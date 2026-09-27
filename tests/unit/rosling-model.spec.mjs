@@ -60,3 +60,8 @@ test('published ranges ignore null values and retain earlier dates',()=>{
   assert.deepEqual(model.years([{year:1980,value:2},{year:1980,value:3},{year:1970,value:null},{year:2024,value:4}]),[1980,2024]);
   assert.deepEqual(model.spendingYears({countries:{CZE:{spending:{per_capita_ppp:{series:[{year:2000,value:2}]}}}}}),[2000]);
 });
+
+test('native population people take precedence over a converted thousands field',()=>{
+  const b={countries:[{country_code:'CZE'}],series:[]},h={countries:{}},w={countries:{CZE:{wpp:[{year:1980,population_thousands:12345.6789,source_population_persons:12345679,kind:'estimate'}]}}};
+  assert.equal(model.journey(b,h,w,1980)[0].population,12345679);
+});

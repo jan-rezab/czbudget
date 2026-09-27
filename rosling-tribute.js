@@ -89,7 +89,7 @@
   }
   function syncYear(){document.querySelector('#rosling-year').value=S.year;document.querySelector('#rosling-year-value').textContent=S.year;}
   function evidence(id,text){document.querySelector(`#${id} [data-evidence]`).innerHTML=text;}
-  function chartSource(data,url,definition,table,vintage='outturn'){return {name:table,url,definition,table,edition:data.dataset_id||data.contract||data.schema_version,extracted:data.generated_at||data.extracted_at,vintage};}
+  function chartSource(data,url,definition,table,vintage='source series / official estimates'){return {name:table,url,definition,table,edition:data.dataset_id||data.contract||data.schema_version,extracted:data.generated_at||data.extracted_at,vintage};}
   const lifeLabel=()=>tr('Life expectancy at birth · years','Naděje dožití při narození · roky');
   const childLabel=()=>tr('Under-five mortality · per 1,000 live births','Úmrtnost do pěti let · na 1 000 živě narozených');
   const spendLabel=()=>tr('Current health spending · PPP $ / person','Běžné zdravotní výdaje · PPP $ / obyvatele');
@@ -182,7 +182,7 @@
     document.querySelector('#rosling-progress-reveal')?.addEventListener('click',e=>{document.querySelector('#rosling-progress-answer').hidden=false;e.currentTarget.hidden=true;});
     measures.forEach(([key,label,url,unit])=>{
       const source=country?.outcomes[key],rows=(source?.series||[]).map(r=>({...r,label:String(r.year),value:r.value})),id='rosling-progress-'+key.replaceAll('_','-');
-      plot(id,{type:'line',height:300,rows,fields:[{key:'value',label}],unit:label,includeZero:key!=='life_expectancy_years',emptyLabel:tr('No published observations','Žádná publikovaná pozorování')},chartSource(h,url,label,key),[{key:'year',label:tr('Year','Rok')}]);
+      plot(id,{type:'line',height:300,rows,fields:[{key:'value',label}],unit:label,includeZero:key!=='life_expectancy_years',emptyLabel:tr('No published observations','Žádná publikovaná pozorování')},chartSource(h,url,label,key),[{key:'year',label:tr('Year','Rok')},{key:'source_value',label:tr('Source numeric text','Zdrojový číselný text')},{key:'source_status',label:tr('Source flag','Zdrojový příznak')},{key:'footnote',label:tr('Source footnote','Zdrojová poznámka')}]);
       const change=M.change(source?.series);
       evidence(id,`${change?`<p class="rosling-country-evidence">${change.first.year}: ${fmt(change.first.value)} → ${change.last.year}: ${fmt(change.last.value)}. ${tr('Calculated change','Vypočtená změna')}: ${fmt(change.delta)} ${esc(unit)}.</p>`:`<p class="rosling-caption">${tr('Insufficient history to calculate a change.','Nedostatečná historie pro výpočet změny.')}</p>`}${sourceLine([[key,url]],`PSD country-health-performance.v1 · ${h.generated_at}`)}`);
     });
