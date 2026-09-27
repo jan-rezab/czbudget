@@ -51,6 +51,19 @@ export function validateHumanDevelopment(payload, releaseId) {
           (row.year == null && row.period == null && row.label == null)) fail();
       for (const key of keys) if (row[key] != null && (typeof row[key] !== 'number' || !Number.isFinite(row[key]))) fail();
     }
+    for (const [code, ranges] of Object.entries(chart.missing_periods_by_country || {})) {
+      if (!codes.has(code) || !Array.isArray(ranges)) fail();
+      let previousEnd = -Infinity;
+      for (const range of ranges) {
+        if (!Number.isSafeInteger(range.start) || !Number.isSafeInteger(range.end) || range.end < range.start ||
+            range.end - range.start > 1000 || range.start <= previousEnd) fail();
+        previousEnd = range.end;
+      }
+    }
+    for (const [code, periods] of Object.entries(chart.missing_period_values_by_country || {})) {
+      if (!codes.has(code) || !Array.isArray(periods) || periods.length > 1000 ||
+          periods.some(period => typeof period !== 'string' || period.length > 100)) fail();
+    }
     if (chart.status === 'ready' || chart.status === 'historical') {
       if (!TYPES.has(chart.chart_type) || !chart.fields.length || !chart.source_refs.length ||
           !chart.rows.some(row => [...keys].some(key => Number.isFinite(row[key])))) fail();

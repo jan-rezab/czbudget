@@ -14,8 +14,7 @@
   const local = value => value && typeof value === 'object' ? value[lang()] || value.en || value.cs || '' : String(value ?? '');
   const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const node = id => document.getElementById(id);
-  const globalCodes = new Set(['World', 'WLD', 'GLOBAL', 'OWID_WRL']);
-  const applicable = row => row.country == null || globalCodes.has(row.country) || row.country === country;
+  const chartRows = chart => window.PSDHumanDevelopmentModel.rowsFor(chart,country);
   const number = value => value.toLocaleString(lang() === 'en' ? 'en-GB' : 'cs-CZ', {maximumFractionDigits: 6});
   function translateShell() {
     document.querySelectorAll('[data-hd-copy]').forEach(el => { el.textContent = t(el.dataset.hdCopy); });
@@ -30,7 +29,7 @@
   }
   function chartHTML(chart) {
     const slug = `human-development-${chart.id}`;
-    const rows = chart.rows.filter(applicable);
+    const rows = chartRows(chart);
     const plot = ['ready','historical'].includes(chart.status) && rows.some(row => chart.fields.some(field => Number.isFinite(row[field.key])));
     const selectedPeriods = rows.filter(row => chart.fields.some(field => Number.isFinite(row[field.key]))).map(row => row.period ?? row.year).filter(value => value != null).map(String).sort();
     const latest = selectedPeriods.at(-1) || t('unknown');
@@ -40,7 +39,7 @@
   function coverageHTML() {
     const c = payload.coverage;
     const count = value => Array.isArray(value) ? value.length : Number.isFinite(value) ? value : t('unknown');
-    const gaps = payload.charts.filter(chart => chart.status !== 'ready' || !chart.rows.filter(applicable).some(row => chart.fields.some(field => Number.isFinite(row[field.key]))));
+    const gaps = payload.charts.filter(chart => chart.status !== 'ready' || !chartRows(chart).some(row => chart.fields.some(field => Number.isFinite(row[field.key]))));
     return `<div class="hd-coverage-counts"><div><strong>${count(c.source_count)}</strong>${t('sources')}</div><div><strong>${count(c.unavailable_sources)}</strong>${t('gaps')}</div><div><strong>${count(c.original_figures)}</strong>${t('figures')}</div></div><div class="hd-table-scroll"><table><thead><tr><th>${t('chart')}</th><th>${t('status')}</th><th>${t('reason')}</th></tr></thead><tbody>${gaps.map(chart => `<tr><th scope="row"><a href="#human-development-${esc(chart.id)}">${esc(local(chart.title))}</a></th><td>${chart.status === 'ready' ? t('noCountry') : t(chart.status)}</td><td>${esc(local(chart.method))}<br>${esc(local(chart.denominator))}</td></tr>`).join('')}</tbody></table></div>${c.unavailable_sources.length ? `<details><summary>${t('showSources')}</summary><ul>${c.unavailable_sources.map(source => `<li>${esc(typeof source === 'string' ? source : local(source.name || source.source_id || source.id))}${source.reason ? `: ${esc(local(source.reason))}` : ''}</li>`).join('')}</ul></details>` : ''}<p class="hd-print-note">${t('printNote')}</p>`;
   }
   async function drawCharts(currentGeneration) {
@@ -50,7 +49,7 @@
       for (const chart of payload.charts) {
         const figure = document.getElementById(`human-development-${chart.id}`), host = figure?.querySelector('.hd-plot');
         if (!host) continue;
-        const rows = chart.rows.filter(applicable).map(row => ({...row, label: local(row.label ?? row.period ?? row.year)}));
+        const rows = chartRows(chart).map(row => ({...row, label: local(row.label ?? row.period ?? row.year)}));
         const fields = chart.fields.map(field => ({...field, label:local(field.label), format:number}));
         const controller = window.PSDPlot.render(host, {type:chart.chart_type, rows, fields, title:local(chart.title), unit:chart.unit, labelTitle:t('observed'), locale:lang() === 'en' ? 'en-GB' : 'cs-CZ'});
         controllers.push(controller);
@@ -78,7 +77,7 @@
     node('hd-print').disabled = false;
     node('hd-status').textContent = '';
     node('hd-release').textContent = `${t('release')}: ${payload.release_id} · ${t('generated')}: ${payload.generated_at}`;
-    const downloadLabels = lang() === 'en' ? {core_csv:'All core observations (CSV)',annex_csv:'Full statistical annex (CSV)',chart_csv:'Chart observations (CSV)'} : {core_csv:'Všechna základní pozorování (CSV)',annex_csv:'Úplná statistická příloha (CSV)',chart_csv:'Pozorování grafů (CSV)'};
+    const downloadLabels = lang() === 'en' ? {core_csv:'All core observations (CSV)',annex_csv:'Full statistical annex (CSV)',chart_csv:'Chart observations (CSV)',chart_details:'Full chart details and survey weights (JSON)'} : {core_csv:'Všechna základní pozorování (CSV)',annex_csv:'Úplná statistická příloha (CSV)',chart_csv:'Pozorování grafů (CSV)',chart_details:'Podrobnosti grafů a váhy průzkumu (JSON)'};
     node('hd-downloads').innerHTML = `<a href="/api/v1/human-development/reports" target="_blank" rel="noopener">${lang() === 'en' ? 'Report data (JSON)' : 'Data reportu (JSON)'}</a>` + Object.entries(downloadLabels).filter(([key]) => payload.download_access?.[key] === 'verified_anonymous_head_200' && payload.downloads?.[key]?.startsWith(`https://storage.googleapis.com/czbudget-janrezab-public-snapshots/static-assets/human-development/releases/${payload.release_id}/`)).map(([key,label]) => ` · <a href="${esc(payload.downloads[key])}" target="_blank" rel="noopener">${label}</a>`).join('');
     node('hd-chapter-nav').innerHTML = payload.chapters.map(chapter => `<a href="#hd-chapter-${esc(chapter.id)}">${esc(local(chapter.title))}</a>`).join('');
     node('hd-chapters').innerHTML = payload.chapters.map(chapter => `<section class="hd-section" id="hd-chapter-${esc(chapter.id)}"><h2>${esc(local(chapter.title))}</h2>${payload.charts.filter(chart => chart.chapter === chapter.id).map(chartHTML).join('')}</section>`).join('');
