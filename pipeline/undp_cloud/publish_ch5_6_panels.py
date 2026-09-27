@@ -10,6 +10,8 @@ import re
 
 from chart_ch5_6 import hadcrut_source, rupp, epoch_source, ilo_tree
 
+ADMITTED = frozenset({'hadcrut5_1','hadcrut5_2','rupp_transistors_1','epoch_models_1','ilo_genai_2023_occupations'})
+
 
 def bi(en, cs): return dict(en=en, cs=cs)
 def numeric(value):
@@ -66,8 +68,7 @@ def panel(sid,meta,title,unit,rows,fields,method,denominator,original,chapter='c
 
 def provider_panels(source_rows, by_source):
     charts=[]; gaps=[]
-    admitted={'hadcrut5_1','hadcrut5_2','rupp_transistors_1','epoch_models_1','ilo_genai_2023_occupations'}
-    for sid in sorted(admitted):
+    for sid in sorted(ADMITTED):
         meta=by_source.get(sid)
         if not meta or not meta.get('accepted_records'):
             gaps.append(dict(source_id=sid,reason='No validated pinned source observations available for this reviewed binding.'))

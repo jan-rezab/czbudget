@@ -1,10 +1,18 @@
 import copy
 import unittest
-from publish_reports import core_charts, survey_charts, validate, audit_ledger, bi
+from publish_reports import core_charts, survey_charts, validate, audit_ledger, bi, report_spool_sources
 from pathlib import Path
 
 SHA='a'*64
 class PublicReportTests(unittest.TestCase):
+ def test_spool_only_fetches_consumed_provider_sources(self):
+  from publish_ch3_4_panels import ADMITTED as care
+  from publish_ch5_6_panels import ADMITTED as climate
+  expected=set(care)|set(climate)|{'wdi_country_metadata','wid_current_DE','unep_irp_current_mfa_totals_ratios_v1','gcp_contract_fixture'}
+  catalog={sid:dict(release_id='r',accepted_records=1) for sid in expected|{'pisa_original_student_microdata','cdc_native_microdata','unused_provider'}}
+  selected=report_spool_sources(catalog,[dict(source_id='gcp_contract_fixture')])
+  self.assertEqual(set(selected),expected)
+  self.assertIs(selected['wid_current_DE'],catalog['wid_current_DE'])
  def core(self):
   common=dict(source_id='hdr',release_id='r',source_vintage='HDR2025',source_url='https://example.org/source',source_sha256=SHA,geography_kind='country_or_area',unit='index')
   return [dict(common,country_code=c,country_name=c,metric=m,year=y,value=v) for c,m,y,v in [('CZE','hdi',2023,'.9'),('DEU','hdi',2023,'.9'),('CZE','hdi',2022,'.8'),('CZE','gdi',2023,'1.1'),('CZE','le',2023,'80'),('CZE','le',2022,'79')]]
