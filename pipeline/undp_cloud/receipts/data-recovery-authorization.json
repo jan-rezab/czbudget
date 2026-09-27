@@ -1,6 +1,6 @@
 {
   "request_started_at_unix": 1790461758,
-  "recorded_at": "2026-09-27T00:55:32Z",
+  "recorded_at": "2026-09-27T00:58:24Z",
   "data_recovery_authorized_at": "2026-09-27T00:42:33Z",
   "user_instruction": "fix the cloud run fails on the data bit ... crawling server to server right?",
   "budget_minutes": 179,
@@ -28,7 +28,56 @@
     "hdr_report_sources_2025:pisa"
   ],
   "public_bucket_writes": 0,
-  "runs": [],
+  "runs": [
+    {
+      "id": "83c540f4-1b3a-408b-9f72-a2dc14054d02",
+      "group": "pisa",
+      "resume_run": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
+      "status": "WORKING",
+      "guard_elapsed_seconds": 8794.949,
+      "expected_source_cases": 613744,
+      "observed_count_only_progress": 20000,
+      "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
+      "guard_result": "STOP_NEW_BUILDS withfailed5;explicituseroverrideapproved",
+      "publication_pointer": "hdr_report_sources_2025:pisa"
+    },
+    {
+      "id": "1b85e601-6eae-4489-9eef-bb147672a602",
+      "group": "inequality",
+      "wid_shard_index": 0,
+      "wid_shard_count": 4,
+      "resume_run": "ab7fee89-7d27-4911-936d-63167df05e80",
+      "status": "WORKING",
+      "guard_elapsed_seconds": 8826.338,
+      "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
+      "guard_result": "STOP_NEW_BUILDS withfailed5;explicituseroverrideapproved",
+      "publication_pointer": "hdr_report_sources_2025:inequality-wid-0-of-4"
+    },
+    {
+      "id": "3a487f84-b624-4f7c-829c-380531d97420",
+      "group": "inequality",
+      "wid_shard_index": 1,
+      "wid_shard_count": 4,
+      "resume_run": "e2063f35-3eea-46e5-b9d5-e3d39912a5ae",
+      "status": "WORKING",
+      "guard_elapsed_seconds": 8852.584,
+      "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
+      "guard_result": "STOP_NEW_BUILDS withfailed5;explicituseroverrideapproved",
+      "publication_pointer": "hdr_report_sources_2025:inequality-wid-1-of-4"
+    },
+    {
+      "id": "db194761-96e6-41cc-a8e7-5bd4b9158d01",
+      "group": "inequality",
+      "wid_shard_index": 2,
+      "wid_shard_count": 4,
+      "resume_run": null,
+      "status": "WORKING",
+      "guard_elapsed_seconds": 8896.811,
+      "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
+      "guard_result": "STOP_NEW_BUILDS withfailed5;explicituseroverrideapproved",
+      "publication_pointer": "hdr_report_sources_2025:inequality-wid-2-of-4"
+    }
+  ],
   "plan": [
     {
       "group": "inequality",
@@ -60,12 +109,12 @@
     }
   ],
   "capacity": "At most3sourceworkers initially (6CPU), reserve2CPUprivateexport and2CPUCDCprobe; WID2/3 waitverifiedfree slots.",
-  "submission_status": "specific_guard_override_approved_preparing_exact_source_package",
-  "cloud_jobs_created": 0,
+  "submission_status": "explicitly_approved_jobs_running",
+  "cloud_jobs_created": 4,
   "prepared_package": {
-    "loader_git_sha": "d1910b18c8caab51f883a84437bb2a0951bd5c35",
-    "path": "/private/tmp/hdr-data-recovery-d1910b18c8",
-    "contents": "Committed loader code and small audit/receipt files only"
+    "loader_git_sha": "bb09ff1ba356efa6e45906f4fbc68da177acb175",
+    "path": "/private/tmp/hdr-approved-recovery-bb09ff1ba3",
+    "contents": "Committed code/audits/smallreceipts only"
   },
   "approval_review_rejection": {
     "action": "Submit corrected PISA Cloud Build data recovery job using exact raw checkpoint596e4e15-18f3-46bf-8b80-e7e8c833d11e",
@@ -84,5 +133,8 @@
     ],
     "scope": "Specific tested data recovery and private validation jobs only; originalclock1790461758/budget179min/five priorfailures preserved; no other gates waived.",
     "prior_review_block": "User explicitly approved overriding the guard stop after the parent explained five failures and the concrete corrected retry scope."
-  }
+  },
+  "pending_wid_shards": [
+    3
+  ]
 }
