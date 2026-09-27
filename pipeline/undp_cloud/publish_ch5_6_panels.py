@@ -80,7 +80,7 @@ def provider_panels(source_rows, by_source):
             rows=[dict(country='WLD',period=r['period'],value=numeric(r['value']),lower=numeric(r['lower']),upper=numeric(r['upper'])) for r in sorted(observations,key=lambda r:r['period'])]
             chart=panel(sid,meta,bi('Global temperature anomaly — '+grain,'Globální teplotní odchylka — '+('roční' if grain=='annual' else 'měsíční')),'degrees Celsius / °C',rows,
                 [dict(key='value',label=bi('Global anomaly','Globální odchylka')),dict(key='lower',label=bi('Source lower uncertainty bound (2.5%)','Dolní mez nejistoty zdroje (2,5 %)')),dict(key='upper',label=bi('Source upper uncertainty bound (97.5%)','Horní mez nejistoty zdroje (97,5 %)'))],
-                bi('HadCRUT5 native reference period 1961–1990; complete '+grain+' observations and source uncertainty bounds. No rebasing to the report’s 1850–1900 reference. Annual and monthly grains remain separate.','Původní referenční období HadCRUT5 1961–1990; úplná '+('roční' if grain=='annual' else 'měsíční')+' řada a meze nejistoty zdroje. Bez přepočtu na základ 1850–1900 z původní zprávy. Roční a měsíční řady jsou oddělené.'),
+                bi('HadCRUT5 native reference period 1961–1990; all available '+grain+' source observations and source uncertainty bounds. No rebasing to the report’s 1850–1900 reference. Annual and monthly grains remain separate.','Původní referenční období HadCRUT5 1961–1990; všechna dostupná '+('roční' if grain=='annual' else 'měsíční')+' pozorování a meze nejistoty zdroje. Bez přepočtu na základ 1850–1900 z původní zprávy. Roční a měsíční řady jsou oddělené.'),
                 bi('Global analysis series; mean of Northern and Southern Hemisphere anomalies. Source uncertainty includes ensemble and additional coverage uncertainty.','Globální analytická řada; průměr odchylek severní a jižní polokoule. Nejistota zahrnuje soubor realizací a dodatečnou nejistotu pokrytí.'),['S6.1.1'])
             chart['source_coverage']=coverage;charts.append(chart)
         elif sid == 'rupp_transistors_1':
@@ -132,4 +132,43 @@ def provider_panels(source_rows, by_source):
                 bi('Occupation categories, equally counted; no people, jobs, FTE, employment or population weighting.','Kategorie povolání, každá se počítá jednou; žádné osoby, pracovní místa, úvazky ani váhy zaměstnanosti či populace.'),['6.1'],kind='bar',status='historical')
             chart['source_coverage']=coverage;charts.append(chart)
             gaps.append(dict(source_id=sid,reason='Occupational taxonomy chart available; original HDR6.1 country/HDI-group employment shares require original labour microdata and remain unavailable.'))
+    disclose_hadcrut_year_coverage(charts)
     return charts,gaps
+
+
+def disclose_hadcrut_year_coverage(charts):
+    """Monthly observations disclose annual coverage; never recompute anomalies."""
+    annual=next((c for c in charts if c['id']=='provider-hadcrut5-1'),None)
+    if annual is None: return
+    latest=max(annual['rows'],key=lambda r:r['period'])
+    year=latest['period']
+    monthly=next((c for c in charts if c['id']=='provider-hadcrut5-2'),None)
+    annual_ref=annual['source_refs'][0]
+    paired=False
+    if monthly is not None:
+        monthly_ref=monthly['source_refs'][0]
+        paired=(annual_ref['release_id']==monthly_ref['release_id'] and
+                annual_ref['vintage']==monthly_ref['vintage'] and
+                annual_ref['url'].endswith('.global.annual.csv') and
+                monthly_ref['url']==annual_ref['url'].replace('.global.annual.csv','.global.monthly.csv'))
+    coverage=dict(year=year,status='unverified',observed_months=None)
+    if paired:
+        months=sorted({int(r['period'][5:7]) for r in monthly['rows'] if r['period'][:4]==year})
+        complete=months==list(range(1,13))
+        coverage.update(status='complete_calendar_year' if complete else 'partial_year',
+            observed_months=len(months),months=months,
+            observed_through=year+'-'+str(max(months)).zfill(2) if months else None,
+            monthly_source_id=monthly_ref['source_id'],
+            monthly_release_id=monthly_ref['release_id'],monthly_sha256=monthly_ref['sha256'])
+        annual['source_refs'].append(dict(monthly_ref))
+        en=f" Latest annual year {year}: {len(months)} of 12 monthly source observations available; " + ('complete calendar year.' if complete else 'partial calendar-year coverage.')
+        cs=f" Poslední roční údaj {year}: dostupných {len(months)} z 12 měsíčních pozorování zdroje; " + ('úplný kalendářní rok.' if complete else 'neúplné pokrytí kalendářního roku.')
+    else:
+        en=f" Latest annual year {year}: calendar-year completeness is unverified because a matching pinned monthly series is unavailable."
+        cs=f" Poslední roční údaj {year}: úplnost kalendářního roku není ověřena, protože odpovídající připnutá měsíční řada není dostupná."
+    latest['calendar_year_status']=coverage['status']
+    latest['observed_months']=coverage['observed_months']
+    latest['observed_through']=coverage.get('observed_through')
+    annual['source_coverage']['latest_year_monthly_coverage']=coverage
+    annual['method']['en']+=en+' The official annual anomaly and uncertainty bounds are preserved unchanged; monthly observations are used only to disclose coverage, without annual recalculation.'
+    annual['method']['cs']+=cs+' Oficiální roční odchylka a meze nejistoty zůstávají beze změny; měsíční pozorování slouží pouze k uvedení pokrytí, bez přepočtu roční hodnoty.'
