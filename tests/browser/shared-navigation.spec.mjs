@@ -8,7 +8,7 @@ test('shared navigation exposes the same primary destinations on narrow and wide
     const nav=page.locator('.global-nav');
     await expect(nav).toContainText('Stories');
     const items=await nav.locator(':scope > a, :scope > details > summary').allTextContents();
-    expect(items.map(item=>item.replace(/\s+/g,''))).toEqual(['Country⌄','Municipalities⌄','Compare','Map','Reports','Stories','Coverage','About']);
+    expect(items.map(item=>item.replace(/\s+/g,''))).toEqual(['Country⌄','Municipalities⌄','Compare','Map','Reports⌄','Stories','Coverage','About']);
     // Every destination fits onscreen without having to discover a sideways rail.
     for (const item of await nav.locator(':scope > a, :scope > details > summary').all()) {
       const box = await item.boundingBox();
@@ -40,5 +40,5 @@ test('country menus fit the viewport, filter countries and return keyboard focus
     await expect(menu).not.toHaveAttribute('open', '');
     await expect(summary).toBeFocused();
   }
-  await expect(page.locator('[data-global-nav="deep-dives"]')).toHaveAttribute('aria-current', 'page');
+  await expect(page.locator('.reports-menu-all')).toHaveAttribute('aria-current', 'page');
 });

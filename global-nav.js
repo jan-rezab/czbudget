@@ -84,6 +84,9 @@
   };
   Object.assign(copy.cs,{coverageDepth:"Hloubka dat",depthDirectory:"Adresář",depthHeadline:"Souhrnné finance",depthItemized:"Položkový rozpočet"});
   Object.assign(copy.en,{coverageDepth:"Data depth",depthDirectory:"Directory",depthHeadline:"Headline finance",depthItemized:"Itemized budget"});
+  /* BEGIN GENERATED REPORT MENU */
+  const reportMenuGroups = [{"id":"spend","title":{"cs":"Kam peníze jdou","en":"Where the money goes"},"reports":[{"slug":"education","path":"deep-dives/education/","title":{"cs":"Školství","en":"Education"}},{"slug":"health","path":"deep-dives/health/?code=CZE","title":{"cs":"Zdraví","en":"Health"}},{"slug":"transportation","path":"deep-dives/transportation/?code=CZE","title":{"cs":"Doprava","en":"Transportation"}},{"slug":"defense","path":"deep-dives/defense/?code=USA","title":{"cs":"Výdaje na obranu","en":"Defense spending"}},{"slug":"redistribution","path":"deep-dives/redistribution/?code=CZE","title":{"cs":"Daně, transfery a příjmová nerovnost","en":"Taxes, transfers and income inequality"}}]},{"id":"raise","title":{"cs":"Odkud peníze jsou","en":"Where the money comes from"},"reports":[{"slug":"funding","path":"deep-dives/funding/","title":{"cs":"Jak peníze dorazí ke službám","en":"How money reaches services"}},{"slug":"revenue","path":"deep-dives/revenue/?code=CZE","title":{"cs":"Odkud stát bere peníze","en":"Where the state gets its money"}},{"slug":"tax-burden","path":"deep-dives/tax-burden/?code=CZE","title":{"cs":"Daňové zatížení","en":"Tax burden"}},{"slug":"eu-budget","path":"deep-dives/eu-budget/?code=CZE","title":{"cs":"Peníze mezi zeměmi a EU","en":"Money between countries and the EU"}}]},{"id":"economy","title":{"cs":"Ekonomika, průmysl a obchod","en":"Economy, industry and trade"},"reports":[{"slug":"job-market","path":"deep-dives/job-market/?country=USA","title":{"cs":"Kde lidé pracují a kdo je zaměstnává","en":"Where people work and who employs them"}},{"slug":"economy","path":"deep-dives/economy/?code=CZE","title":{"cs":"Ekonomika v kontextu","en":"Economy in context"}},{"slug":"industry","path":"deep-dives/industry/?code=CZE&channel=eurostat","title":{"cs":"Průmysl měsíc po měsíci","en":"Industry month by month"}},{"slug":"industrial-diagnostics","path":"deep-dives/industry/diagnostics/","title":{"cs":"Uvnitř průmyslu","en":"Inside industry"}},{"slug":"trade","path":"deep-dives/trade/?code=DEU","title":{"cs":"Zahraniční obchod","en":"Foreign trade"}},{"slug":"energy-trade","path":"deep-dives/energy-trade/","title":{"cs":"Světový obchod s ropou a plynem","en":"World oil and gas trade"}},{"slug":"russia-trade","path":"deep-dives/russia-trade/","title":{"cs":"Obchod kolem Ruska","en":"Trade around Russia"}},{"slug":"automotive","path":"deep-dives/automotive/","title":{"cs":"Automobilový průmysl","en":"Automotive"}},{"slug":"product-markets","path":"deep-dives/product-markets/","title":{"cs":"Globální produktové trhy","en":"Global product markets"}},{"slug":"digital-spillover","path":"deep-dives/digital-spillover/","title":{"cs":"Kdo si ponechá digitální ekonomiku?","en":"Who keeps the digital economy?"}}]},{"id":"society","title":{"cs":"Společnost a stát","en":"Society and the state"},"reports":[{"slug":"ageing","path":"deep-dives/ageing/?code=CZE","title":{"cs":"Stárnutí populace","en":"Population ageing"}},{"slug":"migration","path":"deep-dives/migration/","title":{"cs":"Evropská migrace","en":"European migration"}},{"slug":"european-politics","path":"deep-dives/european-politics/?code=CZE","title":{"cs":"Evropská politika","en":"European politics"}},{"slug":"state-owned-enterprises","path":"deep-dives/state-owned-enterprises/","title":{"cs":"Státní podniky","en":"State-owned enterprises"}},{"slug":"capital-cities","path":"deep-dives/capital-cities/?city=prague-cz","title":{"cs":"Hlavní města","en":"Capital cities"}},{"slug":"rosling","path":"deep-dives/rosling/","title":{"cs":"Pocta Hansi Roslingovi","en":"A tribute to Hans Rosling"}}]},{"id":"cz","title":{"cs":"Česko","en":"Czechia"},"reports":[{"slug":"budget-planner","path":"deep-dives/budget-planner/","title":{"cs":"Plánovač rozpočtu 2027","en":"2027 budget planner"}},{"slug":"public-employment","path":"deep-dives/public-employment/","title":{"cs":"Veřejná zaměstnanost","en":"Public employment"}},{"slug":"money-cze","path":"deep-dives/money/cze/","title":{"cs":"Kam šly peníze? Česko","en":"Where did the money go? Czechia"}},{"slug":"plzen-contracts","path":"deep-dives/plzen-contracts/","title":{"cs":"Plzeň: smlouvy a skutečné platby","en":"Plzeň: contracts and actual payments"}}]},{"id":"us","title":{"cs":"Spojené státy","en":"United States"},"reports":[{"slug":"money-usa","path":"deep-dives/money/usa/","title":{"cs":"Kam šly peníze? Spojené státy","en":"Where did the money go? United States"}}]}];
+/* END GENERATED REPORT MENU */
   const language = () => document.documentElement.lang === "en" ? "en" : "cs";
   const href = (path, lang = language()) => `${assetRoot}${path}${path.includes("?") ? "&" : "?"}lang=${lang}`;
   const countryHref = (code, lang = language()) => window.PSDCountryRoutes?.href
@@ -164,7 +167,7 @@
       </header>`;
       this.addEventListener("keydown", (event) => {
         if (event.key !== "Escape" || event.defaultPrevented) return;
-        const menu = this.querySelector("details[open]");
+        const menu = this.querySelector(".global-nav > details[open]");
         if (!menu) return;
         event.preventDefault();
         menu.open = false;
@@ -183,12 +186,15 @@
         return `<a href="${destination}" data-country-code="${code}"><img src="${assetRoot}assets/flags/${flag}.svg" alt="" loading="lazy" decoding="async"><span>${lang === "en" ? en : cs}</span>${depthIcon(municipalityDepth(code), t)}</a>`;
       }).join("");
       const municipalityLegend = `<div class="municipal-depth-key"><strong>${t.coverageDepth}</strong>${depthIcon(1,t,true)}${depthIcon(2,t,true)}${depthIcon(3,t,true)}</div>`;
+      const escapeText = value => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      const reportGroups = reportMenuGroups.map(group => `<details class="report-menu-group" data-report-topic="${group.id}" open><summary><span>${escapeText(group.title[lang])}</span><span class="report-topic-count">${group.reports.length}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><ul>${group.reports.map(report => `<li><a data-report-slug="${report.slug}" href="${href(report.path, lang)}">${escapeText(report.title[lang])}</a></li>`).join("")}</ul></details>`).join("");
+      const reportsMenu = `<details class="reports-menu" data-global-nav="deep-dives"><summary><span class="menu-label">${t.deepDives}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="reports-menu-panel"><div class="reports-menu-head"><div><span>${lang === "cs" ? "Knihovna reportů" : "The report library"}</span><p>${lang === "cs" ? "Prozkoumejte veřejné peníze" : "Explore public money"}</p></div><a class="reports-menu-all" href="${href("deep-dives/", lang)}">${t.allDeepDives}<span aria-hidden="true">↗</span></a></div><div class="reports-menu-groups">${reportGroups}</div></div></details>`;
       const contextCountry = String(document.body.dataset.countryCode || "").toUpperCase();
       const methodologyHref = contextCountry
         ? `${href("methodology.html", lang)}&country=${encodeURIComponent(contextCountry)}#sources`
         : href("methodology.html", lang);
       nav.setAttribute("aria-label", t.navigation);
-      nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><label class="country-menu-search"><span>${t.searchCountry}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${countries.length} ${t.countryMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a><a class="capital-menu-feature" href="${href("money-flow.html", lang)}"><b>↗</b><span>${lang === "cs" ? "Sledujte tok peněz" : "Follow the money"}</span></a>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div><label class="country-menu-search"><span>${t.searchMunicipality}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${municipalityCountries.length} ${t.municipalityMatches}</output></label>${municipalityLegend}<p class="country-menu-empty" hidden>${t.noCountryMatches}</p>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("map.html", lang)}" data-global-nav="map">${t.map}</a><a href="${href("deep-dives/", lang)}" data-global-nav="deep-dives">${t.deepDives}</a><a href="${href("stories/", lang)}" data-global-nav="stories">${t.stories}</a><a href="${methodologyHref}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
+      nav.innerHTML = `<details class="country-menu" data-global-nav="country"><summary><span class="menu-label">${t.country}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.country}</span><a href="${assetRoot}?lang=${lang}#countries">${t.all} →</a></div><label class="country-menu-search"><span>${t.searchCountry}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${countries.length} ${t.countryMatches}</output></label><p class="country-menu-empty" hidden>${t.noCountryMatches}</p><a class="capital-menu-feature" href="${href("cesky-rozpocet.html", lang)}"><b>CZ+</b><span>${t.czechBudget}</span></a><a class="capital-menu-feature" href="${href("money-flow.html", lang)}"><b>↗</b><span>${lang === "cs" ? "Sledujte tok peněz" : "Follow the money"}</span></a>${countryLinks}</div></details><details class="country-menu municipality-menu" data-global-nav="cities"><summary><span class="menu-label">${t.cities}</span><span class="menu-chevron" aria-hidden="true">⌄</span></summary><div class="country-menu-panel"><div class="country-menu-head"><span>${t.cities}</span><a href="${href("municipalities/", lang)}">${t.allMunicipalities} →</a></div><label class="country-menu-search"><span>${t.searchMunicipality}</span><input type="search" autocomplete="off" spellcheck="false" placeholder="${t.searchCountryPlaceholder}"><output aria-live="polite">${municipalityCountries.length} ${t.municipalityMatches}</output></label>${municipalityLegend}<p class="country-menu-empty" hidden>${t.noCountryMatches}</p>${municipalityLinks}</div></details><a href="${href("comparison.html", lang)}" data-global-nav="compare">${t.compare}</a><a href="${href("map.html", lang)}" data-global-nav="map">${t.map}</a>${reportsMenu}<a href="${href("stories/", lang)}" data-global-nav="stories">${t.stories}</a><a href="${methodologyHref}" data-global-nav="method">${t.method}</a><a href="${href("about.html", lang)}" data-global-nav="about">${t.about}</a>`;
       const active = activeSection(this);
       const activeItem = nav.querySelector(`[data-global-nav="${active}"]`);
       activeItem?.classList.add("active");
@@ -202,6 +208,16 @@
         search?.addEventListener("input",filter);
         search?.addEventListener("keydown",event=>{if(event.key==="Enter"){const visible=filter();if(visible.length===1){event.preventDefault();visible[0].click();}}else if(event.key==="Escape"){event.preventDefault();if(search.value){search.value="";filter();}else{menu.open=false;menu.querySelector("summary")?.focus();}}});
       });
+      // Topic accordions keep a small-screen menu short; the desktop menu shows all links.
+      this.reportMedia?.removeEventListener("change", this.syncReportTopics);
+      this.reportMedia = matchMedia("(max-width: 600px)");
+      this.syncReportTopics = () => nav.querySelectorAll(".report-menu-group").forEach(group => { group.open = !this.reportMedia.matches; });
+      this.syncReportTopics();
+      this.reportMedia.addEventListener("change", this.syncReportTopics);
+      const currentPath = location.pathname.replace(/index\.html$/, "");
+      nav.querySelectorAll(".reports-menu-panel a").forEach(link => {
+        if (new URL(link.href).pathname.replace(/index\.html$/, "") === currentPath) link.setAttribute("aria-current", "page");
+      });
       this.querySelector(".lang-switch")?.setAttribute("aria-label", t.language);
       const languagePending = document.documentElement.hasAttribute("data-language-pending");
       this.querySelectorAll("[data-lang]").forEach((button) => {
@@ -212,10 +228,10 @@
         button.setAttribute("aria-pressed", String(selected));
       });
       this.querySelector(".brand")?.setAttribute("href", href("", lang));
-      nav.querySelectorAll("details").forEach((details) => details.addEventListener("toggle", () => {
+      nav.querySelectorAll(":scope > details").forEach((details) => details.addEventListener("toggle", () => {
         if (!details.open) return;
         if (details.matches(".country-menu:not(.municipality-menu)")) loadCoverage();
-        nav.querySelectorAll("details[open]").forEach((other) => { if (other !== details) other.open = false; });
+        nav.querySelectorAll(":scope > details[open]").forEach((other) => { if (other !== details) other.open = false; });
         const close = (event) => { if (!details.contains(event.target)) { details.open = false; document.removeEventListener("pointerdown", close); } };
         setTimeout(() => document.addEventListener("pointerdown", close), 0);
       }));
@@ -223,14 +239,14 @@
     }
   }
 
-  const headerStylesHref = `${assetRoot}site-header.css?v=20260927-editorial-navigation`;
+  const headerStylesHref = `${assetRoot}site-header.css?v=20260927-report-submenus`;
   const existingHeaderStyles = document.querySelector("link[data-psd-site-header]") || document.querySelector('link[rel="stylesheet"][href*="site-header.css"]');
   if (existingHeaderStyles) {
     // Older open pages can still reference the old header CSS. Upgrade its cache key
     // when the new navigation loads; preserve staging's content-addressed URLs.
     existingHeaderStyles.dataset.psdSiteHeader = "true";
     const version = new URL(existingHeaderStyles.href).searchParams.get("v") || "";
-    if (!/^[a-f0-9]{16,}$/.test(version) && version !== "20260927-editorial-navigation") existingHeaderStyles.href = headerStylesHref;
+    if (!/^[a-f0-9]{16,}$/.test(version) && version !== "20260927-report-submenus") existingHeaderStyles.href = headerStylesHref;
   } else {
     const styles = document.createElement("link");
     styles.rel = "stylesheet";

@@ -12,7 +12,7 @@
       municipal: "Obce a města", countryData: "Data země", deepDive: "Hloubkové profily", freshness: "Datový horizont",
       allFreshness: "Všechny horizonty", search: "Hledat", searchPlaceholder: "země, vrstva, pokrytí…", reset: "Vymazat",
       matrix: "Srovnávací matice", detailTable: "Podrobný registr", latest: "Nejnovější období", type: "Typ",
-      coverage: "Pokrytí", generated: "Artefakt sestaven", artifact: "Publikovaný artefakt", openView: "Otevřít profil",
+      coverage: "Pokrytí", generated: "Artefakt sestaven", artifact: "Publikovaný artefakt", release: "Datové vydání", openView: "Otevřít profil",
       openSource: "Primární zdroj", download: "Stáhnout CSV", shown: "zobrazených záznamů", noRows: "Filtru neodpovídají žádná data.",
       selected: "Vybraná vrstva", firstYear: "Začátek řady", entities: "Jednotky / řady", actual: "skutečnost / statistika", estimate: "odhad zdroje", actual_estimate: "skutečnost + odhad",
       plan: "plán / schválený rozpočet", projection: "projekce", register: "živý registr", mixed: "skutečnost + plán",
@@ -27,7 +27,7 @@
       municipal: "Municipalities and cities", countryData: "Country data", deepDive: "Deep dives", freshness: "Data horizon",
       allFreshness: "All horizons", search: "Search", searchPlaceholder: "country, layer, coverage…", reset: "Reset",
       matrix: "Comparison matrix", detailTable: "Detailed ledger", latest: "Latest period", type: "Type",
-      coverage: "Coverage", generated: "Artifact built", artifact: "Published artifact", openView: "Open profile",
+      coverage: "Coverage", generated: "Artifact built", artifact: "Published artifact", release: "Data release", openView: "Open profile",
       openSource: "Primary source", download: "Download CSV", shown: "records shown", noRows: "No data matches these filters.",
       selected: "Selected layer", firstYear: "Series start", entities: "Entities / series", actual: "actual / statistical", estimate: "source estimate", actual_estimate: "actual + estimate",
       plan: "plan / adopted budget", projection: "projection", register: "live register", mixed: "actual + plan",
@@ -36,10 +36,13 @@
       none: "no layer", method: "The year in each cell is the latest fiscal, reporting or observation period. The file-build date is separate; plans, actuals and projections are not interchangeable.",
     },
   };
+  copy.cs.unavailable = "Některé živé vrstvy se nepodařilo ověřit. Neúplný přehled neznamená nulové pokrytí.";
+  copy.en.unavailable = "Some live layers could not be checked. This incomplete inventory does not mean zero coverage.";
   const t = (key) => copy[lang][key] || key;
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
   const number = (value) => new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(Number(value) || 0);
   const date = (value) => {
+    if (!value) return "—";
     const parsed = new Date(value);
     return Number.isNaN(parsed.getTime()) ? "—" : new Intl.DateTimeFormat(lang === "cs" ? "cs-CZ" : "en-GB", { dateStyle: "medium" }).format(parsed);
   };
@@ -115,7 +118,7 @@
     const layer = module(record.module);
     const count = record.entity_count || record.row_count;
     const viewUrl = record.view_url ? `${record.view_url}${record.view_url.includes("?") ? "&" : "?"}lang=${lang}` : null;
-    root.innerHTML = `<header><span>${esc(t("selected"))}</span><h3>${esc(countryName(item))} · ${esc(moduleName(layer))}</h3></header><div class="freshness-selection-grid"><div><span>${esc(t("latest"))}</span><strong>${esc(cellLabel(record))}</strong><small>${esc(bandLabel(record.freshness_band))}</small></div><div><span>${esc(t("firstYear"))}</span><strong>${record.first_year || "—"}</strong><small>${esc(vintageLabel(record.vintage_type))}</small></div><div><span>${esc(t("entities"))}</span><strong>${count ? number(count) : "—"}</strong><small>${esc(record.coverage_status)}</small></div><div><span>${esc(t("generated"))}</span><strong>${esc(date(record.artifact_generated_at))}</strong><small>${esc(record.artifact)}</small></div></div><p>${esc(record[`coverage_${lang}`] || record.coverage_en || record.coverage_cs)}</p><nav>${viewUrl ? `<a href="${esc(viewUrl)}">${esc(t("openView"))} →</a>` : ""}${record.source_url ? `<a href="${esc(record.source_url)}" target="_blank" rel="noreferrer">${esc(t("openSource"))} ↗</a>` : ""}</nav>`;
+    root.innerHTML = `<header><span>${esc(t("selected"))}</span><h3>${esc(countryName(item))} · ${esc(moduleName(layer))}</h3></header><div class="freshness-selection-grid"><div><span>${esc(t("latest"))}</span><strong>${esc(cellLabel(record))}</strong><small>${esc(bandLabel(record.freshness_band))}</small></div><div><span>${esc(t("firstYear"))}</span><strong>${record.first_year || "—"}</strong><small>${esc(vintageLabel(record.vintage_type))}</small></div><div><span>${esc(t("entities"))}</span><strong>${count ? number(count) : "—"}</strong><small>${esc(record.coverage_status)}</small></div><div><span>${esc(t("generated"))}</span><strong>${esc(date(record.artifact_generated_at))}</strong><small>${esc(record.artifact)}</small></div></div>${record.release_id ? `<p>${esc(t("release"))}: ${esc(record.release_id)}</p>` : ""}<p>${esc(record[`coverage_${lang}`] || record.coverage_en || record.coverage_cs)}</p><nav>${viewUrl ? `<a href="${esc(viewUrl)}">${esc(t("openView"))} →</a>` : ""}${record.source_url ? `<a href="${esc(record.source_url)}" target="_blank" rel="noreferrer">${esc(t("openSource"))} ↗</a>` : ""}</nav>`;
   }
   function renderTable(records) {
     const body = document.querySelector("#freshness-table-body");
@@ -127,15 +130,17 @@
     document.querySelector("#freshness-summary").textContent = `${number(records.length)} / ${number(state.data.records.length)} ${t("shown")}`;
   }
   function render() {
+    const warning = document.querySelector("#freshness-warning");
+    if (warning) { warning.hidden = !state.data.unavailable?.length; warning.textContent = t("unavailable"); }
     const records = filteredRecords();
     renderMatrix(records);
     renderSelection();
     renderTable(records);
   }
   function downloadCsv() {
-    const headings = ["country_code", "country", "module", "latest_year", "period_label", "vintage_type", "freshness_band", "coverage", "entity_count", "row_count", "artifact", "artifact_generated_at", "source_url", "view_url"];
+    const headings = ["country_code", "country", "module", "latest_year", "period_label", "vintage_type", "freshness_band", "coverage", "entity_count", "row_count", "artifact", "artifact_generated_at", "release_id", "source_url", "view_url"];
     const quote = (value) => `"${String(value ?? "").replaceAll('"', '""')}"`;
-    const lines = [headings.join(","), ...filteredRecords().map((record) => [record.country_code, countryName(country(record.country_code)), moduleName(module(record.module)), record.latest_year, record.period_label, record.vintage_type, record.freshness_band, record[`coverage_${lang}`], record.entity_count, record.row_count, record.artifact, record.artifact_generated_at, record.source_url, record.view_url].map(quote).join(","))];
+    const lines = [headings.join(","), ...filteredRecords().map((record) => [record.country_code, countryName(country(record.country_code)), moduleName(module(record.module)), record.latest_year, record.period_label, record.vintage_type, record.freshness_band, record[`coverage_${lang}`], record.entity_count, record.row_count, record.artifact, record.artifact_generated_at, record.release_id, record.source_url, record.view_url].map(quote).join(","))];
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob(["\ufeff" + lines.join("\n")], { type: "text/csv;charset=utf-8" }));
     link.download = `public-spending-data-freshness-${lang}.csv`;
@@ -169,10 +174,7 @@
     if (!state.data) return;
     renderKpis(); fillControls(); render();
   });
-  const freshnessDataPromise = window.psdDataFreshnessPromise || (window.psdDataFreshnessPromise = fetch("data/data-freshness.v1.json").then((response) => {
-    if (!response.ok) throw new Error(`Freshness data returned ${response.status}`);
-    return response.json();
-  }));
+  const freshnessDataPromise = PSDCoverage.load();
   freshnessDataPromise.then((data) => {
     state.data = data;
     renderKpis();

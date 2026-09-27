@@ -166,8 +166,7 @@
     const references = spec.type === 'bar' ? '' : (spec.referenceLines || []).filter(line => finite(line.value)).map(line => `<line class="psd-plot-reference" x1="${left}" x2="${width - right}" y1="${y(line.value)}" y2="${y(line.value)}"/><text class="psd-plot-reference-label" x="${left + 4}" y="${y(line.value) - 5}">${escape(line.label || String(line.value))}</text>`).join('');
     const selectedIndex = rows.findIndex(row => row.label === String(spec.selectedLabel));
     const marker = spec.type === 'bar' || selectedIndex < 0 ? '' : `<line class="psd-plot-selected" x1="${x(selectedIndex)}" x2="${x(selectedIndex)}" y1="${top}" y2="${height - bottom}"/><text class="psd-plot-selected-label" x="${x(selectedIndex)}" y="${top - 8}" text-anchor="middle">${escape(rows[selectedIndex].label)}</text>`;
-    const inspectionBelow = spec.inspectionPlacement === 'below';
-    host.innerHTML = `${empty ? `<p class="psd-chart-empty">${escape(spec.emptyLabel || 'No reported values')}</p>` : ''}<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || fields.map(f => f.label).join(', '))}"><defs><clipPath id="${clipID}"><rect x="${left - 4}" y="${top - 4}" width="${plotWidth + 8}" height="${plotHeight + 8}"/></clipPath></defs>${axes}${references}${marker}${marks}${endLabels}<line class="psd-plot-playhead" y1="${top}" y2="${height-bottom}" stroke="currentColor" stroke-opacity=".5" hidden/><rect class="psd-plot-brush" y="${top}" height="${plotHeight}" hidden/><line class="psd-plot-guide" y1="${top}" y2="${height - bottom}" hidden/>${hits}</svg>${inspectionBelow ? `<div class="psd-plot-inspection" style="--inspection-rows:${Math.ceil(fields.length / 2)};--inspection-fields:${fields.length}">` : ''}<div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>${inspectionBelow ? '</div>' : ''}`;
+    host.innerHTML = `${empty ? `<p class="psd-chart-empty">${escape(spec.emptyLabel || 'No reported values')}</p>` : ''}<svg viewBox="0 0 ${width} ${height}" role="group" aria-label="${escape(spec.title || fields.map(f => f.label).join(', '))}"><defs><clipPath id="${clipID}"><rect x="${left - 4}" y="${top - 4}" width="${plotWidth + 8}" height="${plotHeight + 8}"/></clipPath></defs>${axes}${references}${marker}${marks}${endLabels}<line class="psd-plot-playhead" y1="${top}" y2="${height-bottom}" stroke="currentColor" stroke-opacity=".5" hidden/><rect class="psd-plot-brush" y="${top}" height="${plotHeight}" hidden/><line class="psd-plot-guide" y1="${top}" y2="${height - bottom}" hidden/>${hits}</svg><div class="psd-plot-tooltip" role="status" aria-live="polite" hidden></div>`;
     function emphasize(key = spec.activeField, persist = false) {
       if (persist) spec.activeField = key;
       for (const group of host.querySelectorAll('[data-mark-series],[data-end-series]')) {
@@ -225,10 +224,8 @@
       tooltip.hidden = false;
       spec.onInspect?.(row.raw);
       const box = host.getBoundingClientRect(), point = Number.isFinite(clientX) ? clientX - box.left : x(i) / width * box.width;
-      if (!inspectionBelow) {
-        tooltip.style.left = `${Math.max(4, Math.min(box.width - tooltip.offsetWidth - 4, point + 14))}px`;
-        tooltip.style.top = `${Math.min(48, box.height / 4)}px`;
-      }
+      tooltip.style.left = `${Math.max(4, Math.min(box.width - tooltip.offsetWidth - 4, point + 14))}px`;
+      tooltip.style.top = `${Math.min(48, box.height / 4)}px`;
       if (spec.type !== 'bar') { guide.setAttribute('x1', x(i)); guide.setAttribute('x2', x(i)); guide.removeAttribute('hidden'); }
     }
     on(host, 'pointermove', e => { const hit = e.target.closest('[data-point]'); if (hit && !pinned && !dragging?.moved) show(hit, e.clientX); });

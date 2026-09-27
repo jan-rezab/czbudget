@@ -53,7 +53,7 @@ test('report discovery, language switching and actual downloads',async({page})=>
  await page.locator('psd-site-header [data-lang="cs"]').click();
  await expect(page.locator('h1')).toContainText('Kdo vládl');
  await expect(page).toHaveURL(/lang=cs/);
- await expect(page.locator('psd-site-header [data-global-nav="deep-dives"]')).toHaveAttribute('href',/deep-dives\/\?lang=cs$/);
+ await expect(page.locator('psd-site-header .reports-menu-all')).toHaveAttribute('href',/deep-dives\/\?lang=cs$/);
  const download=page.waitForEvent('download');
  await page.locator('#chart-container [data-action="csv"]').click();
  expect((await download).suggestedFilename()).toBe('european-politics-economy-history.csv');
