@@ -51,6 +51,12 @@ test('runtime data routes include every independently published serving contract
     '/data/paq/obec-001.json.gz',
     '/data/trade/automotive-monthly.v1.json',
     '/data/municipal-budget-codebook.v1.json',
+    '/data/monitor-2026/unit-facts-001.ndjson.gz',
+    '/data/dotaceeu/operation-rows.ndjson.gz',
+    '/data/mv-administration-grants/2025.json.gz',
+    '/data/mf-perimeter-history/2020-actual-perimeter.json.gz',
+    '/data/france-municipal-profiles/62.v1.json',
+    '/data/municipal-benchmarks/nor.json',
   ]) assert.match(url, ASSET_PATH);
   for (const url of ['/data/trade/README.md', '/data/other.json', '/paq/catalog.json.gz']) assert.doesNotMatch(url, ASSET_PATH);
 });
@@ -184,4 +190,24 @@ test('cold reads have bounded admission and memory', async () => {
   await assert.rejects(service.body(asset + 'extra', lock.files[asset], lock), {status: 503});
   release(); await Promise.all(pending);
   assert.equal(service.inFlightBytes, 0);
+});
+
+test('paths this build does not route are skipped, not fatal to the whole lock', async () => {
+  const value = manifest();
+  value.files['/data/not-yet-routed/a.json'] = {...value.files[asset]};
+  const lock = await new StaticAssets({manifest: value, localRoot: ''}).lock();
+  assert.ok(lock.files[asset]);
+  assert.equal(lock.files['/data/not-yet-routed/a.json'], undefined);
+});
+
+test('a failed refresh keeps serving the last verified lock', async () => {
+  let calls = 0;
+  const service = new StaticAssets({
+    lockPath: null, lockObject: 'static-assets/current.json', lockTtlMs: 0,
+    fetchImpl: async () => { calls++; return calls === 1 ? new Response(JSON.stringify(manifest())) : new Response('{"version":2}'); },
+  });
+  service.token = async () => 'synthetic-token';
+  assert.equal((await service.lock()).packs.isred.generation, '123456');
+  assert.equal((await service.lock()).packs.isred.generation, '123456');
+  assert.equal(calls, 2);
 });

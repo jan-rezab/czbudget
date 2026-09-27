@@ -1,4 +1,4 @@
-import { createReadStream } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { execFileSync } from "node:child_process";
@@ -86,7 +86,8 @@ createServer(async (request, response) => {
     }
     const queryProfile = /^\/municipalities\/(?:france|germany)\/profile\/$/.test(pathname);
     if ((!queryProfile && /^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(pathname))
-      || (process.env.DATA_ASSET_LOCK && ASSET_PATH.test(pathname))
+      // Like nginx in production: a file in the checkout wins; published packs serve the rest.
+      || (process.env.DATA_ASSET_LOCK && ASSET_PATH.test(pathname) && !existsSync(join(root, pathname.slice(1))))
       || /^\/(?:public-data|api|auth|docs|developers)(?:\/|$)/.test(pathname)
       || /^\/(?:data\/)?municipal-expansion\/[a-z]{3}\/[^/]+\.json$/.test(pathname)
       || /^\/data\/entities\/\d{8}\.json$/.test(pathname)

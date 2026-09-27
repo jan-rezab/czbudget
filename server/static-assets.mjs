@@ -5,7 +5,7 @@ import {Readable} from 'node:stream';
 import {pipeline} from 'node:stream/promises';
 import {createGunzip} from 'node:zlib';
 
-export const ASSET_PATH = /^\/data\/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq)\/|trade\/automotive-monthly\.v1\.json$|municipal-budget-codebook\.v1\.json$)/;
+export const ASSET_PATH = /^\/data\/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|municipal-benchmarks)\/|trade\/automotive-monthly\.v1\.json$|municipal-budget-codebook\.v1\.json$)/;
 const MAX_FILE = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT_BYTES = 48 * 1024 * 1024;
 const CACHE_BYTES = 16 * 1024 * 1024;
@@ -37,16 +37,21 @@ export class StaticAssets {
           || !Number.isSafeInteger(pack.size) || pack.size <= 0
           || (!this.localRoot && !/^\d+$/.test(pack.generation || ''))) throw new Error('Invalid pack descriptor');
       }
+      // A data release may publish paths this build does not route yet. Skip them
+      // rather than rejecting the whole lock, which would fail every asset route.
+      const files = {};
       for (const [url, file] of Object.entries(lock.files)) {
+        if (!ASSET_PATH.test(url)) continue;
+        files[url] = file;
         const pack = lock.packs[file.pack];
-        if (!ASSET_PATH.test(url) || url.split('/').some(p => p.startsWith('.')) || !pack
+        if (url.split('/').some(p => p.startsWith('.')) || !pack
           || !Number.isSafeInteger(file.offset) || file.offset < 0
           || !Number.isSafeInteger(file.size) || file.size < 0 || file.size > MAX_FILE
           || file.offset + file.size > pack.size || !/^[a-f0-9]{64}$/.test(file.sha256)) throw new Error('Invalid asset descriptor');
         if (file.encoding && (file.encoding !== 'gzip' || !Number.isSafeInteger(file.raw_size)
           || file.raw_size <= 0 || file.raw_size > 128 * 1024 * 1024 || !/^[a-f0-9]{64}$/.test(file.raw_sha256))) throw new Error('Invalid compressed alias');
       }
-      return lock;
+      return {...lock, files};
   }
 
   async lock() {
@@ -78,6 +83,8 @@ export class StaticAssets {
         this.lockLoadedAt = Date.now();
         return lock;
       } catch (error) {
+        // Keep serving the last verified lock through a failed refresh; retry after the TTL.
+        if (this.remoteLock) { this.lockLoadedAt = Date.now(); return this.remoteLock; }
         if (error instanceof AssetError) throw error;
         throw new AssetError(502, 'asset_lock_failed');
       }
