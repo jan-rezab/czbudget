@@ -49,6 +49,9 @@ test('timeline moves existing geometry continuously and commits exact years only
   await ready(page);
   await page.locator('#range-5').click();
   expect(await range(page)).toEqual([2020, 2024]);
+  // Grab the handle only after the preset's motion has settled; a redraw mid-drag
+  // drops the pointer (about one run in twenty on mobile).
+  await expect(page.locator('#explorer-plot')).toHaveAttribute('data-motion-progress', /^1(\.0+)?$/);
   const clip = await page.locator('#explorer-plot clipPath').getAttribute('id');
   const before = await page.locator('#explorer-plot [data-series=CZE]').getAttribute('d');
   const start = page.locator('.psd-range-handle[data-drag=start]');
