@@ -53,3 +53,24 @@ test('failed source load keeps selection and retry recovers',async({page})=>{
   await page.route('**/data/country-health-performance.v1.json',route=>failed?route.fulfill({status:503,body:'Unavailable'}):route.fallback());
   await page.goto('/deep-dives/rosling/?lang=en&view=progress&country=USA');await expect(page.locator('.rosling-error')).toBeVisible();await expect(page.locator('#rosling-country')).toHaveValue('USA');failed=false;await page.locator('#rosling-retry').click();await ready(page);await expect(page.locator('.rosling-grid [data-chart-slug]')).toHaveCount(4);
 });
+
+test('guided stories, population blocks, time reveal and equal-mean lesson work',async({page})=>{
+  await fixtures(page);await page.goto('/deep-dives/rosling/?lang=en');await ready(page);
+  await expect(page.locator('.rosling-chapters button')).toHaveCount(3);
+  await page.locator('[data-chapter="0"]').click();await expect(page.locator('#rosling-year-value')).toHaveText('2015');
+  await expect(page.locator('.psd-plot-year')).toHaveText('2015');
+  await page.locator('.rosling-present').click();await expect(page.locator('body')).toHaveClass(/rosling-presenting/);await expect(page).toHaveURL(/present=1/);
+  await page.keyboard.press('Escape');await expect(page.locator('body')).not.toHaveClass(/rosling-presenting/);
+  await page.locator('[data-view=population]').click();await ready(page);
+  await expect(page.locator('#rosling-cohort-blocks .psd-plot-unit-block')).toHaveCount(6);
+  for(let i=0;i<3;i++)await page.locator('#rosling-block-next').click();
+  await expect(page.locator('#rosling-block-total')).toContainText('total 12');await expect(page.locator('#rosling-block-next')).toBeDisabled();
+  await page.locator('[data-chapter="2"]').click();await expect(page.locator('#rosling-cohort-blocks .psd-plot-unit-block')).toHaveCount(12);
+  await page.locator('#rosling-cohort-blocks [data-action=table]').click();await expect(page.locator('#rosling-cohort-blocks .psd-chart-table')).toContainText('4');
+  await page.locator('[data-view=services]').click();await ready(page);
+  await expect(page.locator('#rosling-time-result')).toBeHidden();await page.locator('#rosling-time-reveal').click();await expect(page.locator('#rosling-time-result')).toContainText('3.33');
+  await page.locator('#rosling-manual').evaluate(el=>{el.value='10';el.dispatchEvent(new Event('input',{bubbles:true}));});await expect(page.locator('#rosling-time-result strong')).toContainText('0 hours');
+  await page.locator('[data-view=distribution]').click();await ready(page);await page.locator('#rosling-share-switch').click();await expect(page.locator('#rosling-share-summary')).toContainText('Mean: 2');
+  await page.locator('#rosling-same-average [data-action=table]').click();await expect(page.locator('#rosling-same-average .psd-chart-table')).toContainText('0.5');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)).toBe(false);
+});

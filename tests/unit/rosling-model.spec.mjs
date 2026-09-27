@@ -35,3 +35,18 @@ test('spatial chart tables preserve positive sex counts and null axes',()=>{
   const scatter=plots.model({type:'scatter',rows:[{label:'Missing',x:null,y:80}],fields:[{key:'x'},{key:'y'}]});
   assert.deepEqual(scatter.rows[0].values,[null,80]);
 });
+
+test('fictional block generations preserve four entering units and show momentum',()=>{
+  const totals=Array.from({length:4},(_,i)=>model.generations(i).reduce((a,r)=>a+r.blocks,0));
+  assert.deepEqual(totals,[6,8,10,12]);
+  for(let i=1;i<4;i++){
+    const now=model.generations(i),before=model.generations(i-1);
+    assert.equal(now[0].blocks,4);assert.equal(now[1].blocks,before[0].blocks);assert.equal(now[2].blocks,before[1].blocks);
+    assert.ok(now.every(r=>r.scenario));
+  }
+});
+test('washing-machine scenario measures active time, never negative savings',()=>{
+  assert.equal(model.timeFreed(60,10,4),10/3);
+  assert.equal(model.timeFreed(10,60,4),0);
+  assert.equal(model.timeFreed(60,10,0),0);
+});

@@ -128,7 +128,7 @@
           const w = spec.type === 'stacked' ? barWidth : barWidth / fields.length;
           const bx = x(i) - barWidth / 2 + (spec.type === 'stacked' ? 0 : f * w);
           if(spec.type==='column' && finite(spec.unitStep) && spec.unitStep>0 && value>=0 && Number.isInteger(value/spec.unitStep) && value/spec.unitStep<=100){
-            return Array.from({length:value/spec.unitStep},(_,j)=>`<rect class="psd-plot-unit-block" x="${bx}" y="${y((j+1)*spec.unitStep)+2}" width="${w}" height="${Math.max(1,y(j*spec.unitStep)-y((j+1)*spec.unitStep)-4)}" fill="${escape(spec.rowColor?.(row.raw,field) || field.color)}"/>`).join('');
+            return Array.from({length:value/spec.unitStep},(_,j)=>`<rect class="psd-plot-unit-block" x="${bx}" y="${y((j+1)*spec.unitStep)+2}" width="${w}" height="${Math.max(1,y(j*spec.unitStep)-y((j+1)*spec.unitStep)-4)}" fill="${escape(field.color)}"/>`).join('');
           }
           return `<rect x="${bx}" y="${Math.min(y(a), y(b))}" width="${w}" height="${Math.abs(y(a) - y(b))}" fill="${escape(field.color)}"/>`;
         }).join('');
