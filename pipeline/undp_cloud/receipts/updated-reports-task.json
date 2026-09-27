@@ -6,7 +6,7 @@
   "checkpoint_minutes_from_original_source_expansion": 83,
   "expanded_scope_checkpoint_minutes": 45,
   "extension_basis": "User OK then load all this data fully and recreate updated reports; added 45-minute structural checkpoint to elapsed source intake without resetting original clock",
-  "failed_cloud_verification_attempts": 2,
+  "failed_cloud_verification_attempts": 3,
   "superseded_builds": [
     {
       "id": "5dc392de-1b7f-48d2-913f-99ca35774c51",
@@ -68,22 +68,37 @@
       "group": "ai",
       "id": "fa0e0af3-297b-4c5d-b5d3-c0a77bddeac9",
       "accepted_source_records": 549975
+    },
+    {
+      "group": "inequality/WID shard0 initial",
+      "id": "ab7fee89-7d27-4911-936d-63167df05e80",
+      "accepted_source_records": 24654,
+      "scope": "Non-WID records only; all65 selected WID sources unavailable; no WID coverage claim."
     }
   ],
   "website_release_block": "Mandatory unchanged pre-push data integrity inputs require approximately 281MB local restoration. Bulk restoration is not authorized under CLOUD_DATA.md. Narrow existing-cloud-check hook correction requested asynchronously.",
-  "checkpoint_status": "STOP_NEW_BUILDS_AT_SECOND_FAILURE; focused source-contract reproduction and correction underway",
+  "checkpoint_status": "STOP_NEW_BUILDS_AFTER_THIRD_TERMINAL_FAILURE; explicit retry approval pending; original143-minute deadline preserved",
   "failed_source_builds": [
     {
       "id": "a20f0ab0-dd8b-4b05-af8a-92f0c1266327",
       "group": "brfss",
       "reason": "All four CDC requests returned403; no records or warehouse publication",
       "finished_at": "2026-09-26T23:47:41.809235Z"
+    },
+    {
+      "id": "e2063f35-3eea-46e5-b9d5-e3d39912a5ae",
+      "group": "inequality/WID shard1 initial",
+      "reason": "No original-provider records available for publication; obsolete WID native variable filter excluded all selected source rows. Corrected code is not yet rerun.",
+      "finished_at": "2026-09-27T00:21:52.084544Z",
+      "cumulative_failed_verifications": 3
     }
   ],
   "provider_source_record_rows_current_groups": 15193157,
   "count_scope": "Heterogeneous provider records including metadata; not people or additive economic observations",
   "public_report_build": "No build created: automatic approval review rejected public GCS report bundle/pointer publication because exact destination/payload not explicitly authorized",
-  "approval_requests_pending": [],
+  "approval_requests_pending": [
+    "Root requested explicit corrected private report/WID retry approval at00:21UTC; no response relayed yet."
+  ],
   "unsubmitted_source_groups": [
     "inequality/WID four shards",
     "BRFSS historical32additionalarchive plan"
@@ -143,5 +158,11 @@
       "finished_at": "2026-09-27T00:14:27.346467Z",
       "cumulative_failed_verifications": 2
     }
-  ]
+  ],
+  "report_focused_corrections": {
+    "observed_hdro_panels": "83da8d8669: 2 focused tests; observed-only O.2/O.3/1.2, forecasts excluded",
+    "publisher": "5 focused tests including private-only zero-public-write; e6e46bc372 coverage clarification",
+    "epoch": "5316bd4f61: exact native row3093 excluded with raw values/rejection count; five focused tests and selftest passed",
+    "wid": "c3c3466295: verified native sptincj992 age992/popj;7 normalizer tests passed; source contracts corrected separately; old runs are not valid WID coverage"
+  }
 }
