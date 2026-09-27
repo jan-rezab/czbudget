@@ -305,6 +305,10 @@ def main():
      saved=json.loads((checkpoint if checkpoint.exists() else prior_checkpoint).download_as_bytes())
      if saved['source_id']!=sid or saved['url']!=entry['url'] or saved['format']!=entry['format']:raise ValueError('Resume raw identity mismatch')
      e.update(saved)
+     # Reuse immutable bytes, while the corrected current parser contract remains
+     # authoritative; older checkpoint fields describe an earlier filter/schema.
+     for key in ('filters','expected_header','max_member_bytes','parse_mode','code_verification'):
+      if key in entry:e[key]=entry[key]
      if not e['raw_uri'].startswith('gs://'+BUCKET+'/processing-runs/hdr-report-sources/'):raise ValueError('Untrusted resume raw destination')
      if not checkpoint.exists():e['resumed_raw_from_run']=a.resume_run;upload(bucket,checkpoint.name,(dump(e)+'\n').encode())
      blob=bucket.blob(e['raw_uri'].split('/',3)[3],generation=int(e['generation']))
