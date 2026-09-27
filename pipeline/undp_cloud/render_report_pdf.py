@@ -113,12 +113,12 @@ def build_pdf(payload,output):
     add('Human development and AI: verified data report','Title')
     add('Czechia, global source context and separately identified survey evidence','Heading2')
     add('Report dataset release: '+payload['release_id'])
-    add('Generated public snapshot: '+payload['generated_at'])
+    add('Generated verified snapshot: '+payload['generated_at'])
     add('Source releases and source identifiers','Heading2')
     add(json.dumps(payload.get('source_releases',{}),ensure_ascii=False),'SmallSource')
     source_ids=sorted({s.get('source_id','unknown') for c in payload['charts'] for s in c.get('source_refs',[])})
     add(', '.join(source_ids),'SmallSource')
-    add('Values in the tables preserve the decimal tokens serialized in the verified public report JSON; no additional rounding is applied. These public numbers may have been normalized from source decimals. Full original source precision, metadata and source rows remain in the referenced source releases and available CSV exports. Plot tick labels are visual scales, not replacement observations.')
+    add('Values in the tables preserve the decimal tokens serialized in the verified report JSON; no additional rounding is applied. These report numbers may have been normalized from source decimals. Full original source precision, metadata and source rows remain in the referenced source releases and available CSV exports. Plot tick labels are visual scales, not replacement observations.')
     add('Only explicitly recorded null periods are restored from lossless missing-period ranges. Missing values remain in the exact tables and break plotted lines; unknown gaps are never filled or inferred. Original row dictionaries, survey weights, valid shares and row-level source metadata are retained in the separate chart_details download and original-row CSV audit. These details are not replaced by chart percentages.')
     add('Czechia panels use only CZE observations. Global/source-category context is labelled separately. The 21-country survey pool is never a Czechia or world-population estimate. Missing source definitions and original figure recreations remain in the coverage ledger.')
     add('Downloads from verified snapshot','Heading2')
@@ -150,7 +150,7 @@ def build_pdf(payload,output):
                 if not complete:continue
                 drawing=plot(complete,fieldgroup,c['chart_type'],c['id'])
                 if drawing:body.append(drawing)
-        add('Exact verified public values','Heading2')
+        add('Exact verified report values','Heading2')
         for start in range(0,len(fields),4):
             group=fields[start:start+4]
             header=[para('Period / category','SmallSource')]+[para(f['label'],'SmallSource') for f in group]
