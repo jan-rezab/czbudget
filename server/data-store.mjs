@@ -2,6 +2,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 
+import { PUBLIC_ENTITY_PATH, staticAssets } from './static-assets.mjs';
+
 const ROOT = path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html");
 const cache = new Map();
 
@@ -32,7 +34,11 @@ export class DataError extends Error {
   }
 }
 
-async function readJSON(relativePath, { useCache = true } = {}) {
+export async function readJSON(relativePath, { useCache = true } = {}) {
+  if (PUBLIC_ENTITY_PATH.test(`/${relativePath}`)) {
+    const published = await staticAssets.publishedEntityJSON(`/${relativePath}`);
+    if (published !== null) return published;
+  }
   if (useCache && cache.has(relativePath)) return cache.get(relativePath);
   const filePath = path.join(ROOT, relativePath);
   if (!filePath.startsWith(`${ROOT}${path.sep}`)) throw new DataError(400, "invalid_path", "Invalid data path.");

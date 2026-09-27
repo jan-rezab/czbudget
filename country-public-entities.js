@@ -6,7 +6,7 @@
     code: window.PSDCountryRoutes.codeFromLocation(),
     lang: document.documentElement.lang === "en" ? "en" : "cs",
     coverage: null, aggregates: null, manifest: null, shard: null,
-    query: "", perimeter: "", entityClass: "", sort: "name", page: 1, selected: null,
+    query: "", perimeter: "", entityClass: "", sort: "revenue", page: 1, selected: null,
     request: 0,
   };
   const C = {
@@ -112,7 +112,7 @@
   function summary() {
     const coverage = selectedCoverage(), manifest = selectedManifest();
     const sources = new Set([...(coverage.sources || []).map(item => item.source_id), ...selectedAggregates().map(item => item.source_id)]);
-    return `<div class="detail-heading"><div><span class="kicker">${t().kicker}</span><h2 id="country-public-entities-title">${t().title}</h2></div><p>${t().intro}</p></div><div class="pe-crawl"><span>${t().crawl}</span><b>23. 8. 2026 · 20:12:23 CEST</b><small>${t().methodology}: ${esc(state.coverage.comparison_warning)}</small></div><div class="insight-kpis pe-kpis"><article><span>${t().universe}</span><strong>${finite(referenceCount(state.code)) ? integer(referenceCount(state.code)) : "—"}</strong><small>${slug(coverage.comparison_perimeter)}</small></article><article><span>${t().stored}</span><strong>${integer(manifest.record_count)}</strong><small>${integer(manifest.represented_entity_count)} ${t().represented}</small></article><article><span>${t().finance}</span><strong>${integer(manifest.financial_record_count)}</strong><small>${manifest.record_count ? numeric(manifest.financial_record_count / manifest.record_count * 100, 1) : 0}% ${t().rows}</small></article><article><span>${t().sources}</span><strong>${integer(sources.size)}</strong><small>${statusFor(state.code)}</small></article></div>${coverageTable()}${sourceLayers()}${aggregates()}${diagnostics()}`;
+    return `<div class="detail-heading"><div><span class="kicker">${t().kicker}</span><h2 id="country-public-entities-title">${t().title}</h2></div><p>${t().intro}</p></div><div class="pe-crawl"><span>${t().crawl}</span><b>${esc(state.shard?.generated_at || state.coverage.generated_at || "—")}</b><small>${t().methodology}: ${esc(state.coverage.comparison_warning)}</small></div><div class="insight-kpis pe-kpis"><article><span>${t().universe}</span><strong>${finite(referenceCount(state.code)) ? integer(referenceCount(state.code)) : "—"}</strong><small>${slug(coverage.comparison_perimeter)}</small></article><article><span>${t().stored}</span><strong>${integer(manifest.record_count)}</strong><small>${integer(manifest.represented_entity_count)} ${t().represented}</small></article><article><span>${t().finance}</span><strong>${integer(manifest.financial_record_count)}</strong><small>${manifest.record_count ? numeric(manifest.financial_record_count / manifest.record_count * 100, 1) : 0}% ${t().rows}</small></article><article><span>${t().sources}</span><strong>${integer(sources.size)}</strong><small>${statusFor(state.code)}</small></article></div>${coverageTable()}${sourceLayers()}${aggregates()}${diagnostics()}`;
   }
 
   function matchingRecords() {
@@ -142,14 +142,28 @@
     const unit = row => [value(row,"monetary_unit"),value(row,"currency")].filter(Boolean).join(" ");
     return `<article class="pe-directory"><header><div><span>${t().directory}</span><p>${t().directoryCopy}</p></div><div><a href="/data/public-entity-directory/${state.code}.v1.json" download>${t().downloadJson} ↓</a><button type="button" data-download-csv>${t().downloadCsv} ↓</button></div></header><div class="pe-filters"><label><span>${t().search}</span><input type="search" data-pe-search value="${esc(state.query)}" placeholder="${t().search}"></label><label><span>${t().perimeter}</span><select data-pe-perimeter>${options("perimeter",t().allPerimeters)}</select></label><label><span>${state.lang === "en" ? "Entity type" : "Typ subjektu"}</span><select data-pe-class>${options("entity_class",t().allClasses)}</select></label><label><span>${state.lang === "en" ? "Sort" : "Řazení"}</span><select data-pe-sort><option value="name" ${state.sort === "name" ? "selected" : ""}>${t().sortName}</option><option value="revenue" ${state.sort === "revenue" ? "selected" : ""}>${t().sortRevenue}</option><option value="employees" ${state.sort === "employees" ? "selected" : ""}>${t().sortEmployees}</option></select></label></div><div class="pe-directory-meta"><b>${integer(records.length)} ${t().shown}</b><span>${integer(represented)} ${t().represented}</span><span>${state.page} / ${pages}</span></div><div class="pe-table-scroll"><table><thead><tr><th>${label("name")}</th><th>${label("entity_class")}</th><th>${label("controlling_authority")}</th><th>${label("revenue")}</th><th>${label("employees")}</th><th>${t().period}</th></tr></thead><tbody>${visible.map((record,index) => `<tr><td><button type="button" data-record="${(state.page-1)*100+index}"><b>${esc(value(record,"name"))}</b><small>${esc(value(record,"national_id") || value(record,"record_id"))}</small></button></td><td>${slug(value(record,"entity_class"))}</td><td>${esc(value(record,"controlling_authority") || "—")}</td><td>${finite(value(record,"revenue")) ? `${formatValue(value(record,"revenue"))} ${esc(unit(record))}` : "—"}</td><td>${finite(value(record,"employees")) ? integer(value(record,"employees")) : "—"}</td><td>${esc(value(record,"financial_period") || value(record,"period") || "—")}</td></tr>`).join("")}</tbody></table></div><div class="pe-pagination"><button type="button" data-page="${state.page-1}" ${state.page === 1 ? "disabled" : ""}>← ${t().previous}</button><span>${integer(records.length)} ${t().rows}</span><button type="button" data-page="${state.page+1}" ${state.page === pages ? "disabled" : ""}>${t().next} →</button></div><aside class="pe-inspector">${inspector()}</aside></article>`;
   }
+  function financialHistory(record) {
+    const history = value(record, "financial_history");
+    if (!Array.isArray(history) || !history.length) return "";
+    const en = state.lang === "en";
+    const columns = [
+      ["year", en ? "Year" : "Rok"], ["revenue", en ? "Revenue / turnover" : "Výnosy / obrat"],
+      ["fare_revenue", en ? "Fares" : "Jízdné"],
+      ["public_service_compensation", en ? "Public-service compensation" : "Kompenzace veřejné služby"],
+      ["operating_grants", en ? "Other operating grants" : "Ostatní provozní dotace"],
+      ["capital_grants", en ? "Capital grants" : "Investiční dotace"],
+      ["expenses", en ? "Expenses" : "Náklady"], ["net_result", en ? "Net result" : "Čistý výsledek"]
+    ];
+    return `<h4>${en ? "Financial history · CZK million" : "Historie hospodaření · mil. Kč"}</h4><p>${en ? "Compensation and operating grants may already be included in revenue; capital grants are separate. Missing values are not zero. Check the source definition before comparing operators." : "Kompenzace a provozní dotace mohou být již zahrnuty ve výnosech; investiční dotace jsou samostatné. Chybějící údaj není nula. Před porovnáním provozovatelů ověřte definici ve zdroji."}</p><div class="pe-table-scroll"><table><thead><tr>${columns.map(([,label]) => `<th>${label}</th>`).join("")}<th>${t().source}</th></tr></thead><tbody>${history.slice().sort((a,b) => b.year-a.year).map(row => `<tr>${columns.map(([key]) => `<td>${key === "year" ? esc(row.year) : finite(row[key]) ? numeric(row[key],3) : "—"}</td>`).join("")}<td>${Array.isArray(row.sources) ? row.sources.filter(source => /^https?:\/\//.test(source.url)).map(source => `<a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.label || source.metric || t().source)}${source.page ? ` · ${esc(source.page)}` : ""} ↗</a>`).join(" · ") : ""}<small>${esc(row.revenue_definition || "")} · ${esc(row.scope || "")}</small>${row.notes ? `<small>${esc(row.notes)}</small>` : ""}</td></tr>`).join("")}</tbody></table></div>`;
+  }
   function inspector() {
     if (!state.selected) return `<header><span>${t().details}</span></header><p>${t().choose}</p>`;
     const record=state.selected;
-    return `<header><div><span>${t().details}</span><h3>${esc(value(record,"name"))}</h3></div><button type="button" data-close-inspector>${t().close}</button></header><dl>${state.shard.fields.map(field => {
+    return `<header><div><span>${t().details}</span><h3>${esc(value(record,"name"))}</h3></div><button type="button" data-close-inspector>${t().close}</button></header><dl>${state.shard.fields.filter(field => field !== "financial_history").map(field => {
       const item=value(record,field); if (item === null || item === "") return "";
       const rendered=field === "source_url" ? `<a href="${esc(item)}" target="_blank" rel="noreferrer">${esc(item)} ↗</a>` : esc(item);
       return `<div><dt>${label(field)}</dt><dd>${rendered}</dd></div>`;
-    }).join("")}</dl>`;
+    }).join("")}</dl>${financialHistory(record)}`;
   }
   function bindDirectory() {
     root.querySelector("[data-pe-search]")?.addEventListener("input", event => {const cursor=event.target.selectionStart;state.query=event.target.value;state.page=1;renderDirectoryOnly();const input=root.querySelector("[data-pe-search]");input?.focus();input?.setSelectionRange(cursor,cursor)});

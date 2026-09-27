@@ -6,6 +6,7 @@ import {pipeline} from 'node:stream/promises';
 import {createGunzip} from 'node:zlib';
 
 export const ASSET_PATH = /^\/data\/(?:(?:isred|industrial-intelligence|czech-nku|contracts|czech-project-geography|industry|paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|municipal-benchmarks)\/|trade\/automotive-monthly\.v1\.json$|municipal-budget-codebook\.v1\.json$)/;
+export const PUBLIC_ENTITY_PATH = /^\/data\/(?:public-entity-directory\/(?:[A-Z]{3}|manifest)\.v1\.json|public-entity-(?:coverage|aggregates)\.v1\.json|cz-public-entities-2024\.json|cz-public-entity-history\.v1\.json)$/;
 const MAX_FILE = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT_BYTES = 48 * 1024 * 1024;
 const CACHE_BYTES = 16 * 1024 * 1024;
@@ -41,7 +42,7 @@ export class StaticAssets {
       // rather than rejecting the whole lock, which would fail every asset route.
       const files = {};
       for (const [url, file] of Object.entries(lock.files)) {
-        if (!ASSET_PATH.test(url)) continue;
+        if (!(ASSET_PATH.test(url) || PUBLIC_ENTITY_PATH.test(url))) continue;
         files[url] = file;
         const pack = lock.packs[file.pack];
         if (url.split('/').some(p => p.startsWith('.')) || !pack
@@ -90,6 +91,21 @@ export class StaticAssets {
       }
     })().finally(() => { this.loading = null; });
     return this.loading;
+  }
+
+  async publishedEntityJSON(url) {
+    if (!PUBLIC_ENTITY_PATH.test(url)) throw new AssetError(400, 'invalid_entity_asset_path');
+    let lock;
+    try { lock = await this.lock(); }
+    catch (error) {
+      // A local fixture needs no cloud configuration; remote failures fail closed.
+      if (this.lockPath && error.code === 'ENOENT') return null;
+      throw error;
+    }
+    const file = Object.hasOwn(lock.files, url) && lock.files[url];
+    if (!file) return null; // Consumer code lands before the first data release.
+    if (file.encoding) throw new AssetError(502, 'invalid_entity_asset_encoding');
+    return JSON.parse((await this.body(url, file, lock)).toString('utf8'));
   }
 
   async token() {

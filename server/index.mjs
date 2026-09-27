@@ -1,5 +1,6 @@
+import { readJSON as readEntityJSON } from './data-store.mjs';
 import http from "node:http";
-import { ASSET_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
+import { ASSET_PATH, PUBLIC_ENTITY_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
 import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
 import { createMiniReports, requireMiniAuthor } from './mini-reports.mjs';
 const miniReports = createMiniReports();
@@ -331,6 +332,13 @@ export async function handler(request, response) {
     return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
   }
   try {
+    if (PUBLIC_ENTITY_PATH.test(url.pathname)) {
+      if (!['GET', 'HEAD'].includes(request.method)) throw new DataError(405, 'method_not_allowed', 'Use GET or HEAD.');
+      const value = await readEntityJSON(url.pathname.slice(1));
+      response.setHeader('Cache-Control', 'public, max-age=60, must-revalidate');
+      if (request.method === 'HEAD') { response.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'}); return response.end(); }
+      return sendJSON(response, 200, value);
+    }
     if (ASSET_PATH.test(url.pathname)) return await staticAssets.serve(request, response, url.pathname);
     if (url.pathname === '/mini-reports' || url.pathname.startsWith('/mini-reports/') || url.pathname === '/api/mini-reports' || url.pathname.startsWith('/api/mini-reports/')) {
       response.setHeader('Cache-Control', 'no-store');
@@ -607,7 +615,7 @@ export async function handler(request, response) {
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
     if (response.headersSent) { response.destroy(error); return; }
-    if (ASSET_PATH.test(url.pathname)) {
+    if (ASSET_PATH.test(url.pathname) || PUBLIC_ENTITY_PATH.test(url.pathname) || error instanceof AssetError) {
       response.setHeader('Cache-Control', 'no-store');
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);

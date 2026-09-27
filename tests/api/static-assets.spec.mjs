@@ -211,3 +211,16 @@ test('a failed refresh keeps serving the last verified lock', async () => {
   assert.equal((await service.lock()).packs.isred.generation, '123456');
   assert.equal(calls, 2);
 });
+
+
+test('public-entity data refreshes from an atomic release, with absence-only legacy fallback', async () => {
+  const url = '/data/public-entity-directory/CZE.v1.json';
+  const service = store(async () => response());
+  assert.equal(await service.publishedEntityJSON(url), null);
+  service.manifest.files[url] = service.manifest.files[asset];
+  assert.deepEqual(await service.publishedEntityJSON(url), {value: 123});
+  await assert.rejects(service.publishedEntityJSON('/data/unrelated.json'), {status: 400});
+  service.cache.clear();
+  service.fetch = async () => response(Buffer.alloc(raw.length));
+  await assert.rejects(service.publishedEntityJSON(url), {code: 'asset_checksum_failed'});
+});
