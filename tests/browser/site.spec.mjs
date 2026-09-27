@@ -3,6 +3,8 @@ import AxeBuilder from "@axe-core/playwright";
 import { mockPublishedCoverage } from "../fixtures/published-coverage.mjs";
 import { readFile, readdir } from "node:fs/promises";
 import { formatCount, loadExpectedCounts } from "../../scripts/lib/expected-counts.mjs";
+import { readDataJSON } from "../../scripts/lib/static-asset-source.mjs";
+import { fileURLToPath } from "node:url";
 
 // Published totals are measured from the artifacts the site serves, never typed
 // out here. Hard-coding them is why this suite spent releases failing against a
@@ -16,7 +18,8 @@ test.describe.configure({ mode: 'parallel' });
 // as in the focused coverage tests; the browser server has no warehouse credentials.
 test.beforeEach(async ({ page }) => { await mockPublishedCoverage(page); });
 const counts = await loadExpectedCounts();
-const readJson = async (relative) => JSON.parse(await readFile(new URL(`../../${relative}`, import.meta.url), "utf8"));
+// Checkout first; datasets served from the static-asset packs are read from the lock.
+const readJson = (relative) => readDataJSON(relative, { root: fileURLToPath(new URL("../..", import.meta.url)) });
 
 // The homepage shows the twenty most populous profiles (homepage-v2.js cards(),
 // commit d884c3fb4c); derive that list from the benchmark the page fetches so the
@@ -813,7 +816,8 @@ test("municipal profiles draw interactive history and preserve genuine coverage 
 });
 
 test("municipal history tables preserve source amounts and annual currency conversion", async ({ page }) => {
-  const history = await readJson("data/municipal-history/00261173.json");
+  // The history fan-out is not in the checkout; read it from the snapshot release the page uses.
+  const history = await (await page.request.get("/data/municipal-history/00261173.json")).json();
   const fx = await readJson("data/municipal-fx-rates.v1.json");
   const latest = history.series.at(-1);
   const money = (value, currency) => new Intl.NumberFormat("en-GB", {style:"currency",currency,maximumFractionDigits:0}).format(value);

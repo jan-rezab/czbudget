@@ -1,15 +1,18 @@
 """Financial reconciliation and provenance checks for the served EU programmes."""
 import json
+import sys
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts" / "lib"))
+from static_asset_source import read_data_json  # noqa: E402  checkout first, else the published pack
 
 
 class EUProgrammeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.data = json.loads((ROOT / "data/eu-budget-flows.v1.json").read_text())
+        cls.data = read_data_json("data/eu-budget-flows.v1.json")
 
     def test_all_countries_have_reconciled_programmes_for_2021_2024(self):
         self.assertEqual(len(self.data["countries"]), 27)

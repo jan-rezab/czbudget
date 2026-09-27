@@ -3,6 +3,27 @@ import { readFileSync } from "node:fs";
 
 const catalogue = JSON.parse(readFileSync(new URL("../../deep-dives/reports.json", import.meta.url), "utf8"));
 
+for (const lang of ["en", "cs"]) test(`${lang} report cards show their own lightweight chart previews`, async ({ page }) => {
+  await page.goto(`/deep-dives/?lang=${lang}`, { waitUntil: "networkidle" });
+  for (const report of catalogue.reports) {
+    const card = page.locator(`#${report.slug}`);
+    if (report.preview.unavailable) {
+      await expect(card.locator('.preview-unavailable')).toHaveText(catalogue.chrome.previewUnavailable[lang]);
+      continue;
+    }
+    const image = card.locator('img[data-report-preview]');
+    await expect(image).toHaveAttribute('src', new RegExp(report.preview[lang].replaceAll('.', '\\.')));
+    await expect(image).toHaveAttribute('loading', 'lazy');
+    await expect(image).toHaveAttribute('alt', `${report.title[lang]} — ${catalogue.chrome.headlinePreview[lang]}`);
+  }
+  const education = page.locator('#education img');
+  await education.scrollIntoViewIfNeeded();
+  await expect.poll(() => education.evaluate(image => image.complete && image.naturalWidth > 0)).toBe(true);
+  await page.locator('#education').click();
+  await expect(page).toHaveURL(new RegExp(`/deep-dives/education/\\?lang=${lang}$`));
+});
+
+
 test("Reports opens generated topic submenus and links to the complete catalogue", async ({ page }) => {
   await page.goto("/about.html?lang=en", { waitUntil: "networkidle" });
   const reports = page.locator('psd-site-header [data-global-nav="deep-dives"]');

@@ -4,6 +4,8 @@ import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
+import { ASSET_PATH, StaticAssets } from "../server/static-assets.mjs";
+import { localAssetOptions, serverAccessToken } from "./lib/static-asset-source.mjs";
 
 const root = resolve(process.cwd());
 const port = Number(process.env.PORT || 4173);
@@ -11,6 +13,9 @@ const nationalBudgetSlugs = new Set([
   "poland", "germany", "united-kingdom", "france", "united-states", "switzerland",
   "sweden", "denmark", "finland", "spain", "netherlands", "greece",
 ]);
+// Like nginx in production: a file in the checkout wins; datasets that left the
+// repository are served from the published static-asset packs (in memory only).
+const assets = new StaticAssets(localAssetOptions(process.env, { tokenProvider: serverAccessToken }));
 const mimeTypes = {
   ".mjs": "application/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
@@ -39,6 +44,17 @@ createServer(async (request, response) => {
     if (details?.isDirectory()) {
       filePath = join(filePath, "index.html");
       details = await fileStat(filePath);
+    }
+    if (!details?.isFile() && ASSET_PATH.test(`/${relative.split("\\").join("/")}`)) {
+      try {
+        await assets.serve(request, response, url.pathname);
+      } catch (error) {
+        if (!response.headersSent) {
+          response.writeHead(error.status || 502, { "Content-Type": "application/json; charset=utf-8" });
+          response.end(JSON.stringify({ error: { code: error.code || "asset_unavailable" } }));
+        } else response.destroy(error);
+      }
+      return;
     }
     if (!details?.isFile()) {
       response.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });

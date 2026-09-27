@@ -1,0 +1,37 @@
+/* Shared chart sections only: never page layout, navigation or footer. */
+.psd-shared-plot{position:relative;min-width:0;background:var(--chart-paper,#faf7ef);color:var(--chart-ink,#171918);border:1px solid var(--chart-grid,#d2ccc1);padding:12px 4px 4px;font:14px Arial,Helvetica,sans-serif;font-variant-numeric:tabular-nums}
+.psd-shared-plot svg{display:block;width:100%;min-width:0!important;height:auto;overflow:visible}
+.psd-shared-plot svg text{fill:var(--chart-ink,#171918);font:14px Arial,Helvetica,sans-serif}
+.psd-plot-grid line{stroke:var(--chart-grid,#d2ccc1);stroke-width:1;vector-effect:non-scaling-stroke}
+.psd-plot-line{fill:none;stroke-width:2.2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.psd-plot-reference{stroke:var(--chart-neutral,#8b8d83);stroke-width:1;stroke-dasharray:5 4;vector-effect:non-scaling-stroke}.psd-shared-plot svg .psd-plot-reference-label{font-size:11px;fill:#626359}
+.psd-plot-selected{stroke:#c93237;stroke-width:1.5;stroke-dasharray:3 3;vector-effect:non-scaling-stroke}.psd-shared-plot svg .psd-plot-selected-label{font-size:11px;fill:#c93237;font-weight:700}
+.psd-plot-hit{fill:transparent;cursor:crosshair;outline:none}
+.psd-plot-hit:focus-visible{stroke:var(--chart-ink,#171918);stroke-width:2;stroke-dasharray:3 3}
+.psd-plot-guide{stroke:var(--chart-neutral,#8b8d83);stroke-width:1;stroke-dasharray:4 4;pointer-events:none}
+.psd-plot-guide[hidden],.psd-plot-tooltip[hidden]{display:none!important}
+.psd-plot-tooltip{position:absolute;z-index:5;width:max-content;max-width:calc(100% - 8px);box-sizing:border-box;padding:12px 14px;background:#faf7ef;color:#171918;border:1px solid #8b8d83;box-shadow:0 8px 24px #17191820;border-radius:3px;pointer-events:none;font:12px/1.5 Arial,Helvetica,sans-serif}
+.psd-plot-tooltip>strong{display:block;border-bottom:1px solid #d2ccc1;padding-bottom:5px;margin-bottom:6px;font-size:14px}
+.psd-plot-tooltip>span{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:8px;align-items:center;margin:4px 0}
+.psd-plot-tooltip i{display:block;width:7px;height:7px}
+.psd-plot-tooltip b{text-align:right;max-width:180px;overflow-wrap:anywhere}.psd-plot-tooltip small{display:block;font-weight:400;color:#57594f}
+.psd-chart-empty{padding:12px;font-size:14px}
+@media(max-width:600px){.psd-shared-plot{padding:6px 0}.psd-plot-tooltip{font-size:12px;padding:8px}.psd-shared-plot svg{min-height:190px}.psd-shared-plot svg text{font-size:12px}}
+
+/* Shared geographic relationships: independent observed edges, not a Sankey. */
+.psd-route-land path{fill:#242724;stroke:#8b8d83;stroke-width:.45}.psd-route-land .is-involved{fill:#424638;stroke:#a8b63f}.psd-route-edges path{fill:none}.psd-route-hit{stroke:transparent;stroke-width:44;vector-effect:non-scaling-stroke;pointer-events:stroke}.psd-route-line{pointer-events:none;stroke-linecap:round;stroke-dasharray:9 4}.psd-route-line.is-missing{stroke-dasharray:2 6;opacity:.35}.psd-route-nodes circle{fill:#faf7ef}.psd-route-nodes text{font:700 12px Arial;fill:#faf7ef;paint-order:stroke;stroke:#171918;stroke-width:4px;stroke-linejoin:round}.psd-route-edges g:focus{outline:none}.psd-route-edges g:focus .psd-route-line{stroke:#faf7ef!important}.psd-route-detail{min-height:2.5em;font-size:13px}.routes-playing .psd-route-line.has-value{animation:psd-route-flow 1.5s linear infinite}@keyframes psd-route-flow{to{stroke-dashoffset:-26}}@media(prefers-reduced-motion:reduce){.routes-playing .psd-route-line.has-value{animation:none}}
+.psd-plot-trail{fill:none;stroke-width:2;opacity:.55}.psd-plot-bubble{opacity:.75;stroke:#171918;stroke-width:1}.psd-plot-direct{font-weight:700;fill:#171918;font-size:12px}.psd-shared-plot[data-chart-component="scatter"] .psd-plot-tooltip,.psd-shared-plot[data-chart-component="pyramid"] .psd-plot-tooltip{white-space:normal;max-width:min(340px,85%)}
+/* Optional range navigation and plot brushing, shared by every explorer. */
+.psd-shared-plot[data-zoomable]{touch-action:pan-y;user-select:none}.psd-shared-plot[data-brushing] .psd-plot-hit{cursor:crosshair}
+.psd-plot-brush{fill:#a8b63f25;stroke:#171918;stroke-width:1;stroke-dasharray:4 3;pointer-events:none;vector-effect:non-scaling-stroke}.psd-plot-brush[hidden]{display:none}
+.psd-range{padding:0 9px;touch-action:pan-y;user-select:none}.psd-range-track{position:relative;height:50px;background:#f1ede3;border-radius:5px}.psd-range-track>svg{display:block;width:100%;height:50px;overflow:hidden;opacity:.7;pointer-events:none}.psd-range-track path{stroke-width:1.2}.psd-range-window{position:absolute;top:0;bottom:0;cursor:grab;background:#a8b63f0c;border-block:1px solid #8b8d83;border-radius:3px}.psd-range[data-dragging] .psd-range-window{cursor:grabbing}.psd-range-shade{position:absolute;top:0;bottom:0;background:#faf7efaa;pointer-events:none}.psd-range-before{left:0}.psd-range-after{right:0}.psd-range-handle{position:absolute;top:0;height:50px;width:18px;padding:0;transform:translateX(-50%);border:1px solid #8b8d83;background:#faf7ef;border-radius:4px;cursor:ew-resize;box-shadow:0 1px 3px #17191810}.psd-range-handle:after{content:'';position:absolute;left:6px;top:16px;height:16px;width:3px;border-inline:1px solid #8b8d83}.psd-range-handle:hover,.psd-range-handle:focus-visible{border-color:#171918;background:#f1ede3}.psd-range-extents{display:flex;justify-content:space-between;gap:10px;margin-top:6px;color:#57594f;font:11px Arial,Helvetica,sans-serif;font-variant-numeric:tabular-nums}
+@media(max-width:600px){.psd-range-handle{width:26px}.psd-range-handle:after{left:10px}}
+
+.psd-plot-year{font:700 140px Arial,sans-serif;fill:#171918;opacity:.065;pointer-events:none}.psd-plot-unit-block{stroke:#63711c;stroke-width:1}
+
+/* Reserve inspection space outside the plot so pointer/keyboard/touch values never obscure the data. */
+.psd-plot-inspection{min-height:calc(44px + var(--inspection-rows,1)*32px);margin-top:10px}
+.psd-plot-inspection .psd-plot-tooltip{position:static;width:100%;max-width:100%;box-shadow:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
+.psd-plot-inspection .psd-plot-tooltip>strong{grid-column:1/-1}
+.psd-plot-inspection .psd-plot-tooltip>span{min-width:0}
+@media(max-width:600px){.psd-plot-inspection{min-height:calc(44px + var(--inspection-fields,1)*32px)}.psd-plot-inspection .psd-plot-tooltip{grid-template-columns:minmax(0,1fr)}}

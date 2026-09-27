@@ -47,6 +47,22 @@ _DATA_DIR = next((path for path in _CANDIDATES if path.is_dir()), _CANDIDATES[0]
 HISTORY = _DATA_DIR / "large-city-history.v1.json"
 MUNICIPAL_HISTORY_DIR = _DATA_DIR / "municipal-history"
 
+
+def municipal_history_dir() -> Path:
+    """The per-ICO history files are not tracked in Git: use MUNICIPAL_HISTORY_ROOT, the
+    checkout (older commits) or scripts/hydrate-municipal-fanout.py's default destination.
+    Refuse to run without them rather than write a large-city history that is silently
+    missing every enriched field."""
+    explicit = os.environ.get("MUNICIPAL_HISTORY_ROOT")
+    candidates = [Path(explicit)] if explicit else [
+        MUNICIPAL_HISTORY_DIR, _DATA_DIR.parent / ".municipal-fanout" / "data" / "municipal-history"]
+    for candidate in candidates:
+        if candidate.is_dir() and any(candidate.glob("[0-9]" * 8 + ".json")):
+            return candidate
+    raise SystemExit("data/municipal-history/<ICO>.json is not in this checkout; run "
+                     "`python3 scripts/hydrate-municipal-fanout.py --input municipal-history --from git` "
+                     "or set MUNICIPAL_HISTORY_ROOT")
+
 # Fields to bring in from data/municipal-history/<ICO>.json, verbatim, never
 # recomputed. `expense_per_capita` is explicitly allowed to be carried across
 # as-is per the task's field-integrity rule.
@@ -87,9 +103,10 @@ EXTRA_DEFINITIONS = {
 
 def enrich(history: dict) -> dict:
     """Merge extra fields from data/municipal-history/<ICO>.json into `history` in place."""
+    history_dir = municipal_history_dir()
     for city in history["cities"]:
         ico = city["national_id"]
-        municipal_path = MUNICIPAL_HISTORY_DIR / f"{ico}.json"
+        municipal_path = history_dir / f"{ico}.json"
         if not municipal_path.is_file():
             continue
         municipal = json.loads(municipal_path.read_text(encoding="utf-8"))

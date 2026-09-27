@@ -1,5 +1,6 @@
+import { readJSON as readEntityJSON } from './data-store.mjs';
 import http from "node:http";
-import { ASSET_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
+import { ASSET_PATH, PUBLIC_ENTITY_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
 import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
 import { createMiniReports, requireMiniAuthor } from './mini-reports.mjs';
 const miniReports = createMiniReports();
@@ -25,12 +26,14 @@ import { RussiaTradeStore, pageRussiaAggregate } from './russia-trade-store.mjs'
 import { TradeError, TradeStore } from "./trade-store.mjs";
 import { ProcessLogError, processLogStore } from "./process-log-store.mjs";
 import {PrahaContractsError,prahaContractsStore} from './praha-contracts.mjs';
+import {RevenueError, revenueStore} from "./revenue-store.mjs";
 import { JobMarketError, jobMarketStore } from "./job-market-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
 const MAX_REQUEST_URL_BYTES = integerSetting("API_MAX_REQUEST_URL_BYTES", 4 * 1024, 1024, 32 * 1024);
 const MAX_RESPONSE_BYTES = integerSetting("API_MAX_RESPONSE_BYTES", 2 * 1024 * 1024, 64 * 1024, 32 * 1024 * 1024);
+const MAX_REGISTERED_ENTITY_RESPONSE_BYTES = 32 * 1024 * 1024;
 const MAX_IN_FLIGHT = integerSetting("API_MAX_IN_FLIGHT", 32, 1, 1_000);
 const API_IP_MINUTE_LIMIT = integerSetting("API_IP_MINUTE_LIMIT", 300, 1, 100_000);
 const API_USER_MINUTE_LIMIT = integerSetting("API_USER_MINUTE_LIMIT", 300, 1, 100_000);
@@ -62,9 +65,12 @@ function requestID(request) {
   return typeof incoming === "string" && /^[A-Za-z0-9._:-]{1,100}$/.test(incoming) ? incoming : crypto.randomUUID();
 }
 
-export function sendJSON(response, status, payload, extraHeaders = {}) {
+export function sendJSON(response, status, payload, extraHeaders = {}, responsePath = "") {
   let body = JSON.stringify(payload);
-  if (status < 400 && Buffer.byteLength(body) > MAX_RESPONSE_BYTES) {
+  // Registered immutable dataset downloads have their own bounded file contract.
+  // Paginated API calls keep the existing API safety limit.
+  const byteLimit = PUBLIC_ENTITY_PATH.test(responsePath) ? MAX_REGISTERED_ENTITY_RESPONSE_BYTES : MAX_RESPONSE_BYTES;
+  if (status < 400 && Buffer.byteLength(body) > byteLimit) {
     status = 500;
     body = JSON.stringify({
       error: {
@@ -204,10 +210,12 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/process-log/deployments") return sendJSON(response, 200, { data: await processLogStore.deployments() }, { "cache-control": "public, max-age=60" });
   if (pathname === "/api/v1/process-log/data-runs") return sendJSON(response, 200, { data: await processLogStore.dataRuns() }, { "cache-control": "public, max-age=60" });
   if (pathname === "/api/v1/praha/related-contracts") return sendJSON(response, 200, await prahaContractsStore.related({payer:url.searchParams.get("payer"),supplier:url.searchParams.get("supplier"),date:url.searchParams.get("date")||"",term:url.searchParams.get("term")||""}));
+  if (pathname === "/api/v1/revenue/current") return sendJSON(response, 200, await revenueStore.current());
   if (pathname === "/api/v1/job-market/2024") return sendJSON(response, 200, await jobMarketStore.current());
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
   if ((match = pathname.match(/^\/api\/v1\/countries\/([^/]+)$/))) return sendJSON(response, 200, { data: await countryProfile(match[1]) });
+  if (pathname === "/api/v1/trade/russia-bilateral") return sendJSON(response, 200, {data:pageRussiaAggregate(await russiaTrade.bilateral(url.searchParams.get("country")),url.searchParams.get("page") || "0")});
   if (pathname === "/api/v1/trade/russia-aggregate") return sendJSON(response, 200, { data: pageRussiaAggregate(await russiaTrade.aggregate(url.searchParams.get("frequency"), url.searchParams.get("product")),url.searchParams.get("page") || "0") });
   if (pathname === "/api/v1/trade/russia-routes") return sendJSON(response, 200, { data: await russiaTrade.routes(url.searchParams.get("exporter"), url.searchParams.get("via"), url.searchParams.get("product")) });
   if (pathname === "/api/v1/trade/explorer") return sendJSON(response, 200, { data: await trade.explorer(url.searchParams.get("countries")) }, { "cache-control": "public, max-age=900" });
@@ -332,6 +340,13 @@ export async function handler(request, response) {
     return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
   }
   try {
+    if (PUBLIC_ENTITY_PATH.test(url.pathname)) {
+      if (!['GET', 'HEAD'].includes(request.method)) throw new DataError(405, 'method_not_allowed', 'Use GET or HEAD.');
+      const value = await readEntityJSON(url.pathname.slice(1));
+      response.setHeader('Cache-Control', 'public, max-age=60, must-revalidate');
+      if (request.method === 'HEAD') { response.writeHead(200, {'Content-Type': 'application/json; charset=utf-8'}); return response.end(); }
+      return sendJSON(response, 200, value, {}, url.pathname);
+    }
     if (ASSET_PATH.test(url.pathname)) return await staticAssets.serve(request, response, url.pathname);
     if (url.pathname === '/mini-reports' || url.pathname.startsWith('/mini-reports/') || url.pathname === '/api/mini-reports' || url.pathname.startsWith('/api/mini-reports/')) {
       response.setHeader('Cache-Control', 'no-store');
@@ -608,12 +623,12 @@ export async function handler(request, response) {
     throw new DataError(404, "not_found", "Resource does not exist.");
   } catch (error) {
     if (response.headersSent) { response.destroy(error); return; }
-    if (ASSET_PATH.test(url.pathname)) {
+    if (ASSET_PATH.test(url.pathname) || PUBLIC_ENTITY_PATH.test(url.pathname) || error instanceof AssetError) {
       response.setHeader('Cache-Control', 'no-store');
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);
     }
-    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof PrahaContractsError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof RevenueError || error instanceof PrahaContractsError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

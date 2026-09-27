@@ -24,13 +24,18 @@ import { readFile, readdir, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { gunzipSync } from "node:zlib";
 import path from "node:path";
+import { retainUnavailableHistory } from './run-log-history.mjs';
+import { readDataFile, readDataJSON } from './lib/static-asset-source.mjs';
 
 const ROOT = process.env.SITE_ROOT || process.cwd();
 const OUT = "data/registry/run-log.v1.json";
 const write = process.argv.includes("--write");
 
 const readJSON = async (p) => JSON.parse(await readFile(path.join(ROOT, p), "utf8"));
-const tryJSON = async (p) => { try { return await readJSON(p); } catch { return null; } };
+// Checkout first, then the published static-asset packs for datasets that left the repository.
+const tryJSON = async (p) => { try { return await readDataJSON(p, { root: ROOT }); } catch { return null; } };
+const unavailableInputs = [];
+const previousLedger = await tryJSON(OUT);
 
 /* ---------------------------------------------------------------- sections */
 /* An artifact is reachable from a page either directly or via a script the page includes. Only
@@ -139,10 +144,16 @@ async function countryRoutes() {
 async function provenanceByArtifact() {
   const registry = await tryJSON("data/registry/source-provenance.v1.json");
   const byArtifact = new Map();
-  if (!registry) return byArtifact;
+  if (!registry) {
+    unavailableInputs.push("data/registry/source-provenance.v1.json");
+    return byArtifact;
+  }
   for (const shard of registry.shards || []) {
-    const raw = await readFile(path.join(ROOT, shard.path.replace(/^\//, ""))).catch(() => null);
-    if (!raw) continue;
+    const raw = await readDataFile(shard.path.replace(/^\//, ""), { root: ROOT }).catch(() => null);
+    if (!raw) {
+      unavailableInputs.push(shard.path);
+      continue;
+    }
     for (const record of JSON.parse(gunzipSync(raw).toString("utf8")).records || []) {
       const when = record.retrieved_at || record.extracted;
       if (!when) continue;
@@ -172,7 +183,7 @@ async function countryOf(artifact) {
 
 /* --------------------------------------------------------------------- run */
 
-const runs = [];
+let runs = [];
 const { index: sections, prefixes } = await buildSectionIndex();
 /** The routes that read this artifact, by name or by the directory it sits in. */
 const routesFor = (artifacts) => {
@@ -188,6 +199,7 @@ const routesFor = (artifacts) => {
 
 // 1. Warehouse source editions. These carry a country and a load date.
 const vintages = await tryJSON("data/registry/source-vintages.v1.json");
+if (!vintages) unavailableInputs.push("data/registry/source-vintages.v1.json");
 const byCountry = await countryRoutes();
 for (const source of vintages?.sources || []) {
   const route = byCountry.get(source.country_code);
@@ -324,6 +336,8 @@ for (const run of runs) {
   };
 }
 
+const history = retainUnavailableHistory(runs, previousLedger, unavailableInputs);
+runs = history.runs;
 runs.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : a.run_id < b.run_id ? -1 : 1));
 
 /* ------------------------------------------------------------------ facets */
@@ -342,6 +356,12 @@ const payload = {
   schema_version: "2.0.0",
   registry: "run-log",
   generated_at: new Date().toISOString(),
+  input_status: {
+    status: unavailableInputs.length ? "historical_ledger_preserved" : "complete",
+    unavailable_inputs: unavailableInputs,
+    retained_historical_events: history.retained,
+    previous_content_hash: unavailableInputs.length ? previousLedger.content_hash : null,
+  },
   note:
     "Ingestion and data-release events reconstructed from committed evidence. Deployment events " +
     "are append-only Cloud Build receipts returned by the live API. Missing checker, approver, PR " +

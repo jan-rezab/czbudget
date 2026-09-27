@@ -5,7 +5,7 @@ import {spawn} from 'node:child_process';
 import {setTimeout as delay} from 'node:timers/promises';
 
 const root = '/usr/share/nginx/html';
-for (const name of ['.asset-release', '.public-serving-build', '.cityvizor-serving', 'scripts', 'pipeline', 'tests', 'data/.municipal-headlines-query.json', 'data/isred', 'data/industrial-intelligence', 'data/czech-nku', 'data/contracts', 'data/czech-project-geography', 'data/industry']) {
+for (const name of ['.asset-release', '.public-serving-build', '.cityvizor-serving', 'scripts', 'pipeline', 'tests', 'data/.municipal-headlines-query.json', 'data/isred', 'data/industrial-intelligence', 'data/czech-nku', 'data/contracts', 'data/czech-project-geography', 'data/industry', 'data/countries', 'data/public-entities', 'data/economy', 'data/international-municipalities', 'data/czech-sfdi-tables', 'data/monitor-grants', 'data/registry/source-provenance', 'data/paq', 'data/international-municipalities.v1.json', 'data/municipal-snapshot.v1.json', 'data/municipal-history-directory.v1.json', 'data/cze-medicine-reimbursements.v1.json', 'data/cze-school-funding-2026.v1.json', 'data/czech-consolidated-accounts.v1.json', 'data/czech-sfdi-financing.v1.json', 'data/pensions-today.v1.json', 'data/methodology-sources.v1.json', 'data/eu-budget-flows.v1.json', 'data/sovereign-benchmark-slim.v1.json']) {
   await assert.rejects(fs.stat(`${root}/${name}`), {code: 'ENOENT'});
 }
 const lockPath = process.env.DATA_ASSET_LOCK || '/app/server/data-assets-lock.json';

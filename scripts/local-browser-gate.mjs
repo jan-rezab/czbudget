@@ -4,7 +4,9 @@
 // same component server the production build uses. About twenty seconds locally,
 // against an eight-to-eighteen-minute cloud round trip when a spec fails there.
 // A component lane runs its selected specs; a full lane runs every component spec
-// (the data-backed specs still run in the production build).
+// (the data-backed specs still run in the production build). One local retry absorbs
+// rare timing flakes under a busy laptop; a real breakage fails both attempts, and the
+// production build still runs every spec with zero retries.
 import { existsSync, readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { groups, selectVerification } from './verification-plan.mjs';
@@ -23,6 +25,6 @@ const selected = plan ? selectVerification(plan.files) : null;
 const every = [...new Set([...Object.values(groups).flat(), ...registry.consumers.flatMap((consumer) => consumer.tests)])];
 const specs = (selected?.lane === 'component' ? selected.specs : every).filter(existsSync);
 const started = Date.now();
-const result = spawnSync('npx', ['playwright', 'test', ...specs, '--config=playwright.ui.config.mjs', '--workers=4', '--retries=0', '--reporter=dot', '--output=test-results/local-gate'], { stdio: 'inherit' });
+const result = spawnSync('npx', ['playwright', 'test', ...specs, '--config=playwright.ui.config.mjs', '--workers=4', '--retries=1', '--reporter=dot', '--output=test-results/local-gate'], { stdio: 'inherit' });
 console.log(`local browser gate: ${specs.length} spec file(s) in ${Math.round((Date.now() - started) / 1000)} s`);
 process.exit(result.status ?? 1);

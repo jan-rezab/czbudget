@@ -74,6 +74,24 @@ test('absolute stacks withhold incomplete or negative compositions, but preserve
  assert.deepEqual(charts.model({type:'stacked',stackMode:'absolute',fields,rows}).rows.map(r=>r.stackValues),[[0,0],[null,null],[null,null]]);
 });
 
+test('donuts use a positive cross-row denominator and withhold partial or negative compositions',()=>{
+ const fields=[{key:'delta'}],rows=[{label:'Vehicles',delta:30},{label:'Machinery',delta:70}];
+ assert.deepEqual(charts.model({type:'donut',fields,rows}).rows.map(r=>r.shares),[[30],[70]]);
+ for(const bad of [null,-1])assert.deepEqual(charts.model({type:'donut',fields,rows:[rows[0],{delta:bad}]}).rows.map(r=>r.shares),[[null],[null]]);
+ assert.throws(()=>charts.model({type:'donut',fields:[...fields,{key:'other'}],rows}),/one nonnegative/);
+});
+test('exact story table columns retain source decimal text without changing plot coordinates',()=>{
+ const row={label:'Machinery',delta:50,deltaExact:'50.000000001',baseExact:'100.000000001'};
+ const data=charts.model({type:'donut',fields:[{key:'delta'}],rows:[row],tableColumns:[{key:'label'},{key:'baseExact'},{key:'deltaExact'}]});assert.equal(data.rows[0].values[0],50);assert.deepEqual(data.accessor.rows(),[{label:'Machinery',baseExact:'100.000000001',deltaExact:'50.000000001'}]);
+});
+
+
+test('donut markup preserves a single full-circle observation and rejects incomplete geometry',()=>{
+ const originalDocument=globalThis.document;globalThis.document={activeElement:null};const stop=Symbol('markup');
+ function capture(rows){let html;const host={clientWidth:393,contains:()=>false,classList:{add(){}},dataset:{},set innerHTML(v){html=v;throw stop;}};try{charts.render(host,{type:'donut',rows,fields:[{key:'delta',format:(v,r)=>r.deltaExact+' USD'}],title:'Growing categories',shareFormat:(v,r)=>r.share+'%'});}catch(e){if(e!==stop)throw e;}return html;}
+ try{const single=capture([{label:'Mineral fuels',delta:50,deltaExact:'50.000000001',share:'100'}]);assert.match(single,/aria-label="Mineral fuels: 50\.000000001 USD \(100%\)"/);assert.match(single,/class="psd-donut-slice"/);assert.doesNotMatch(single,/NaN|Infinity/);const missing=capture([{label:'Missing',delta:null}]);assert.doesNotMatch(missing,/class="psd-donut-slice"/);assert.match(missing,/No complete positive composition/);}finally{globalThis.document=originalDocument;}
+});
+
 test('treemap tiles conserve area and preserve the exact positive proportions', () => {
   const rows=[{label:'Transport',value:55},{label:'Schools',value:30},{label:'Housing',value:10},{label:'Other',value:5}];
   for(const [width,height] of [[1000,500],[320,440],[1,1]]) {

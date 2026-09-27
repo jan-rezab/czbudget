@@ -7,8 +7,8 @@
   <meta name="description" content="Follow every 100 units of tax revenue from income, payroll, consumption and property to central, regional and local government.">
   <link rel="canonical" href="https://publicspendingdata.org/deep-dives/revenue/">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/revenue/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/revenue/?lang=en">
-  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional"><link rel="stylesheet" href="../../revenue-deep-dive.css?v=20260902-heatmap"><link rel="stylesheet" href="../../tax-detail-chart.css?v=20260901-donut"><link rel="stylesheet" href="../../oecd-overlay.css?v=20260828-oecd-key-metrics"><link rel="stylesheet" href="../../oecd-charts.css?v=20260829-oecd-reports">
-  <script src="../../deep-dives.js?v=20260919-reports-regional" defer></script><script src="../../tax-detail-chart.js?v=20260901-donut" defer></script><script src="../../revenue-deep-dive.js?v=20260902-heatmap" defer></script><script src="../../oecd-overlay.js?v=20260828-oecd-key-metrics" defer></script><script src="../../chart-runtime.js?v=20260921-shared" defer></script><script src="../../oecd-charts.js?v=20260921-shared" defer></script>
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional"><link rel="stylesheet" href="../../revenue-deep-dive.css?v=20260927-flows-3"><link rel="stylesheet" href="../../tax-detail-chart.css?v=20260901-donut"><link rel="stylesheet" href="../../oecd-overlay.css?v=20260828-oecd-key-metrics"><link rel="stylesheet" href="../../oecd-charts.css?v=20260829-oecd-reports">
+  <script src="../../deep-dives.js?v=20260919-reports-regional" defer></script><script src="../../tax-detail-chart.js?v=20260901-donut" defer></script><script src="../../lib/revenue-flow-model.js?v=20260927-flows-3" defer></script><script src="../../lib/revenue-coverage-policy.js?v=20260927-coverage" defer></script><script src="../../revenue-deep-dive.js?v=20260927-flows-3" defer></script><script src="../../oecd-overlay.js?v=20260828-oecd-key-metrics" defer></script><script src="../../chart-runtime.js?v=20260921-shared" defer></script><script src="../../oecd-charts.js?v=20260921-shared" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -25,7 +25,17 @@
     <section class="revenue-section revenue-flow-section" id="flow">
       <div class="deep-section-heading"><div><span class="kicker" data-revenue-copy="flowKicker">Daňový mix</span><h2 data-revenue-copy="flowTitle">Z čeho se daně skládají a kam se připíší</h2></div><p data-revenue-copy="flowIntro">Vlevo je původ příjmů. Vpravo úroveň vlády, které OECD příjem přiřazuje před následnými transfery. Environmentální daně se překrývají s kategoriemi spotřeby a majetku, proto jsou uvedeny zvlášť.</p></div>
       <div class="revenue-scope-line"><span id="revenue-country-label">Česko</span><b id="revenue-year">—</b><span data-revenue-copy="scope">OECD · sektor vládních institucí</span></div>
+      <aside id="revenue-coverage" class="transfer-unavailable" aria-live="polite"></aside>
+      <button id="revenue-cash-example" type="button" hidden></button>
+      <button id="revenue-motion" type="button" aria-pressed="false">Pause motion / Pozastavit pohyb</button>
+      <label class="revenue-currency"><span id="revenue-currency-label">Display currency</span><select id="revenue-currency"><option value="native">Original currency</option><option value="EUR">EUR · annual average</option></select></label>
+      <p id="revenue-currency-note"></p>
       <div class="hundred-flow" id="hundred-flow" aria-live="polite"></div>
+      <p id="revenue-flow-note" class="transfer-unavailable"></p>
+      <div id="revenue-flow-details"></div>
+      <details id="revenue-flow-values"></details>
+      <details id="revenue-transfer-evidence"></details>
+      <details id="revenue-health-evidence"></details>
       <div class="revenue-kpis" id="revenue-kpis"></div>
     </section>
 

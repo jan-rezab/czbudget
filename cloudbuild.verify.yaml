@@ -114,6 +114,8 @@ steps:
     entrypoint: bash
     env:
       - CI=true
+      # The deep run: every browser test on mobile as well as desktop.
+      - PSD_MOBILE_SCOPE=all
       - PYTHONPATH=/workspace/.python-deps
       - DATA_ASSET_LOCK=/workspace/.published/assets/lock.json
       - DATA_ASSET_PACK_ROOT=/workspace/.published/assets

@@ -20,12 +20,13 @@
 // module behaves identically under `node scripts/validate-site.mjs` and under
 // Playwright.
 
-import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { readDataJSON } from "./static-asset-source.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "..");
-const readJson = async (relative) => JSON.parse(await readFile(path.join(repoRoot, relative), "utf8"));
+// Checkout first; a dataset served from the static-asset packs is read from the lock.
+const readJson = (relative) => readDataJSON(relative, { root: repoRoot });
 
 /**
  * PINNED regression tripwires.

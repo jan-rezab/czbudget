@@ -9,6 +9,26 @@ for (const name of [
   'pipeline', 'tests', 'content', 'data/.municipal-headlines-query.json', 'data/isred',
   'data/industrial-intelligence', 'data/czech-nku', 'data/contracts',
   'data/czech-project-geography', 'data/industry',
+  // Served from the static-asset packs since the repository stopped tracking them.
+  'data/countries',
+  'data/public-entities',
+  'data/economy',
+  'data/international-municipalities',
+  'data/czech-sfdi-tables',
+  'data/monitor-grants',
+  'data/registry/source-provenance',
+  'data/paq',
+  'data/international-municipalities.v1.json',
+  'data/municipal-snapshot.v1.json',
+  'data/municipal-history-directory.v1.json',
+  'data/cze-medicine-reimbursements.v1.json',
+  'data/cze-school-funding-2026.v1.json',
+  'data/czech-consolidated-accounts.v1.json',
+  'data/czech-sfdi-financing.v1.json',
+  'data/pensions-today.v1.json',
+  'data/methodology-sources.v1.json',
+  'data/eu-budget-flows.v1.json',
+  'data/sovereign-benchmark-slim.v1.json',
 ]) {
   await assert.rejects(fs.stat(`${root}/${name}`), {code: 'ENOENT'});
 }

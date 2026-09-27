@@ -9,6 +9,10 @@
 // fields so that a warehouse load can never be read as site publication.
 
 import { readdir, readFile, stat, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import { requireFanoutRoot } from "./lib/municipal-fanout.mjs";
 
 const root = new URL("../", import.meta.url);
 const read = async (path) => JSON.parse(await readFile(new URL(path, root), "utf8"));
@@ -147,8 +151,10 @@ const measureExpansion = async (code) => {
 // Benchmark artifacts carry a native measure `breakdown` rather than stage-tagged
 // line items; the stage is declared once by the source bundle.
 const measureBenchmark = async (code) => {
-  const dir = `data/municipal-benchmarks/${code.toLowerCase()}`;
-  if (!(await exists(dir))) return null;
+  // The per-entity benchmark profiles are not tracked in Git. A country with a tracked
+  // index must have its hydrated profiles; measuring without them would publish zero.
+  if (!existsSync(fileURLToPath(new URL(`data/municipal-benchmarks/${code.toLowerCase()}.json`, root)))) return null;
+  const dir = path.join(requireFanoutRoot("municipal-benchmarks", fileURLToPath(root)), code.toLowerCase());
   const bundle = await read(`data/municipal-benchmarks/${code.toLowerCase()}.json`);
   const files = await listJson(dir);
   let published = 0;
@@ -172,7 +178,7 @@ const measureBenchmark = async (code) => {
   const stages = bundle.country?.stages?.length ? bundle.country.stages : ["actual"];
   const stageYears = new Map(stages.map((stage) => [stage, new Set(years)]));
   return {
-    source: dir,
+    source: `data/municipal-benchmarks/${code.toLowerCase()}`,
     artifact_count: files.length,
     published,
     empty,
@@ -224,10 +230,11 @@ const measureCzechia = async () => {
 
   // Layer 2: the per-municipality history that the site serves directly. It
   // carries the enacted/revised/actual stages and the economic split per year.
-  const historyDir = "data/municipal-history";
+  // Not tracked in Git: required, so a missing copy cannot silently drop this layer.
+  const historyDir = requireFanoutRoot("municipal-history", fileURLToPath(root));
   let historyProfiles = 0;
   let historyArtifacts = 0;
-  if (await exists(historyDir)) {
+  {
     const names = (await listJson(historyDir)).filter((name) => /^\d+\.json$/.test(name));
     historyArtifacts = names.length;
     const economicKeys = ["tax_revenue", "nontax_revenue", "capital_revenue", "transfer_revenue", "current_expense", "capital_expense"];

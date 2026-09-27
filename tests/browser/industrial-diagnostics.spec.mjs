@@ -68,7 +68,7 @@ test('English report discovery uses current shared translations',async({page})=>
   await page.goto('/deep-dives/?lang=en');
   await expect(page.locator('#industrial-diagnostics h4')).toHaveText('Inside industry');
   await expect(page.locator('#industrial-diagnostics p')).toContainText('Business earnings and investment');
-  await expect(page.locator('script[src*="deep-dives.js"]')).toHaveAttribute('src',/v=20260927-report-library/);
+  await expect(page.locator('script[src*="deep-dives.js"]')).toHaveAttribute('src',/v=20260927-report-previews/);
   await page.locator('#industrial-diagnostics').click();await ready(page);
   await expect(page.locator('h1')).toContainText('What powers');
 });

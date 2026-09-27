@@ -83,3 +83,44 @@ test('paged consumer assembles the full comparison and rejects changing or incom
  calls=0;pages[1].view_id='changed';await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/changed/);
  calls=0;pages[1].view_id='v';pages[1].pagination.supplier_count=2;await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/Incomplete/);
 });
+
+test('map selects major suppliers independently for each hub without discarding underlying rows',async()=>{
+ const {largestMapSuppliers}=await import('../../lib/russia-trade-model.mjs');
+ const rows=['KAZ','KGZ'].flatMap((reporter_iso3,h)=>Array.from({length:15},(_,i)=>({reporter_iso3,partner_iso3:String(i),value_usd:(i+1)*(h?1:1000)})));
+ rows.push({reporter_iso3:'KGZ',partner_iso3:'missing',value_usd:null},{reporter_iso3:'KAZ',partner_iso3:'zero',value_usd:0});
+ const selected=largestMapSuppliers(rows);assert.equal(selected.length,16);assert.equal(rows.length,32);
+ for(const hub of ['KAZ','KGZ']){const values=selected.filter(r=>r.reporter_iso3===hub);assert.equal(values.length,8);assert.deepEqual(values.map(r=>r.partner_iso3),['14','13','12','11','10','9','8','7']);}
+});
+
+test('direct suppliers distinguish Korean decline, missing endpoints and tiny-base growth',async()=>{
+ const {directSupplierGrowth}=await import('../../lib/russia-trade-model.mjs');const suppliers=[['CHN','2019',10],['CHN','2024',30],['KOR','2019',10],['KOR','2024',5],['PRK','2019',1],['GEO','2019',0],['GEO','2024',2]].map(([reporter_iso3,period,value_usd])=>({reporter_iso3,period,value_usd,partner_iso3:'RUS'}));
+ const rows=directSupplierGrowth({suppliers},'2019','2024');assert.equal(rows[0].reporter,'CHN');assert.equal(rows.find(r=>r.reporter==='KOR').delta,-5);assert.equal(rows.find(r=>r.reporter==='PRK').delta,null);assert.equal(rows.find(r=>r.reporter==='GEO').ratio,null);
+});
+test('bilateral categories and history keep Russia imports distinct from World and preserve absent years',async()=>{
+ const {bilateralHistory}=await import('../../lib/russia-trade-model.mjs');const observations=[['2019','M','TOTAL',10],['2019','M','27',8],['2021','M','TOTAL',30],['2021','M','27',25],['2019','X','TOTAL',4],['2021','X','TOTAL',5]].map(([period,flow_code,product_code,value_usd])=>({period,flow_code,product_code,value_usd,reporter_iso3:'CHN',partner_iso3:'RUS'}));
+ const data={frequency:'A',observations},history=bilateralHistory(data);assert.equal(history[1].period,'2020');assert.equal(history[1].M,null);assert.equal(history[2].X,5);
+ const model=categoryGrowth(data,{hub:'CHN',flow:'M',partner:'RUS',baseYear:'2019',endYear:'2021',continuousYears:true});assert.equal(model.categories[0].code,'27');assert.equal(model.categories[0].delta,17);assert.equal(model.rows[0].other,2);assert.equal(model.rows[1].period,'2020');assert.equal(model.rows[1]['27'],null);assert.equal(model.rows[1].other,null);
+});
+
+test('delta story uses exact decimal source arithmetic and distinguishes gross growth from net',async()=>{
+ const {deltaBasket,deltaSlices}=await import('../../lib/russia-trade-model.mjs');
+ const obs=[['84','2019','100.000000001'],['84','2024','150.000000002'],['27','2019','30.1'],['27','2024','20.2'],['85','2019','0'],['85','2024','0'],['26','2024','99'],['06','2020','1']].map(([product_code,period,reported_value_usd])=>({product_code,period,reported_value_usd,value_usd:999}));
+ const b=deltaBasket(obs);assert.equal(b.positiveExact,'50.000000001');assert.equal(b.negativeExact,'-9.9');assert.equal(b.netExact,'40.100000001');assert.deepEqual(b.missing.map(r=>r.code),['06','26']);assert.equal(b.rows.find(r=>r.code==='85').deltaExact,'0');assert.equal(deltaSlices(b)[0].sharePositiveExact,'100');
+ assert.equal(deltaBasket(obs,{endYear:'2025'}).netExact,null);assert.throws(()=>deltaBasket([...obs,obs[0]]),/Duplicate/);
+});
+test('donut slices retain every positive change and exact grouped inputs, without including declines',async()=>{
+ const {deltaBasket,deltaSlices}=await import('../../lib/russia-trade-model.mjs'),observations=Array.from({length:8},(_,i)=>String(i+10)).flatMap((product_code,i)=>[{period:'2019',product_code,reported_value_usd:'0.01'},{period:'2024',product_code,reported_value_usd:String(i+1)+'.01'}]);
+ const b=deltaBasket(observations),slices=deltaSlices(b,2);assert.equal(slices.length,3);assert.equal(slices[2].code,'OTHER');assert.equal(slices[2].deltaExact,'21');assert.equal(slices[2].baseExact,'0.06');assert.equal(slices[2].valueExact,'21.06');assert.equal(slices.reduce((s,r)=>s+r.delta,0),Number(b.positiveExact));assert.equal(slices[2].members.length,6);
+});
+test('bilateral delta exposes the missing-category bridge to the full basket and does not invent a North Korean zero',async()=>{
+ const {bilateralDelta,chooseStoryYear}=await import('../../lib/russia-trade-model.mjs');
+ const observations=[['2019','TOTAL','100'],['2024','TOTAL','150'],['2019','84','70'],['2024','84','130'],['2019','27','30']].map(([period,product_code,reported_value_usd])=>({period,product_code,reported_value_usd,reporter_iso3:'CHN',partner_iso3:'RUS',flow_code:'M'}));
+ const b=bilateralDelta({country:'CHN',observations},{flow:'M'});assert.equal(b.netExact,'60');assert.equal(b.total.deltaExact,'50');assert.equal(b.coverageDifferenceExact,'-10');assert.equal(b.missing[0].code,'27');
+ assert.equal(bilateralDelta({country:'PRK',observations:[]}).netExact,null);
+ const data={country:'CHN',observations:[...observations,{period:'2024',product_code:'TOTAL',flow_code:'X'}]};assert.equal(chooseStoryYear({suppliers:[{reporter_iso3:'CHN',partner_iso3:'RUS',period:'2024'},{reporter_iso3:'KOR',partner_iso3:'RUS',period:'2025'}]},data), '2024');assert.equal(chooseStoryYear({suppliers:[]},data,'2025'),'2025');
+});
+
+test('audit export retains each missing endpoint, exact decimal and ingestion provenance',async()=>{
+ const {deltaBasket,deltaAuditRows}=await import('../../lib/russia-trade-model.mjs');const basket=deltaBasket([{period:'2019',product_code:'75',reported_value_usd:'0.2',release_ids:'base'},{period:'2024',product_code:'75',reported_value_usd:'0.1',release_ids:['end']},{period:'2020',product_code:'06',reported_value_usd:'1'},{period:'2019',product_code:'14',reported_value_usd:'0'}]);const rows=deltaAuditRows(basket,{reporter:'CHN',flow:'M'});
+ assert.equal(rows.length,3);assert.equal(rows.find(r=>r.code==='75').delta_usd,'-0.1');assert.equal(rows.find(r=>r.code==='75').endpoint_load_ids,'end');assert.equal(rows.find(r=>r.code==='75').base_load_ids,'base');assert.equal(rows.find(r=>r.code==='14').baseline_usd,'0');assert.equal(rows.find(r=>r.code==='14').comparison_status,'missing_endpoint');assert.equal(rows.find(r=>r.code==='06').comparison_status,'missing_both');assert.equal(rows[0].reporter_iso3,'CHN');
+});

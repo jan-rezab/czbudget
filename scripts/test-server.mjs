@@ -1,18 +1,24 @@
-import { createReadStream } from "node:fs";
+import { createReadStream, existsSync } from "node:fs";
 import { mkdtemp, readFile, rm, stat } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { createServer } from "node:http";
 import { extname, join, normalize, resolve } from "node:path";
-import { ASSET_PATH } from '../server/static-assets.mjs';
+import { ASSET_PATH, staticAssets } from '../server/static-assets.mjs';
+import { localAssetOptions, serverAccessToken } from './lib/static-asset-source.mjs';
 
 const root = resolve(process.cwd());
 const port = Number(process.env.PORT || 4173);
 // Exercise the same immutable snapshots and renderer as production. A caller may
 // reuse a prepared release; otherwise build one from the local serving inputs.
 let temporaryRelease;
-if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT) {
+// The per-entity serving inputs left the checkout (they live in the published release).
+// Without them, read the live published release from the bucket, in memory only.
+const remoteRelease = !process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT && !process.env.PUBLIC_SNAPSHOT_BASE_URL
+  && !existsSync(join(root, "data/municipal-history/00064581.json"));
+if (remoteRelease) process.env.PUBLIC_SNAPSHOT_BASE_URL = "gs://czbudget-janrezab-public-snapshots/municipal";
+if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT && !process.env.PUBLIC_SNAPSHOT_BASE_URL) {
   temporaryRelease = await mkdtemp(join(tmpdir(), "czbudget-browser-release-"));
   execFileSync(process.execPath, ["scripts/prepare-public-serving-snapshots.mjs", "--output", temporaryRelease, "--release-id", "browser-test"], { cwd: root, stdio: "inherit" });
   process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT = temporaryRelease;
@@ -20,6 +26,11 @@ if (!process.env.PUBLIC_SNAPSHOT_RELEASE_ROOT) {
 process.env.NODE_ENV = "test";
 process.env.SITE_ROOT = root;
 const { handler } = await import("../server/index.mjs");
+if (remoteRelease) (await import("../server/snapshot-store.mjs")).publicSnapshotStore.tokenProvider = serverAccessToken;
+// Datasets that are not in the checkout are served from the published packs: a hydrated
+// DATA_ASSET_LOCK/DATA_ASSET_PACK_ROOT in Cloud Build, else the live lock read with the
+// developer's gcloud credentials. Bytes stay in memory; nothing is written to disk.
+staticAssets.configure(localAssetOptions(process.env, { tokenProvider: serverAccessToken }));
 const lineFixtures = JSON.parse(await readFile(join(root, "tests/fixtures/municipal-lines/manifest.json"), "utf8"));
 const cleanup = async () => {
   if (temporaryRelease) await rm(temporaryRelease, { recursive: true, force: true });
@@ -86,10 +97,11 @@ createServer(async (request, response) => {
     }
     const queryProfile = /^\/municipalities\/(?:france|germany)\/profile\/$/.test(pathname);
     if ((!queryProfile && /^\/(?:municipalities\/[^/]+\/[^/]+|cz\/municipalities\/[^/]+)\/?$/.test(pathname))
-      || (process.env.DATA_ASSET_LOCK && ASSET_PATH.test(pathname))
+      // Like nginx in production: a file in the checkout wins; published packs serve the rest.
+      || (ASSET_PATH.test(pathname) && !existsSync(join(root, pathname.slice(1))))
       || /^\/(?:public-data|api|auth|docs|developers)(?:\/|$)/.test(pathname)
       || /^\/(?:data\/)?municipal-expansion\/[a-z]{3}\/[^/]+\.json$/.test(pathname)
-      || /^\/data\/entities\/\d{8}\.json$/.test(pathname)
+      || /^\/data\/(?:entities|municipal-history)\/\d{8}\.json$/.test(pathname)
       || pathname === "/healthz") {
       await handler(request, response);
       return;

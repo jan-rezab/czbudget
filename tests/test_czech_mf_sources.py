@@ -1,6 +1,8 @@
 import unittest,importlib.util,sys,zipfile,io,json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'scripts'/'lib'))
+from static_asset_source import read_data_json
 def module(name):
  s=importlib.util.spec_from_file_location(name,ROOT/'scripts'/f'{name}.py');m=importlib.util.module_from_spec(s);s.loader.exec_module(m);return m
 class MonitorTests(unittest.TestCase):
@@ -24,7 +26,7 @@ class WorkbookTests(unittest.TestCase):
   r=next(r for r in rows if r['year']==2026);self.assertEqual(r['expense']-r['revenue'],310_000_000_000);self.assertEqual(r['wages'],196_981_378_053);self.assertEqual(rows[-1]['stage'],'proposal')
   self.assertEqual(rows[-1]['year'],2027)
  def test_consolidated_identity(self):
-  d=json.loads((ROOT/'data/czech-consolidated-accounts.v1.json').read_text());a={r['year']:r['value_m_czk'] for r in d['history'] if r['code']=='AKTIVA' and r['measure']=='Netto'};p={r['year']:r['value_m_czk'] for r in d['history'] if r['code']=='PASIVA'}
+  d=read_data_json('data/czech-consolidated-accounts.v1.json');a={r['year']:r['value_m_czk'] for r in d['history'] if r['code']=='AKTIVA' and r['measure']=='Netto'};p={r['year']:r['value_m_czk'] for r in d['history'] if r['code']=='PASIVA'}
   self.assertEqual(len(a),9)
   for y in a:self.assertAlmostEqual(a[y],p[y],places=2)
 
@@ -104,7 +106,7 @@ class ProvenanceTests(unittest.TestCase):
   for s in laws:
    self.assertIn('e-sbirka.gov.cz',s['url']);self.assertIsNone(s['effective_from']);self.assertNotEqual(s['publisher'],s['enacting_institution'])
  def test_ares_update_is_not_retrieval_or_historical_validity(self):
-  d=json.loads((ROOT/'data/municipal-snapshot.v1.json').read_text())
+  d=read_data_json('data/municipal-snapshot.v1.json')
   for row in d['municipalities']:
    p=row['identity_provenance'];self.assertIsNone(p['retrieved_at']);self.assertIsNone(p['valid_from']);self.assertEqual(p['historical_validity'],'unverified_for_fiscal_2025')
  def test_shards_preserve_logical_rows_and_digest(self):
