@@ -61,6 +61,11 @@ data/cityvizor-explorer/v1/
 # Per-entity municipal fan-out restored by scripts/hydrate-municipal-fanout.py from the
 # immutable raw copies pinned in pipeline/config/municipal-serving-inputs.v1.json.
 /.municipal-fanout/
+# The fan-out itself is not tracked: 6,254 history files and 1,010 benchmark profiles, the
+# snapshot builder's inputs only. The small indexes stay tracked because the site serves them
+# (data/municipal-history/index.json, data/municipal-benchmarks/<cc>.json).
+/data/municipal-history/[0-9]*.json
+/data/municipal-benchmarks/*/
 
 # Slim warehouse profiles — identity, history and headline, with detail served by
 # /public-data/municipality-lines rather than repeated in every file. Rebuilt by
