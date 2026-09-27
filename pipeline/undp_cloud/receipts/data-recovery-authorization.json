@@ -1,0 +1,63 @@
+{
+  "request_started_at_unix": 1790461758,
+  "recorded_at": "2026-09-27T00:44:00Z",
+  "data_recovery_authorized_at": "2026-09-27T00:42:33Z",
+  "user_instruction": "fix the cloud run fails on the data bit ... crawling server to server right?",
+  "budget_minutes": 179,
+  "failed_verification_submissions": 4,
+  "guard_result": "STOP_NEW_BUILDS due cumulativefailed4; preserved, not reset",
+  "override": "Explicit current user instruction authorizes only diagnosed, tested data retries within the new45minute recovery checkpoint. Every guard result and job remains recorded. No website release authorization inferred.",
+  "focused_tests": {
+    "source_and_recovery": 28,
+    "chart_core": 7,
+    "status": "passed"
+  },
+  "worktree": "/Users/johnwick/dev/czbudget/work-undp-human-development",
+  "branch": "codex/undp-human-development-20260926",
+  "config": "pipeline/undp_cloud/cloudbuild.report_sources.yaml",
+  "region": "europe-west4",
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "tags": [
+    "plane-data",
+    "hdr-original-sources"
+  ],
+  "raw_destination": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-sources/BUILD_ID/raw/",
+  "staging_destination": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-sources/BUILD_ID/staging/",
+  "publication_pointers": [
+    "hdr_report_sources_2025:inequality-wid-i-of-4",
+    "hdr_report_sources_2025:pisa"
+  ],
+  "public_bucket_writes": 0,
+  "runs": [],
+  "plan": [
+    {
+      "group": "inequality",
+      "shard_index": 0,
+      "shard_count": 4,
+      "resume_run": "ab7fee89-7d27-4911-936d-63167df05e80"
+    },
+    {
+      "group": "inequality",
+      "shard_index": 1,
+      "shard_count": 4,
+      "resume_run": "e2063f35-3eea-46e5-b9d5-e3d39912a5ae"
+    },
+    {
+      "group": "inequality",
+      "shard_index": 2,
+      "shard_count": 4,
+      "resume_run": null
+    },
+    {
+      "group": "pisa",
+      "resume_run": "596e4e15-18f3-46bf-8b80-e7e8c833d11e"
+    },
+    {
+      "group": "inequality",
+      "shard_index": 3,
+      "shard_count": 4,
+      "resume_run": null
+    }
+  ],
+  "capacity": "No active europe-west4 workers at precheck; admit at most4default2CPUsourceworkers, reserve2CPUforrootprivateexport. Later shard waitsfree source slot."
+}
