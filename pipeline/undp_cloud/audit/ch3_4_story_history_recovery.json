@@ -1,0 +1,99 @@
+{
+  "scope": "Verified source-history recovery additions for chapters3\u20134; no source build submitted",
+  "wipo": {
+    "sources": [
+      {
+        "source_id": "wipo_assistive_conventional2021",
+        "source_sha256": "8f7fb6b276e977321f26c7828f7d8dda988819a514f293fede3ac64511a991c2",
+        "native_families": 117209,
+        "source_export_cutoff": "2020-07-20"
+      },
+      {
+        "source_id": "wipo_assistive_emerging2021",
+        "source_sha256": "5e7be8fd4a05947dc9929222abe929e9bd18c93f502597c8348e4b441ce854ef",
+        "native_families": 15592,
+        "source_export_cutoff": "2020-08-17"
+      }
+    ],
+    "verified_private_release": "c3899c01-7d21-4de0-88c9-7a4259329ffb",
+    "native_year_range": [
+      1998,
+      2020
+    ],
+    "unit": "distinct native DWPI accession families, calculated from original published landscape rows",
+    "native_treatments": "Patent, country-specific UtilityModel variants and ResearchDisclosure; not granted patents",
+    "partial_final_year": true,
+    "multi_category_overlap": "Do not sum categories or conventional/emerging sets without identity-overlap analysis",
+    "hdr_erratum": {
+      "source_url": "https://hdr.undp.org/errata-and-corrigenda-hdr-2025",
+      "figures": [
+        "4.2",
+        "4.3"
+      ],
+      "correct_period": "2000\u20132020",
+      "earlier_erroneous_label": "2000\u20132010",
+      "updated_digital_versions_from": "2025-05-23"
+    },
+    "story_relation": "Additional full native1998\u20132020 history, not reproduction of office-country cross-section",
+    "newer_like_for_like": "No updated same-query landscape verified; generic PATENTSCOPE is not a substitute"
+  },
+  "sapien": {
+    "historical_original_files": "audit/sapien_history_fetch.json",
+    "prepared_group": "care_history",
+    "vintages": [
+      2020,
+      2021,
+      2022,
+      2023
+    ],
+    "verification": "Original publisher DataTables links and HEAD200 withZIP/XLSX content types",
+    "publication_status": "not loaded; blocked gate requires explicit approval",
+    "method_limits": [
+      "Changing internet-enabled/self-selected samples and country coverage",
+      "Annual source aggregates require native table/schema/denominator review before charts",
+      "Earlier annual releases and revised GMP2025 overlapping two-year windows must stay separate",
+      "First smartphone age is a retrospective cross-section, not calendar-year history"
+    ]
+  },
+  "brfss": {
+    "figures": [
+      "S3.1.1",
+      "S3.1.2"
+    ],
+    "full_history_status": "not loaded; officialfullGET403",
+    "native_years_planned": "1991\u20132025 metadata plan; source weights/fields/2011designbreak must be harmonized",
+    "exact_required_metrics": "Life satisfaction and exactly30bad-mental-health days, byage/sex, native survey weights and missingcodes",
+    "not_substitutes": [
+      "Socrata state-level prevalence/FMD\u226514days",
+      "SMART/PLACES modeled or alternate samples",
+      "Range4096-byteprobe success"
+    ],
+    "no_bypass": "No rangeassembly, proxies, spoofed browser headers or third-party mirror substitution"
+  },
+  "mics_care": {
+    "figure": "Box4.1",
+    "pdf_page": 130,
+    "printed_page": 116,
+    "verified_source_note": "HDRO based on sixth-round MICS",
+    "country_selection": "unresolved; no verified country list in attached figure note",
+    "unresolved": [
+      "ICTskillsindex definition",
+      "Household child-count/age definition",
+      "Survey selection/vintages",
+      "Male/femaleweight andsample pooling",
+      "Indexmissingcodes and uncertainty"
+    ],
+    "generic_sdmx_ict_can_reproduce": false
+  },
+  "mpi_internet": {
+    "figure": "3.6",
+    "pdf_page": 93,
+    "printed_page": 79,
+    "reported_coverage": "~8.1millionindividuals in94countries; figureanalysis ages19\u201364",
+    "poverty_rule": "Household weighted MPI deprivation score\u22651/3; person inherits household poverty status",
+    "education_rule": "Household has at least one member old enough for school entrance age+6 who completed\u22656years of schooling; not respondent attainment",
+    "source": "HDRO using UNDP2024a;DHS/MICS householdmicrodata",
+    "required": "Harmonized household/personfiles, internet/accessquestion, MPIindicatorconstruction, householdschoolingthreshold,age filter,poolingweight and country/vintage selection",
+    "aggregate_mpi_can_reproduce": false
+  }
+}

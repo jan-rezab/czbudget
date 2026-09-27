@@ -8,6 +8,7 @@ import math
 import re
 from pathlib import Path
 from chart_ch3_4 import transform
+from wipo_family_history import BINDINGS as WIPO_BINDINGS, derive_family_history
 
 ADMITTED = {
  'wipo_assistive_conventional2021': 'wipo_assistive',
@@ -44,6 +45,14 @@ def provider_panels(source_rows,by_source):
   applicable=[c for c in contracts if c['source_id']==sid]
   if not meta or not meta.get('accepted_records'):
    gaps.append(dict(source_id=sid,reason='No validated pinned aggregate source release available.'));continue
+  if sid in WIPO_BINDINGS:
+   binding=WIPO_BINDINGS[sid]
+   if meta.get('sha256')!=binding['sha256']:
+    gaps.append(dict(source_id=sid,reason='WIPO family-history contract belongs to a different source snapshot.'));continue
+   result=derive_family_history(source_rows(sid),sid,meta,binding)
+   conventional=binding['kind']=='conventional';kind_en='Conventional' if conventional else 'Emerging';kind_cs='Konvenční' if conventional else 'Nové'
+   charts.append(dict(id='provider-wipo-'+binding['kind']+'-family-history',chapter='chapter4',title=bi(kind_en+' assistive technology families by first filing year',kind_cs+' asistivní technologie: rodiny podle roku první přihlášky'),unit='families',chart_type='line',rows=result['rows'],fields=[dict(key='value',label=bi('DWPI families (calculated count)','Rodiny DWPI (vypočtený počet)'))],source_refs=[dict(url=meta['url'],vintage=meta['vintage'],table='Overall Metadata; DWPI accession and earliest priority year',release_id=meta['release_id'],source_id=sid,sha256=meta['sha256'])],method=bi('Calculation: count unique native DWPI accession identifiers by earliest priority year in the complete published workbook. Patent, utility-model and research-disclosure families retain the source classification. This is a fixed landscape, not granted patent counts or a live patent feed. The 2020 year is partial at the source export cutoff '+binding['cutoff']+'. Categories and the two workbooks may overlap and are not summed. HDR2025 officially corrects Figures4.2/4.3 to2000–2020; this additional historical panel shows all available1998–2020 source years, not a reproduction of that cross-section.','Výpočet: počet jedinečných původních identifikátorů rodin DWPI podle roku nejstarší priority v úplném zveřejněném sešitu. Rodiny patentů, užitných vzorů a výzkumných oznámení zachovávají klasifikaci zdroje. Jde o pevnou studii, nikoli počty udělených patentů či živý tok. Rok2020 je neúplný k datu exportu '+binding['cutoff']+'. Kategorie a oba sešity se mohou překrývat a nesčítají se. Oficiální oprava HDR2025 stanoví pro obrázky4.2/4.3 období2000–2020; tento doplňující graf ukazuje všechny dostupné roky1998–2020 a nereprodukuje původní průřez.'),denominator=bi('Unique published DWPI families in this '+binding['kind']+' assistive-technology landscape; no population denominator.','Jedinečné zveřejněné rodiny DWPI v této studii asistivních technologií; bez populačního jmenovatele.'),original_refs=['4.2' if conventional else '4.3'],status='historical',latest_period='2020',source_coverage=dict(native_family_count=result['native_family_count'],native_treatment_counts=result['native_treatment_counts'],source_export_cutoff=binding['cutoff'],partial_final_year=True,geography='Global published landscape; WIPO/EPO offices are not treated as countries',original_corrected_scope='2000–2020',history_scope='1998–2020',erratum_url='https://hdr.undp.org/errata-and-corrigenda-hdr-2025')))
+   continue
   if not applicable:
    gaps.append(dict(source_id=sid,reason='Aggregate source loaded; exact cloud schema, native units and denominator binding remains unresolved.'));continue
   for contract in applicable:
