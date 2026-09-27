@@ -1,0 +1,14 @@
+steps:
+  - id: immutable-source-stage-validate-publish
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    env: [PYTHONUNBUFFERED=1, 'BUILD_ID=$BUILD_ID', 'PROJECT_ID=$PROJECT_ID']
+    args: [pipeline/rosling_history_cloud/worker.py, --loader-sha, '${_LOADER_SHA}']
+timeout: 1200s
+queueTtl: 600s
+tags: [plane-data, rosling-history, data-publication]
+options:
+  machineType: E2_MEDIUM
+  logging: CLOUD_LOGGING_ONLY
+substitutions:
+  _LOADER_SHA: required
