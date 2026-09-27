@@ -115,6 +115,13 @@ def survey_charts(bins, metadata):
         c['question_variable']=variable;c['source_question_label']=title;c['denominators']=denominators;c['question_metadata']=values[0]['metadata']['metadata_json'];out.append(c)
     return out
 
+def csv_source_refs(chart,row):
+    if row.get('source_id'):
+        refs=[s for s in chart['source_refs'] if s.get('source_id')==row['source_id']]
+        if len(refs)!=1:raise ValueError('Native CSV row source_id lacks one exact source reference')
+        return refs
+    return chart['source_refs']
+
 def audit_ledger(root):
     inventory=root/'report_chart_inventory.json'
     if inventory.exists():
@@ -352,7 +359,8 @@ def main():
     stream=io.StringIO();writer=csv.writer(stream);writer.writerow(['chart_id','country','period','label','field','value','unit','source_release','source_url','original_row_json'])
     for c,detail in zip(charts,detailed_rows):
         for r in detail['rows']:
-            for f in c['fields']:writer.writerow([c['id'],r.get('country'),r.get('year',r.get('period')),r.get('label'),f['key'],r.get(f['key']),c['unit'],';'.join(s['release_id'] for s in c['source_refs']),';'.join(s['url'] for s in c['source_refs']),dump(r).decode()])
+            row_refs=csv_source_refs(c,r)
+            for f in c['fields']:writer.writerow([c['id'],r.get('country'),r.get('year',r.get('period')),r.get('label'),f['key'],r.get(f['key']),c['unit'],';'.join(s['release_id'] for s in row_refs),';'.join(s['url'] for s in row_refs),dump(r).decode()])
     csv_body=stream.getvalue().encode();downloads=output_prefix+'/observations.csv'
     def immutable(bucket,key,data,ctype):
         blob=bucket.blob(key)

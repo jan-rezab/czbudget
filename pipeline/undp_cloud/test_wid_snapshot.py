@@ -1,5 +1,6 @@
 import unittest
 from publish_wid_snapshot import merge_wid_snapshots
+from publish_reports import csv_source_refs
 class WidSnapshotTests(unittest.TestCase):
  def chart(self,sid,country,rows):
   return dict(id='provider-wid-current-'+sid,source_refs=[dict(source_id=sid,vintage='snapshot2026',table='sptincj992')],unit='proportion',denominator=dict(en='age992/popj',cs='age992/popj'),rows=[dict(country=country,period=y,value=v) for y,v in rows],fields=[dict(key='value')])
@@ -9,6 +10,8 @@ class WidSnapshotTests(unittest.TestCase):
   self.assertEqual([(r['country'],r['period'],r['value']) for r in c['rows']],[('CZE','2023',.14),('DEU','2022',.22)])
   self.assertEqual(len(exports[c['id']]),5);self.assertTrue(any(r['value'] is None for r in exports[c['id']]))
   self.assertEqual({r['source_id'] for r in exports[c['id']]},{'CZ','DE'});self.assertEqual(len(c['source_refs']),2)
+  for row in exports[c['id']]:self.assertEqual(csv_source_refs(c,row)[0]['source_id'],row['source_id'])
+  with self.assertRaises(ValueError):csv_source_refs(c,dict(source_id='not_loaded'))
  def test_distinct_vintage_never_merged_conflicts_rejected(self):
   a=self.chart('CZ','CZE',[('2023',.14)]);b=self.chart('CZ2','CZE',[('2023',.15)])
   with self.assertRaises(ValueError):merge_wid_snapshots([a,b])
