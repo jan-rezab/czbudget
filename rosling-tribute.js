@@ -78,8 +78,9 @@
     return window.PSDChart.register({el,slug:id,title:spec.title||el.querySelector('h3').textContent,accessor,exports:['csv','png'],embeddable:false,source});
   }
   const colsMeta=[{key:'code',label:'ISO3'},{key:'year',label:'Year / Rok'}];
-  function yearControls(min,max,extra=''){return `<div class="rosling-controls"><button data-play aria-pressed="false">${tr('▶ Play years','▶ Přehrát roky')}</button><label>${tr('Year','Rok')} <output id="rosling-year-value">${S.year}</output><input id="rosling-year" type="range" min="${min}" max="${max}" step="1" value="${S.year}"></label>${extra}</div>`;}
+  function yearControls(min,max,extra=''){return `<div class="rosling-controls rosling-timeline"><button data-play aria-pressed="false">${tr('▶ Play years','▶ Přehrát roky')}</button><label class="rosling-timeline-year">${tr('Year','Rok')} <output id="rosling-year-value">${S.year}</output><input id="rosling-year" type="range" min="${min}" max="${max}" step="1" value="${S.year}"><span class="rosling-timeline-ends" aria-hidden="true"><span>${min}</span><span>${max}</span></span></label>${extra}</div>`;}
   function bindYears(min,max,redraw){
+    stage.querySelector('figure')?.after(stage.querySelector('.rosling-timeline'));
     document.querySelector('#rosling-year').addEventListener('input',e=>{stop();S.year=Number(e.target.value);url();redraw();});
     document.querySelector('[data-play]').addEventListener('click',e=>{
       if(timer){stop();e.currentTarget.textContent=tr('▶ Play years','▶ Přehrát roky');return;}

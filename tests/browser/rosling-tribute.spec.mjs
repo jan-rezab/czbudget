@@ -95,6 +95,11 @@ test('years glide slowly with their labels and preserve position when interrupte
   await page.emulateMedia({reducedMotion:'no-preference'});
   await fixtures(page);await page.goto('/deep-dives/rosling/?lang=en&year=2018');await ready(page);
   const bubble=page.locator('#rosling-health-wealth circle[data-bubble-id="CZE"]');
+  const layout=await page.evaluate(()=>{
+    const chart=document.querySelector('#rosling-health-wealth').getBoundingClientRect(),timeline=document.querySelector('.rosling-timeline').getBoundingClientRect(),slider=document.querySelector('#rosling-year').getBoundingClientRect();
+    return {below:timeline.top>=chart.bottom,width:timeline.width/chart.width,sliderShare:slider.width/timeline.width};
+  });
+  expect(layout.below).toBe(true);expect(layout.width).toBeGreaterThan(.98);expect(layout.sliderShare).toBeGreaterThan(.65);
   const position=()=>bubble.evaluate(el=>{
     const m=new DOMMatrixReadOnly(getComputedStyle(el).transform);
     return {x:Number(el.getAttribute('cx'))+m.m41,y:Number(el.getAttribute('cy'))+m.m42};

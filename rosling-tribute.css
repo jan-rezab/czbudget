@@ -4,3 +4,12 @@
 @media(max-width:700px){.rosling-lesson,.rosling-experiment{padding:18px}.rosling-lesson-top{align-items:start}.rosling-chapters{grid-template-columns:1fr;gap:8px;margin:18px 0}.rosling-chapters button{padding:12px;display:flex;align-items:baseline;gap:12px}.rosling-chapters b{margin:0}.rosling-story-caption{min-height:180px}.rosling-story-caption h3{font-size:24px}.rosling-story-caption p{font-size:16px}.rosling-wash-layout{grid-template-columns:1fr;gap:22px}.rosling-washer{margin:8px auto}.rosling-experiment>h3,.rosling-wash-layout h3{font-size:27px}.rosling-presenting .rosling-lesson{padding:18px}.rosling-presenting .rosling-story-caption p{font-size:18px}.rosling-presenting .rosling-story-caption h3{font-size:28px}}
 
 .rosling-before-after{border:1px solid #d2ccc1;background:#fffdf6;padding:28px;margin-bottom:24px}.rosling-before-after h3{font-size:24px}.rosling-reveal-grid{display:grid;grid-template-columns:1fr 1fr;gap:30px}.rosling-reveal-grid>div{padding:20px 0}.rosling-reveal-grid strong{display:block;font-size:clamp(42px,7vw,80px);letter-spacing:-.055em;margin:10px 0}.rosling-reveal-grid small,.rosling-reveal-grid span{font-size:14px}.rosling-reveal-grid p{font-size:14px;line-height:1.6}@media(max-width:600px){.rosling-reveal-grid{grid-template-columns:1fr;gap:0}.rosling-before-after{padding:18px}}
+
+/* The year navigator belongs below the chart and spans its full available width. */
+.rosling-controls.rosling-timeline{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:14px 24px;padding:18px 22px;background:#eef0dc;border:1px solid #d2ccc1;margin:0 0 22px}
+.rosling-timeline .rosling-timeline-year{display:grid;grid-template-columns:1fr auto;gap:0 16px;width:100%;font-weight:700}
+.rosling-timeline-year output{font-size:28px;font-variant-numeric:tabular-nums;line-height:1.2}
+.rosling-controls.rosling-timeline input[type=range]{grid-column:1/-1;width:100%;min-height:44px;margin:0;cursor:pointer}
+.rosling-timeline-ends{grid-column:1/-1;display:flex;justify-content:space-between;font-size:12px;font-weight:400;font-variant-numeric:tabular-nums}
+.rosling-timeline>label:not(.rosling-timeline-year){grid-column:1/-1}
+@media(max-width:600px){.rosling-controls.rosling-timeline{grid-template-columns:1fr;padding:16px;gap:14px}.rosling-timeline>button{justify-self:start}}
