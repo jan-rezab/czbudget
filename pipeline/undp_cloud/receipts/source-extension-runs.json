@@ -1,8 +1,8 @@
 {
   "request_started_at_unix": 1790461758,
-  "recorded_at": "2026-09-27T00:14:24Z",
+  "recorded_at": "2026-09-27T00:17:38Z",
   "extension_budget_minutes": 143,
-  "failed_verification_submissions": 1,
+  "failed_verification_submissions": 2,
   "loader_git_sha": "09df13a139c53b300c8fc288ff96f4962a4c84b4",
   "branch": "codex/undp-human-development-20260926",
   "worktree": "/Users/johnwick/dev/czbudget/work-undp-human-development",
@@ -28,16 +28,26 @@
     {
       "id": "391e6556-b1ed-4531-b876-a072d7a6f75f",
       "group": "annex",
-      "status": "WORKING",
+      "status": "SUCCESS",
       "resume_run": "1612d231-2e7c-4363-9b6a-0c12b4ba6e72",
-      "pointer": "hdr_report_sources_2025:annex"
+      "pointer": "hdr_report_sources_2025:annex",
+      "accepted_source_records": 514048,
+      "accepted_sources": 22,
+      "unavailable_sources": 0,
+      "receipt_sha256": "5e626b182bb170a5aa15b968955658384daac8ca175bc7719bd3bf3cbfd2d189",
+      "receipt": "annex-schooling-completed.json"
     },
     {
       "id": "c3899c01-7d21-4de0-88c9-7a4259329ffb",
       "group": "care",
-      "status": "WORKING",
+      "status": "SUCCESS",
       "resume_run": "6c9dfbee-78b0-4081-8d95-99b80ff2f29d",
-      "pointer": "hdr_report_sources_2025:care"
+      "pointer": "hdr_report_sources_2025:care",
+      "accepted_source_records": 300204,
+      "accepted_sources": 16,
+      "unavailable_sources": 1,
+      "receipt_sha256": "b1b6cb7b40700aba150849f57a91fb776767c2254e6160ef304e3988944b146b",
+      "receipt": "care-cp1252-completed.json"
     },
     {
       "id": "ab7fee89-7d27-4911-936d-63167df05e80",
@@ -46,14 +56,40 @@
       "wid_shard_count": 4,
       "status": "WORKING",
       "pointer": "hdr_report_sources_2025:inequality-wid-0-of-4"
+    },
+    {
+      "id": "e2063f35-3eea-46e5-b9d5-e3d39912a5ae",
+      "group": "inequality",
+      "wid_shard_index": 1,
+      "wid_shard_count": 4,
+      "status": "WORKING",
+      "pointer": "hdr_report_sources_2025:inequality-wid-1-of-4"
     }
   ],
   "pending_wid_shards": [
-    1,
     2,
     3
   ],
-  "capacity": "Verified regional10CPU;5default2CPUworkers active including existingPISA and root privatePDFreview; later shards awaitfree slots.",
+  "capacity": "No new jobs admitted after failure2. Existing authorized source jobs continue; never canceled for website scheduling.",
   "processing_status": "active_cloud_runs",
-  "publication_status": "pending_each_atomic_bundle"
+  "publication_status": "pending_each_atomic_bundle",
+  "submission_status": "stopped_new_submissions_at_cumulative_failure2",
+  "pisa_progress": {
+    "id": "596e4e15-18f3-46bf-8b80-e7e8c833d11e",
+    "status": "WORKING",
+    "raw_received_bytes": 682364259,
+    "raw_generation": "1790466355777384",
+    "raw_sha256": "24ee020cd6315d8aca52e07fd9aaef21cbf4f9e5b21601734b4ee6d0928a0905",
+    "raw_download_completed_at": "2026-09-26T23:45:55Z",
+    "archive_directory_metadata_bytes_read": 143,
+    "members": [
+      {
+        "name": "CY08MSP_STU_QQQ.SAV",
+        "bytes": 2096666903,
+        "compressed_bytes": 682364087
+      }
+    ],
+    "staging_status": "No complete processed checkpoint or staging object at 2026-09-27T00:15Z; long-running source parse, no admitted respondent rows yet.",
+    "memory_status": "Standard Cloud Build API/logs expose no worker memory telemetry; no OOM evidence observed."
+  }
 }
