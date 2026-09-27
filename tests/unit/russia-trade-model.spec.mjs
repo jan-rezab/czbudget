@@ -50,3 +50,11 @@ test('growth stacks distinguish missing observations, missing baselines and real
  assert.throws(()=>categoryGrowth({frequency:'M',observations},{hub:'KGZ'}),/annual/);
 });
 test('growth stack never turns a negative remainder into a valid total',()=>{const observations=[agg('2019','KAZ','M','WORLD','84',10),agg('2025','KAZ','M','WORLD','84',100),agg('2025','KAZ','M','WORLD','TOTAL',50)];assert.equal(categoryGrowth({frequency:'A',observations},{hub:'KAZ'}).rows[0].other,null);});
+test('earlier baseline ranks pre-invasion growth without borrowing the 2019 reference',()=>{
+ const observations=[];
+ for(const [year,total,a,b] of [['2014',1000,100,200],['2019',1500,800,100],['2021',2000,300,600]])
+  for(const [code,value] of [['TOTAL',total],['84',a],['85',b]])observations.push(agg(year,'KGZ','M','WORLD',code,value));
+ const result=categoryGrowth({frequency:'A',observations},{hub:'KGZ',baseYear:'2014',endYear:'2021',limit:1});
+ assert.equal(result.baseYear,'2014');assert.equal(result.categories[0].code,'85');assert.equal(result.categories[0].delta,400);
+ assert.deepEqual(result.rows.map(r=>r.period),['2014','2019','2021']);assert.equal(result.rows[0].other,800);
+});

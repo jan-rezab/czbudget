@@ -87,7 +87,7 @@ WITH leaves AS (
   product_code, primary_value_usd, classification_code, source_last_released,
   retrieved_at, ingestion_run_id, source_response_sha256
  FROM \`czbudget-janrezab.budget_detail.trade_observations\`
- WHERE period_start BETWEEN DATE '2019-01-01' AND CURRENT_DATE()
+ WHERE period_start BETWEEN IF(@frequency='A', DATE '2014-01-01', DATE '2019-01-01') AND CURRENT_DATE()
   AND frequency=@frequency AND product_type='C' AND reporter_iso3 IN ('KAZ','KGZ')
   AND (partner_area_code=0 OR partner_area_code IN (SELECT DISTINCT area_code FROM \`czbudget-janrezab.budget_detail.trade_areas\` WHERE is_partner AND NOT is_group))
   AND flow_code IN ('M','X') AND aggregation_level=6 AND is_original_classification
