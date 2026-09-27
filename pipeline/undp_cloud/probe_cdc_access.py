@@ -54,8 +54,9 @@ def main():
     build=os.environ['BUILD_ID'];sha=os.environ['LOADER_SHA']
     if not build or not sha:raise ValueError('Immutable run identity required')
     manifest=json.load(open('pipeline/undp_cloud/audit/brfss_access_probe.json'))
+    authorization=json.load(open('pipeline/undp_cloud/receipts/cdc-access-override-20260927.json'))
     results,unattempted=probe_sources(manifest['sources'])
-    receipt=dict(schema_version='1.0.0',build_id=build,loader_git_sha=sha,region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',generated_at=datetime.now(timezone.utc).isoformat(),processing_status='access_probe_completed',publication_status='not_published',raw_ingestion_status='not_attempted',max_received_bytes_per_url=LIMIT,original_started_at=1790461758,budget_minutes=179,cumulative_failed_attempts=4,checkpoint_override='Explicit user authorization for corrected DATA recovery; counter retained',unattempted=unattempted,results=results)
+    receipt=dict(schema_version='1.0.0',build_id=build,loader_git_sha=sha,region='europe-west4',service_account='psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com',generated_at=datetime.now(timezone.utc).isoformat(),processing_status='access_probe_completed',publication_status='not_published',raw_ingestion_status='not_attempted',max_received_bytes_per_url=LIMIT,original_started_at=authorization['original_started_at'],budget_minutes=authorization['budget_minutes'],cumulative_failed_attempts=authorization['cumulative_failed_attempts'],checkpoint_override=authorization['named_exception'],unattempted=unattempted,results=results)
     raw=json.dumps(receipt,sort_keys=True).encode()
     obj=f'processing-runs/hdr-cdc-access/{build}/receipt.json'
     storage.Client().bucket('czbudget-janrezab-data-layers').blob(obj).upload_from_string(raw,content_type='application/json',if_generation_match=0)
