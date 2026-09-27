@@ -56,6 +56,13 @@ for (const report of registry.reports) {
   const page = path.join(root, "deep-dives", report.href.split("?")[0], "index.html");
   if (!existsSync(page)) problems.push(`${report.slug}: no page at ${path.relative(root, page)}`);
   if (!report.navPath.startsWith("deep-dives/")) problems.push(`${report.slug}: navPath must start with deep-dives/`);
+  if (report.preview?.unavailable) {
+    if (!report.preview.reason) problems.push(`${report.slug}: unavailable preview requires a reason`);
+  } else for (const lang of LANGS) {
+    const asset = report.preview?.[lang];
+    if (!asset?.startsWith('assets/report-previews/') || !existsSync(path.join(root, asset))) problems.push(`${report.slug}: missing ${lang} chart preview`);
+    if (!report.preview?.source?.[lang]?.url || !report.preview?.source?.[lang]?.capturedAt) problems.push(`${report.slug}: missing ${lang} preview provenance`);
+  }
 }
 // Every published page must be in the catalogue, so a new report cannot ship orphaned.
 const pages = [];
@@ -72,12 +79,16 @@ const registered = new Set(registry.reports.map((report) => report.href.split("?
 for (const page of pages) if (!registered.has(page)) problems.push(`Page deep-dives/${page}/ is not in reports.json`);
 
 // ------------------------------------------------------------------ index.html
+const preview = (report) => report.preview?.unavailable
+  ? `<div class="report-chart-preview preview-unavailable"><span data-deep-copy="previewUnavailable">${escapeHtml(registry.chrome.previewUnavailable.cs)}</span></div>`
+  : `<figure class="report-chart-preview"><img src="../${report.preview.cs}" data-report-preview="${report.key}" data-preview-cs="../${report.preview.cs}" data-preview-en="../${report.preview.en}" alt="${escapeHtml(report.title.cs)} — ${escapeHtml(registry.chrome.headlinePreview.cs)}" width="640" height="320" loading="lazy" decoding="async"><figcaption><span data-deep-copy="headlinePreview">${escapeHtml(registry.chrome.headlinePreview.cs)}</span><span><span data-deep-copy="previewSnapshot">${escapeHtml(registry.chrome.previewSnapshot.cs)}</span> · <time datetime="2026-09-27">27.09.2026</time></span></figcaption></figure>`;
 const card = (report) => {
   const place = report.place ? `<em class="deep-card-place" data-deep-copy="place${cap(report.key)}">${escapeHtml(report.place.cs)}</em>` : "";
   return `<a class="deep-card available" id="${report.slug}" data-deep-link href="${report.href}">`
     + `<header><span data-deep-copy="source${cap(report.key)}">${escapeHtml(report.source.cs)}</span><b>${escapeHtml(report.badge)}</b></header>`
     + `${place}<h4 data-deep-copy="${report.key}">${escapeHtml(report.title.cs)}</h4>`
     + `<p data-deep-copy="${report.key}Copy">${escapeHtml(report.card.cs)}</p>`
+    + preview(report)
     + `<strong data-deep-copy="open">${escapeHtml(registry.chrome.open.cs)}</strong></a>`;
 };
 
@@ -148,9 +159,9 @@ const menuGroups = registry.shelves.flatMap(shelf => shelf.clusters.map(cluster 
 })));
 const menuBlock = `  const reportMenuGroups = ${JSON.stringify(menuGroups)};`;
 const targets = [
+  { file: "global-nav.js", begin: "/* BEGIN GENERATED REPORT MENU */", end: "/* END GENERATED REPORT MENU */", body: menuBlock },
   { file: "deep-dives/index.html", begin: "<!-- BEGIN GENERATED REPORTS -->", end: "<!-- END GENERATED REPORTS -->", body: indexBlock },
   { file: "deep-dives.js", begin: "/* BEGIN GENERATED REPORT COPY */", end: "/* END GENERATED REPORT COPY */", body: copyBlock },
-  { file: "global-nav.js", begin: "/* BEGIN GENERATED REPORT MENU */", end: "/* END GENERATED REPORT MENU */", body: menuBlock },
 ];
 
 let stale = 0;
