@@ -317,3 +317,19 @@ test('invoice detail distinguishes missing line items from an unassessed Hlída�
  await expect(dialog.getByRole('link',{name:'Investigate this supplier on Hlídač státu'})).toHaveAttribute('href','https://www.hlidacstatu.cz/hledat?Q=ico%3A12345678');
  await expectNoRawDownloads(page);
 });
+
+test('opening an allocation automatically shows exact-party contract evidence and preserves source boundaries',async({page})=>{
+ await fixturePraha(page);let lookups=0;
+ await page.route('**/api/v1/praha/related-contracts?*',route=>{
+  lookups++;const q=new URL(route.request().url()).searchParams;
+  return route.fulfill({json:{status:'related_by_exact_parties',match_status:'not_verified',payer_ico:q.get('payer'),supplier_ico:q.get('supplier'),release_id:'95efccaf-8f0f-421d-b5fc-1316ee967cc6',cityvizor_source_release_id:'praha-browser-fixture',cityvizor_warehouse_release_id:'3c1b0b77-f00f-42c9-ae74-1a2366034a62',serving_release_id:'fixture-curated',coverage_contracts:115429,related_count:1,filtered_count:1,rows:[{contract_id:'7939187',subject:'Published project agreement',signed_at:'2019-01-01',value_czk:'1016400.01',currency:'CZK',source_url:'https://smlouvy.gov.cz/smlouva/7939187',parent_contract_id:'5395991',compact_contract_sha256:'b'.repeat(64)}]}});
+ });
+ await openPraha(page);await page.locator('#ledger-load').click();
+ await page.locator('#ledger-table tbody tr').filter({hasText:'Pražská stavební společnost'}).first().getByRole('button').click();
+ const results=page.locator('#related-contract-results');
+ await expect(results).toContainText('Published project agreement');
+ await expect(results).toContainText('1016400.01 CZK');
+ await expect(results).toContainText('invoice-to-contract link not verified');
+ await expect(results.getByRole('link',{name:'Published project agreement'})).toHaveAttribute('href','https://smlouvy.gov.cz/smlouva/7939187');
+ expect(lookups).toBe(1);await expectNoRawDownloads(page);
+});
