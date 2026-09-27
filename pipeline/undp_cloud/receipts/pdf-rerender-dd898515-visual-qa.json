@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0.0",
+  "build_id": "dd898515-64d0-4a8a-b33e-ee3e1eb292dc",
+  "created_at": "2026-09-27T01:25:29.001367526Z",
+  "started_at": "2026-09-27T01:25:29.913716291Z",
+  "finished_at": "2026-09-27T01:26:18.654678Z",
+  "loader_git_sha": "9f746e6df6adc13abe0618c6480f09fa8c7062b6",
+  "region": "europe-west4",
+  "service_account": "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com",
+  "source_report_release_id": "369c3550-0253-40c7-9cf8-8b1acf944b17",
+  "source_report_sha256": "5b0ade36aa00f69a7c9336bc73bcd0f3f7d51ed08ed8b7830b2a8b105b25e7ef",
+  "source_report_generation": "1790471900799071",
+  "source_report_manifest": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-review/369c3550-0253-40c7-9cf8-8b1acf944b17/validated-report-manifest.json",
+  "objects": [
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-pdf/dd898515-64d0-4a8a-b33e-ee3e1eb292dc/report.pdf",
+      "generation": "1790472376157769",
+      "bytes": 520246,
+      "sha256": "ff13ba745dd873d95fd8fa7d334944c315734b877418ef26d4381ea01ec99b7b"
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-pdf/dd898515-64d0-4a8a-b33e-ee3e1eb292dc/proof-1.png",
+      "generation": "1790472376471580",
+      "bytes": 111113,
+      "sha256": "93ad7d61bdb44f0895522658a6d9867195c8fcc989a8ecdf46ea95666ddbf523"
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-pdf/dd898515-64d0-4a8a-b33e-ee3e1eb292dc/proof-2.png",
+      "generation": "1790472376778977",
+      "bytes": 60415,
+      "sha256": "dde8a44cd680ac8661167c815fbafbeb60db9907c0cfc83e431d22fda4bfc566"
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-pdf/dd898515-64d0-4a8a-b33e-ee3e1eb292dc/proof-92.png",
+      "generation": "1790472377075724",
+      "bytes": 115382,
+      "sha256": "8f459d50d7da7c09039f359c7a0dba825b46a4aa8f5f1bc9e841671fb797adf3"
+    },
+    {
+      "uri": "gs://czbudget-janrezab-data-layers/processing-runs/hdr-report-pdf/dd898515-64d0-4a8a-b33e-ee3e1eb292dc/proof-185.png",
+      "generation": "1790472377357912",
+      "bytes": 23326,
+      "sha256": "b006b6cc63e463133eeca0fc71a065eadf72351f866da9a6352b77a84c1d9ebd"
+    }
+  ],
+  "qa": {
+    "first_chart_page": 2,
+    "page_count": 185,
+    "selected_panels": 61,
+    "selected_numeric_cells": 8466,
+    "unavailable_or_missing_geography_panels": 86,
+    "text_verified": true,
+    "pdf_bytes": 520246
+  },
+  "original_started_at": 1790461758,
+  "budget_minutes": 179,
+  "cumulative_failed_attempts": 7,
+  "guard_override": "Explicit finish override for necessary private PDF correction; original clock/counter retained",
+  "root_visual_qa": "PASS",
+  "reviewed_pages": [
+    1,
+    2,
+    92,
+    185
+  ],
+  "visual_findings": [
+    "Readable cover: source provenance moved to complete final appendix",
+    "Actual single2023 observation uses native2023 xaxis tick, no0\u20132400 axis; exact value unchanged",
+    "Middle monthly table retains exact source anomaly and uncertainty bounds with readable headers",
+    "Final provenance appendix retained with no overflow"
+  ],
+  "hash_and_size_validation": "Root verified everyPDF/PNG SHA256 and bytecount against immutable cloudreceipt; child also verified all4proof hashes",
+  "processing_status": "private_pdf_validated_and_visually_reviewed",
+  "publication_status": "private_only; public_report_promotion_and_website_main_blocked_by_automatic_approval_review_pending_user_answer",
+  "public_pointer_changed": false,
+  "source_numeric_data_changed": false,
+  "new_cloud_jobs_authorized_after_checkpoint": false
+}
