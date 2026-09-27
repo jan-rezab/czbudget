@@ -1,10 +1,10 @@
 {
   "request_started_at_unix": 1790461758,
-  "recorded_at": "2026-09-27T00:45:01Z",
+  "recorded_at": "2026-09-27T00:55:32Z",
   "data_recovery_authorized_at": "2026-09-27T00:42:33Z",
   "user_instruction": "fix the cloud run fails on the data bit ... crawling server to server right?",
   "budget_minutes": 179,
-  "failed_verification_submissions": 4,
+  "failed_verification_submissions": 5,
   "guard_result": "STOP_NEW_BUILDS due cumulativefailed4; preserved, not reset",
   "override": "Explicit current user instruction authorizes only diagnosed, tested data retries within the new45minute recovery checkpoint. Every guard result and job remains recorded. No website release authorization inferred.",
   "focused_tests": {
@@ -59,8 +59,8 @@
       "resume_run": null
     }
   ],
-  "capacity": "No active europe-west4 workers at precheck; admit at most4default2CPUsourceworkers, reserve2CPUforrootprivateexport. Later shard waitsfree source slot.",
-  "submission_status": "blocked_by_automatic_approval_review_before_execution",
+  "capacity": "At most3sourceworkers initially (6CPU), reserve2CPUprivateexport and2CPUCDCprobe; WID2/3 waitverifiedfree slots.",
+  "submission_status": "specific_guard_override_approved_preparing_exact_source_package",
   "cloud_jobs_created": 0,
   "prepared_package": {
     "loader_git_sha": "d1910b18c8caab51f883a84437bb2a0951bd5c35",
@@ -71,5 +71,18 @@
     "action": "Submit corrected PISA Cloud Build data recovery job using exact raw checkpoint596e4e15-18f3-46bf-8b80-e7e8c833d11e",
     "reason": "Although the user authorized the data recovery goal, the command submits a new cloud build after the delivery guard explicitly returned STOP_NEW_BUILDS following four failed verification attempts, contrary to the mandatory stop-and-ask guardrail.",
     "next_action": "Parent asks explicit approval to override the four-failure delivery stop for these concrete corrected data retries. No workaround or indirect submission permitted."
+  },
+  "explicit_guard_override": {
+    "user_reply": "approve override yes - lets finish this",
+    "confirmed_at": "2026-09-27T00:54:38Z",
+    "approved_jobs": [
+      "Corrected PISA full-source retry",
+      "Corrected WID shard0/1 raw-checkpoint retries",
+      "Corrected fresh WID shard2/3 when capacity opens",
+      "Bounded CDC official accessibility probe",
+      "One corrected private report validation retry"
+    ],
+    "scope": "Specific tested data recovery and private validation jobs only; originalclock1790461758/budget179min/five priorfailures preserved; no other gates waived.",
+    "prior_review_block": "User explicitly approved overriding the guard stop after the parent explained five failures and the concrete corrected retry scope."
   }
 }
