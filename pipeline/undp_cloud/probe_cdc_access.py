@@ -9,7 +9,7 @@ LIMIT=4096
 
 def official(url):
     parsed=urlsplit(url)
-    if parsed.scheme!='https' or parsed.hostname!='www.cdc.gov' or not parsed.path.startswith('/brfss/annual_data/') or parsed.query or parsed.fragment:
+    if parsed.scheme!='https' or parsed.hostname!='www.cdc.gov' or not parsed.path.startswith('/brfss/annual_data/') or parsed.query or parsed.fragment or parsed.username or parsed.password or parsed.port not in (None,443):
         raise ValueError('Unreviewed official source URL')
     return url
 
@@ -32,6 +32,7 @@ def probe(url,opener=None):
         out['status']='accessible_bounded_probe'
     except HTTPError as error:
         out.update(status='access_denied' if error.code in (401,403) else 'http_error',http_status=error.code)
+        error.close()
     except (URLError,TimeoutError,OSError,ValueError) as error:
         out.update(status='probe_error',error=str(error))
     return out

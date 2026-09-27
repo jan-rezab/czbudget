@@ -23,6 +23,6 @@ class Tests(unittest.TestCase):
         self.assertTrue(result['zip_signature'])
         self.assertEqual(calls[1].get_header('Range'),'bytes=0-4095')
     def test_nonofficial_or_credentials_and_queries_rejected(self):
-        for url in ['https://example.com/file.zip',URL+'?token=a','http://www.cdc.gov/brfss/annual_data/file']:
+        for url in ['https://example.com/file.zip',URL+'?token=a','https://user:secret@www.cdc.gov/brfss/annual_data/file','http://www.cdc.gov/brfss/annual_data/file']:
             with self.assertRaises(ValueError):official(url)
 if __name__=='__main__':unittest.main()
