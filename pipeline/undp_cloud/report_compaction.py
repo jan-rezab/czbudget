@@ -25,6 +25,10 @@ def compact_chart(chart):
         if other:chart['missing_period_values_by_country']=other
         chart['native_coverage']=dict(received_rows=len(original),nonmissing_rows=len(retained),missing_rows=sum(map(len,missing.values())))
     if chart['id'].startswith('ai-survey-'):chart['row_details_download']='chart_details'
+    null_count=sum(v is None for r in retained for v in r.values())
+    if null_count:
+        retained=[{k:v for k,v in r.items() if v is not None} for r in retained]
+        chart['explicit_null_keys_omitted']=null_count
     # Calendar-year string→integer is an exact coordinate encoding, not rounding.
     if retained and all('period' in r and re.fullmatch(r'[0-9]{4}',str(r['period'])) for r in retained) and not any('label' in r for r in retained):
         for r in retained:r['year']=int(r.pop('period'))
@@ -38,13 +42,24 @@ def compact_chart(chart):
             for r in retained:
                 for key in defaults:r.pop(key)
             chart['row_defaults']=defaults
+    if chart['id'].startswith('hdro-indices-') and retained:
+        columns=[k for k in ['country','year','period'] if any(k in r for r in retained)]+[f['key'] for f in chart['fields']]
+        if len(columns)!=len(set(columns)):raise ValueError('Duplicate tuple columns')
+        if any(set(r)-set(columns) for r in retained):raise ValueError('Undeclared core row key')
+        chart['row_columns']=columns
+        retained=[[r.get(k) for k in columns] for r in retained]
     chart['rows']=retained
     return original
 
 def expanded_rows(chart):
     """Restore exact explicit null observations; never infer unknown missing years."""
+    columns=chart.get('row_columns')
+    if columns and (not isinstance(columns,list) or not all(isinstance(k,str) for k in columns) or len(columns)!=len(set(columns)) or not {f['key'] for f in chart['fields']}<=set(columns)):raise ValueError('Invalid tuple columns')
     for row in chart['rows']:
-        restored=dict(chart.get('row_defaults',{}),**row)
+        if columns:
+            if not isinstance(row,list) or len(row)!=len(columns):raise ValueError('Tuple row width mismatch')
+            row=dict(zip(columns,row))
+        restored=dict({f['key']:None for f in chart['fields']},**chart.get('row_defaults',{}));restored.update(row)
         yield restored
     for country,groups in chart.get('missing_periods_by_country',{}).items():
         for group in groups:

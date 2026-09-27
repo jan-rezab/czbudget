@@ -22,6 +22,7 @@ import urllib.error
 
 from publish_observed_hdro_panels import observed_panels
 from report_compaction import compact_chart,expanded_rows
+from publish_wid_snapshot import merge_wid_snapshots
 from publish_ch5_6_panels import provider_panels
 from publish_ch3_4_panels import provider_panels as care_provider_panels
 from chart_core import numeric, survey_aggregated_distributions, SURVEY_TOPICS, source_csv_observations, wid_observations, wdi_inequality, gcp_territorial
@@ -149,11 +150,10 @@ def validate(payload):
         for field in ['title','method','denominator']:
             if not isinstance(c[field],dict) or not all(isinstance(c[field].get(k),str) and c[field][k] for k in ['en','cs']):raise ValueError('Missing bilingual '+field)
         if not c['unit'] or c['status'] not in {'ready','historical','unavailable','needs_definition','withdrawn'}:raise ValueError('Invalid chart unit/status')
-        if c['status'] in {'ready','historical'} and (not c['fields'] or not c['source_refs'] or not any(r.get(f['key']) is not None for r in c['rows'] for f in c['fields'])):raise ValueError('Ready chart without observations')
+        if c['status'] in {'ready','historical'} and (not c['fields'] or not c['source_refs'] or not any(r.get(f['key']) is not None for r in expanded_rows(c) for f in c['fields'])):raise ValueError('Ready chart without observations')
         for source in c['source_refs']:
             if not source['url'].startswith('https://') or not source['vintage'] or not source['table'] or not source.get('release_id') or not re.fullmatch('[0-9a-f]{64}',source.get('sha256','')):raise ValueError('Incomplete immutable source reference')
-        for row in c['rows']:
-            r=dict(c.get('row_defaults',{}),**row)
+        for r in expanded_rows(c):
             if r.get('country') is not None and r['country'] not in codes:raise ValueError('Unregistered chart geography')
             if not any(k in r for k in ['year','period','label']):raise ValueError('No observation period/category')
             for f in c['fields']:
@@ -254,7 +254,9 @@ def main():
             if not code:code=country_names.get(r.get('country_name'))
             if not code:code='SRC-'+slug(r.get('country_name') or r.get('country_code') or 'unresolved').upper()
             if code not in countries:countries[code]=r.get('country_name') or code
-            groups[(r['metric'],r['unit'])].append(dict(country=code,period=r['period'],value=number(r['value'])))
+            cell=dict(country=code,period=r['period'],value=number(r['value']))
+            if sid.startswith('wid_current_'):cell.update(source_value=r.get('source_value'),source_record_json=r.get('source_record_json'),data_quality=r.get('data_quality'))
+            groups[(r['metric'],r['unit'])].append(cell)
         m=by_source[sid]
         for (metric,unit),rows in groups.items():
             source=ref(dict(source_url=m['url'],source_sha256=m['sha256'],release_id=m['release_id'],source_id=sid),metric,m.get('vintage'))
@@ -284,6 +286,7 @@ def main():
     charts+=added_charts
     care_charts,care_gaps=care_provider_panels(source_rows,by_source)
     charts+=care_charts
+    charts,wid_history_exports=merge_wid_snapshots(charts)
     ledger=audit_ledger(Path('pipeline/undp_cloud/audit'))
     gaps=[dict(source_id=sid,name=sid,reason=m.get('error') or 'Source records have no verified chart binding; raw loading is not figure reproduction.') for sid,m in by_source.items() if not m.get('accepted_records')]
     gaps+=added_gaps+care_gaps
@@ -336,9 +339,12 @@ def main():
     if not annex_n:raise ValueError('Pinned numeric annex cells absent')
     payload['coverage']['annex_export']=dict(numeric_cells=annex_n,source_vintages=sorted(annex_vintages),scope='All pinned table_observations numeric cells. Source column headers, units, notes and exact cell coordinates preserved; unit interpretation remains unresolved where source headers are ambiguous. Original HDR all-tables workbook omits Table6; original MPI2024 and newer MPI2025 workbooks remain separate source vintages.')
     details_name=output_prefix+'/chart-details.json'
-    detailed_rows=[dict(chart_id=c['id'],rows=compact_chart(c),denominators=c.get('denominators'),source_refs=c['source_refs'],unit=c['unit'],method=c['method'],denominator=c['denominator']) for c in charts]
+    detailed_rows=[]
+    for c in charts:
+        original=compact_chart(c)
+        detailed_rows.append(dict(chart_id=c['id'],rows=wid_history_exports.get(c['id'],original),denominators=c.get('denominators'),source_refs=c['source_refs'],unit=c['unit'],method=c['method'],denominator=c['denominator']))
     details_body=dump(dict(schema_version='1.0.0',release_id=args.release_id,source_releases=payload['source_releases'],charts=detailed_rows,scope='Complete original chart row dictionaries, including exact survey weighted numerators, nonresponse codes, valid percentages and all native null provider observations; presentation JSON uses sparse known-null ranges.'))
-    payload['coverage']['presentation_compaction']=dict(mode='lossless sparse known-null ranges; detailed original rows downloadable',detailed_rows=sum(len(c['rows']) for c in detailed_rows),retained_rows=sum(len(c['rows']) for c in charts),details_sha256=hashlib.sha256(details_body).hexdigest(),details_bytes=len(details_body))
+    payload['coverage']['presentation_compaction']=dict(mode='lossless sparse known-null ranges, exact coordinate defaults, declared core tuple columns; detailed original rows downloadable',detailed_rows=sum(len(c['rows']) for c in detailed_rows),retained_rows=sum(len(c['rows']) for c in charts),details_sha256=hashlib.sha256(details_body).hexdigest(),details_bytes=len(details_body))
     payload['downloads']=dict(chart_details=download_ref(details_name),annex_csv=download_ref(annex_download),json=download_ref(name),core_csv=download_ref(core_download),chart_csv=download_ref(output_prefix+'/observations.csv'))
     print(dump(dict(event='report_serialized_size_diagnostic',bytes=len(dump(payload)),charts=[dict(id=c['id'],rows=len(c['rows']),bytes=len(dump(c))) for c in charts if c['rows']])).decode(),flush=True)
     body=validate(payload);sha=hashlib.sha256(body).hexdigest()
