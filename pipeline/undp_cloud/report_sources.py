@@ -95,7 +95,7 @@ def acquire_layout(bucket,prefix,entry,root,resume_run=None):
    candidate=json.loads(prior.download_as_bytes())
    if candidate.get('url')==url:saved=candidate
  if saved is None:
-  request=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; PublicSpendingData source ingestion)'})
+  request=urllib.request.Request(url,headers={'User-Agent':'PublicSpendingData/1.0 (public source ingestion)'})
   with urllib.request.urlopen(request,timeout=60) as response:
    data=response.read(2_000_001)
    if len(data)>2_000_000:raise ValueError('Source SAS layout exceeds 2MB bound')
@@ -375,7 +375,7 @@ def main():
      if not checkpoint.exists():e['resumed_raw_from_run']=a.resume_run;upload(bucket,checkpoint.name,(dump(e)+'\n').encode())
      blob=bucket.blob(e['raw_uri'].split('/',3)[3],generation=int(e['generation']))
     else:
-     req=urllib.request.Request(e['url'],headers={'User-Agent':'Mozilla/5.0 (compatible; PublicSpendingData source ingestion)'})
+     req=urllib.request.Request(e['url'],headers={'User-Agent':'PublicSpendingData/1.0 (public source ingestion)'})
      h=hashlib.sha256();md5=hashlib.md5();received=0
      opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
      if e['url'].startswith('https://data.icos-cp.eu/objects/'):
