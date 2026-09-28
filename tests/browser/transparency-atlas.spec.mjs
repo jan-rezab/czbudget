@@ -10,7 +10,7 @@ import { test, expect } from "@playwright/test";
 const ATLAS = "/methodology.html?lang=en";
 
 async function atlas(page) {
-  await page.goto(ATLAS, { waitUntil: "networkidle" });
+  await page.goto(ATLAS, { waitUntil: "domcontentloaded" });
   await expect(page.locator("#transparency-atlas .atlas-table tbody tr").first()).toBeVisible();
 }
 
@@ -67,6 +67,6 @@ test("the atlas explains the marker in both languages", async ({ page }) => {
   await atlas(page);
   await expect(page.locator("#transparency-atlas .atlas-research-notes")).toContainText("adds no bonus");
 
-  await page.goto("/methodology.html?lang=cs", { waitUntil: "networkidle" });
+  await page.goto("/methodology.html?lang=cs", { waitUntil: "domcontentloaded" });
   await expect(page.locator("#transparency-atlas .atlas-research-notes")).toContainText("nepřidává žádný bonus");
 });
