@@ -19,6 +19,10 @@ build/SHA, dates and completed municipality receipts, then exits without warehou
 loading or public publication. Resume explicitly with the same --history-end;
 there is no automatic schedule or unbounded chain of workers.
 
+Warehouse queries carry plane/dataset/purpose/run/SHA labels and admit at most
+32 GiB per query and 96 GiB cumulatively. Missing dry-run estimates hold
+publication; load jobs carry the same attribution without changing loaded rows.
+
 Config pipeline/czech_hlidac_cloud/full_cloudbuild.yaml, europe-west4,
 psd-data-builder, plane-data. Raw/checkpoints/staging/receipts remain under
 gs://czbudget-janrezab-data-layers/processing-runs/czech-hlidac-municipality-contracts/

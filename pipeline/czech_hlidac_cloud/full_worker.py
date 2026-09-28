@@ -35,6 +35,7 @@ SCOPE_PATH = Path("pipeline/config/czech-hlidac-municipalities.v1.json")
 HISTORY_START = date(2016, 7, 1)
 REGION = "europe-west4"
 SERVICE_ACCOUNT = "psd-data-builder@czbudget-janrezab.iam.gserviceaccount.com"
+COST_QUERIES = None
 WAREHOUSE_SCHEMA = (
     "municipality_rank:INTEGER,municipality_ico:STRING,municipality_name:STRING,"
     "contract_id:STRING,subject:STRING,signed_at:STRING,published_at:STRING,"
@@ -50,6 +51,12 @@ WAREHOUSE_COLUMNS = (
 
 
 def run(command: list[str], *, input_text: str | None = None) -> str:
+    if command[0]=='bq' and 'query' in command:
+        if COST_QUERIES is None or input_text is None: raise RuntimeError('No bounded query admission configured')
+        return json.dumps(list(COST_QUERIES.query(input_text)))
+    if command[0]=='bq' and 'load' in command:
+        command=command[:]+['--label=plane:data','--label=dataset:hlidac','--label=purpose:contract-stage',
+            '--label=run_id:'+os.environ['BUILD_ID'],'--label=loader_sha:'+os.environ['LOADER_GIT_SHA']]
     completed = subprocess.run(
         command,
         input=input_text,
@@ -65,15 +72,8 @@ def run(command: list[str], *, input_text: str | None = None) -> str:
 
 
 def bq_query(sql: str) -> list[dict]:
-    output = subprocess.check_output(
-        [
-            "bq", "--project_id=" + PROJECT, "query", "--use_legacy_sql=false",
-            "--format=json", "--quiet", sql,
-        ],
-        text=True,
-        timeout=180,
-    )
-    return json.loads(output or "[]")
+    if COST_QUERIES is None: raise RuntimeError('No bounded query admission configured')
+    return list(COST_QUERIES.query(sql))
 
 
 def sha256_file(path: Path) -> str:
@@ -448,6 +448,7 @@ def read_pointer(pointer_uri: str) -> tuple[dict | None, str]:
 
 
 def main() -> None:
+    global COST_QUERIES
     build_id = os.environ.get("BUILD_ID", "").strip()
     loader_git_sha = os.environ.get("LOADER_GIT_SHA", "").strip()
     token = os.environ.get("HLIDACSTATU_API_TOKEN", "").strip()
@@ -457,6 +458,12 @@ def main() -> None:
         raise RuntimeError("LOADER_GIT_SHA is required")
     if not token:
         raise RuntimeError("HLIDACSTATU_API_TOKEN was not injected")
+
+    from pipeline.russia_suppliers.cloud_clients import bigquery
+    from pipeline.undp_cloud.query_costs import BudgetedQueries,GIB
+    COST_QUERIES=BudgetedQueries(bigquery.Client(PROJECT,'EU'),bigquery,run_id=build_id,
+        loader_sha=loader_git_sha,max_query_bytes=32*GIB,max_run_bytes=96*GIB)
+    COST_QUERIES.labels.update(dataset='hlidac',purpose='contract-publication')
 
     started_at = datetime.now(timezone.utc).isoformat()
     scope = json.loads(SCOPE_PATH.read_text(encoding="utf-8"))
@@ -578,6 +585,7 @@ def main() -> None:
         "raw_page_objects": page_cache.refs,
         "raw_pages_reused": page_cache.reused,
         "raw_pages_fetched": page_cache.fetched,
+        "query_usage": COST_QUERIES.receipt(),
         "normalized_objects": [item["normalized_object"] for item in completions],
         "warehouse_objects": [item["warehouse_object"] for item in completions],
         "municipality_results": [

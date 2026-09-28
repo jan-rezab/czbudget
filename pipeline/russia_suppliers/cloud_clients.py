@@ -49,7 +49,7 @@ class QueryJob:
         for _ in range(100):
             page=self.api.request(url)
             if not page.get('jobComplete'): raise RuntimeError('Query results not complete')
-            fields=page['schema']['fields']
+            fields=page.get('schema',{}).get('fields',[])
             for row in page.get('rows',[]):
                 decoded={}
                 for field,value in zip(fields,row['f']):

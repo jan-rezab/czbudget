@@ -26,6 +26,7 @@ SOURCE_FILES = (
     "pipeline/czech_hlidac_cloud/full_worker.py",
     "pipeline/czech_hlidac_cloud/bounded_stage.py",
     "pipeline/russia_suppliers/cloud_clients.py",
+    "pipeline/undp_cloud/query_costs.py",
     "pipeline/transforms/fetch_hlidac_contracts.py",
     "pipeline/config/czech-hlidac-municipalities.v1.json",
 )
