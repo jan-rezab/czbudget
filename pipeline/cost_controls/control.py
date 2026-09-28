@@ -233,13 +233,10 @@ def registry_dry_run(api):
         url = AR+repo['name']
         operation = api.request(url+'?updateMask=cleanupPolicies,cleanupPolicyDryRun',desired,method='PATCH')
         api.save('registry-'+name+'-operation',operation)
-        for _ in range(8):
-            if operation.get('done'):
-                break
-            time.sleep(1)
-            operation = api.request(AR+operation['name'])
-        if operation.get('error') or not operation.get('done'):
-            raise RuntimeError('Registry policy operation did not verify')
+        # repositories.patch returns the Repository synchronously, unlike
+        # repository creation's long-running operation response.
+        if operation.get('format') != 'DOCKER' or operation.get('name') != repo['name']:
+            raise RuntimeError('Unexpected registry patch response')
         after = api.request(url)
         api.save('registry-'+name+'-after',after)
         if not after.get('cleanupPolicyDryRun') or after.get('cleanupPolicies') != desired['cleanupPolicies']:
@@ -288,7 +285,7 @@ def main():
             summary['results'][name] = {'status':'verified','result':value}
         except Exception as error:
             summary['results'][name] = {'status':'failed','error':str(error)}
-        api.save('control-result',summary)
+        api.save(args.action+'-result',summary)
         print(name,summary['results'][name]['status'],flush=True)
     if any(r['status']=='failed' for r in summary['results'].values()):
         raise SystemExit(1)
