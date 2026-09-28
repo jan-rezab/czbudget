@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
 const obs=(period,hub,flow,partner,product,value)=>({period,reporter_iso3:hub,flow_code:flow,partner_iso3:partner,partner_area_code:partner==='WORLD'?0:1,product_code:product,value_usd:value,reported_value_usd:String(value),product_count:1,classifications:'H6',release_ids:'synthetic'});
-const sample=(frequency='A',product='TOTAL')=>({frequency,product,countries:[{iso3:'DEU',iso2:'de',name:'Germany'},{iso3:'CHN',iso2:'cn',name:'China'}],source:{url:'https://comtradeplus.un.org/',table:'synthetic',release_ids:['synthetic'],method:'Synthetic fixture',release_note:'Test only'},suppliers:[],observations:(frequency==='A'?['2014','2019','2021','2022','2025']:['202401','202403']).flatMap((p,slot)=>{const i=frequency==='A'?({'2014':0,'2019':0,'2021':1,'2022':1,'2025':2}[p]):slot;return ['KAZ','KGZ'].flatMap((h,j)=>[obs(p,h,'M','WORLD',product,100*(i+1)),obs(p,h,'X','RUS',product,20*(i+1)),obs(p,h,'M','DEU',product,60*(i+1)),obs(p,h,'M','CHN',product,40*(i+1)),obs(p,h,'M','WORLD','84',20*(i+1)**2),obs(p,h,'M','WORLD','85',10*(i+1)),obs(p,h,'X','RUS','84',5*(i+1)**2)]);})});
+const sample=(frequency='A',product='TOTAL')=>({view_id:'synthetic-published-report',frequency,product,countries:[{iso3:'DEU',iso2:'de',name:'Germany'},{iso3:'CHN',iso2:'cn',name:'China'}],source:{url:'https://comtradeplus.un.org/',table:'synthetic',release_ids:['synthetic'],method:'Synthetic fixture',release_note:'Test only'},suppliers:[],observations:(frequency==='A'?['2014','2019','2021','2022','2025']:['202401','202403']).flatMap((p,slot)=>{const i=frequency==='A'?({'2014':0,'2019':0,'2021':1,'2022':1,'2025':2}[p]):slot;return ['KAZ','KGZ'].flatMap((h,j)=>[obs(p,h,'M','WORLD',product,100*(i+1)),obs(p,h,'X','RUS',product,20*(i+1)),obs(p,h,'M','DEU',product,60*(i+1)),obs(p,h,'M','CHN',product,40*(i+1)),obs(p,h,'M','WORLD','84',20*(i+1)**2),obs(p,h,'M','WORLD','85',10*(i+1)),obs(p,h,'X','RUS','84',5*(i+1)**2)]);})});
 const bilateralSample=(country='CHN')=>({frequency:'A',product:'TOTAL',country,suppliers:[],source:sample().source,observations:country==='PRK'?[]:['2014','2019','2021','2024'].flatMap((year,i)=>[obs(year,country,'X','RUS','TOTAL',100*(i+1)),obs(year,country,'M','RUS','TOTAL',200*(i+1)),obs(year,country,'X','RUS','87',20*(i+1)**2),obs(year,country,'M','RUS','27',30*(i+1)**2)])});
 test.beforeEach(async({page})=>{
  await page.route('**/api/v1/trade/russia-bilateral?**',route=>route.fulfill({json:{data:bilateralSample(new URL(route.request().url()).searchParams.get('country'))}}));
- await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const u=new URL(route.request().url());return route.fulfill({json:{data:sample(u.searchParams.get('frequency'),u.searchParams.get('product'))}});});
+ await page.route('**/api/v1/trade/russia-report?**',route=>{const u=new URL(route.request().url());return route.fulfill({json:{data:sample(u.searchParams.get('frequency'),u.searchParams.get('product'))}});});
  await page.route('**/data/world-map.v1.json',route=>route.fulfill({json:{viewBox:'0 0 1000 600',locations:[{id:'de',path:'M100 200h40v40h-40z'},{id:'cn',path:'M600 350h80v60h-80z'},{id:'kg',path:'M520 350h20v20h-20z'},{id:'kz',path:'M450 300h80v60h-80z'},{id:'ru',path:'M700 100h150v100h-150z'}]}}));
 });
 test('defaults to annual all suppliers and both hubs even from an old country-pair link',async({page})=>{
@@ -18,7 +18,7 @@ test('map keyboard, touch, Escape and chart table use the same values',async({pa
  await page.locator('#rt-map').scrollIntoViewIfNeeded();const point=await page.locator('[data-edge="5"] .psd-route-hit').evaluate(path=>{const p=path.getPointAtLength(path.getTotalLength()*.65);const q=new DOMPoint(p.x,p.y).matrixTransform(path.getScreenCTM());return {x:q.x,y:q.y};});if(isMobile)await page.touchscreen.tap(point.x,point.y);else await page.mouse.click(point.x,point.y);await expect(page.locator('.psd-route-detail')).toContainText('20 USD');await page.locator('#rt-trend-wrapper [data-action="table"]').click();await expect(page.locator('#rt-trend-wrapper .psd-chart-panel')).toContainText('2019');
 });
 test('playback advances annual frames and pauses',async({page})=>{await page.clock.install();await page.goto('/deep-dives/russia-trade/?lang=en&period=2019');await expect(page.locator('#rt-play')).toBeEnabled();await page.locator('#rt-play').click();await page.clock.runFor(1600);await expect(page.locator('#rt-month')).toHaveText('2021');await page.locator('#rt-play').click();await page.clock.runFor(3000);await expect(page.locator('#rt-month')).toHaveText('2021');});
-test('failed replacement clears stale evidence and offers retry',async({page})=>{await page.goto('/deep-dives/russia-trade/?lang=en');await expect(page.locator('.rt-leg')).toHaveCount(2);await page.route('**/api/v1/trade/russia-aggregate?**',r=>r.fulfill({status:503,json:{error:'offline'}}));await page.locator('#rt-product').selectOption('84');await expect(page.locator('#rt-status')).toContainText('could not be loaded');await expect(page.locator('#rt-legs')).toBeEmpty();await expect(page.locator('#rt-retry')).toBeVisible();await expect(page.locator('#rt-play')).toBeDisabled();});
+test('failed replacement clears stale evidence and offers retry',async({page})=>{await page.goto('/deep-dives/russia-trade/?lang=en');await expect(page.locator('.rt-leg')).toHaveCount(2);await page.route('**/api/v1/trade/russia-report?**',r=>r.fulfill({status:503,json:{error:'offline'}}));await page.locator('#rt-product').selectOption('84');await expect(page.locator('#rt-status')).toContainText('could not be loaded');await expect(page.locator('#rt-legs')).toBeEmpty();await expect(page.locator('#rt-retry')).toBeVisible();await expect(page.locator('#rt-play')).toBeDisabled();});
 test('Czech view and narrow layout remain usable',async({page})=>{await page.goto('/deep-dives/russia-trade/?lang=cs');await expect(page.locator('h1')).toContainText('Obchod si hledá');await expect(page.locator('#rt-month')).toHaveText('2025');expect(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+1)).toBe(false);});
 
 test('category stacks show annual dollar values, fixed groups and separate onward exports',async({page})=>{
@@ -45,7 +45,7 @@ test('category stacks show annual dollar values, fixed groups and separate onwar
 });
 
 test('research supplier chart preserves annual reporting side and country shortcuts',async({page})=>{
- await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const u=new URL(route.request().url()),data=sample(u.searchParams.get('frequency'),u.searchParams.get('product'));data.suppliers=['2019','2022','2025'].flatMap((period,i)=>['KOR','GEO','DEU','TUR','ITA'].map((reporter_iso3,j)=>({period,reporter_iso3,partner_iso3:'KGZ',value_usd:100*(i+1)*(j+1)})));return route.fulfill({json:{data}});});
+ await page.route('**/api/v1/trade/russia-report?**',route=>{const u=new URL(route.request().url()),data=sample(u.searchParams.get('frequency'),u.searchParams.get('product'));data.suppliers=['2019','2022','2025'].flatMap((period,i)=>['KOR','GEO','DEU','TUR','ITA'].map((reporter_iso3,j)=>({period,reporter_iso3,partner_iso3:'KGZ',value_usd:100*(i+1)*(j+1)})));return route.fulfill({json:{data}});});
  await page.goto('/deep-dives/russia-trade/?lang=en');
  await expect(page.locator('#rt-lead-chart')).toHaveAttribute('data-chart-slug','russia-research-suppliers');
  await expect(page.locator('#rt-lead-values')).toContainText('South Korea');
@@ -61,7 +61,7 @@ test('research supplier chart preserves annual reporting side and country shortc
 });
 
 test('supplier inspection stays below the plot and does not move it during keyboard navigation',async({page})=>{
- await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const data=sample();data.suppliers=['2019','2025'].flatMap((period,i)=>['KOR','GEO','DEU','TUR','ITA'].map(reporter_iso3=>({period,reporter_iso3,partner_iso3:'KGZ',value_usd:100*(i+1)})));return route.fulfill({json:{data}});});
+ await page.route('**/api/v1/trade/russia-report?**',route=>{const data=sample();data.suppliers=['2019','2025'].flatMap((period,i)=>['KOR','GEO','DEU','TUR','ITA'].map(reporter_iso3=>({period,reporter_iso3,partner_iso3:'KGZ',value_usd:100*(i+1)})));return route.fulfill({json:{data}});});
  await page.goto('/deep-dives/russia-trade/?lang=en');
  const host=page.locator('#rt-lead-chart'),tip=host.locator('.psd-plot-tooltip');
  await host.locator('[data-point]').first().focus();await expect(tip).toBeVisible();
@@ -79,7 +79,7 @@ test('supplier inspection stays below the plot and does not move it during keybo
 
 test('map defaults to major suppliers and can reveal all without changing the evidence table',async({page})=>{
  const countries=Array.from({length:15},(_,i)=>({iso3:'AA'+String.fromCharCode(65+i),iso2:'a'+i,name:'Supplier '+i}));
- await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const data=sample();data.countries=countries;data.observations=data.observations.filter(o=>Number(o.partner_area_code)===0||o.flow_code==='X');data.observations.push(...countries.flatMap((c,i)=>['KAZ','KGZ'].map(h=>obs('2019',h,'M',c.iso3,'TOTAL',i+1))));return route.fulfill({json:{data}});});
+ await page.route('**/api/v1/trade/russia-report?**',route=>{const data=sample();data.countries=countries;data.observations=data.observations.filter(o=>Number(o.partner_area_code)===0||o.flow_code==='X');data.observations.push(...countries.flatMap((c,i)=>['KAZ','KGZ'].map(h=>obs('2019',h,'M',c.iso3,'TOTAL',i+1))));return route.fulfill({json:{data}});});
  await page.route('**/data/world-map.v1.json',route=>route.fulfill({json:{viewBox:'0 0 1000 600',locations:[...countries.map((c,i)=>({id:c.iso2,path:`M${50+i*20} 100h10v10h-10z`})),{id:'kz',path:'M450 300h80v60h-80z'},{id:'kg',path:'M520 350h20v20h-20z'},{id:'ru',path:'M700 100h150v100h-150z'}]}}));
  await page.goto('/deep-dives/russia-trade/?lang=en&frequency=A&product=TOTAL&period=2019');
  await expect(page.locator('#rt-map-detail')).toHaveValue('major');await expect(page.locator('[data-edge]')).toHaveCount(18);await expect(page.locator('#rt-suppliers tbody tr')).toHaveCount(15);await expect(page.locator('#rt-map-coverage')).toContainText('16 of 30');
@@ -113,7 +113,7 @@ test('absent country declarations clear both charts and do not imply zero or mis
  await page.locator('#rt-bilateral-country').selectOption('CHN');await expect(page.locator('#rt-bilateral-history svg')).toHaveCount(1);
 });
 test('direct supplier growth ranking keeps declines and uses country buttons to open a bilateral view',async({page})=>{
- await page.route('**/api/v1/trade/russia-aggregate?**',route=>{const data=sample();data.suppliers=[['CHN','2019',10],['CHN','2024',30],['KOR','2019',10],['KOR','2024',5]].map(([reporter_iso3,period,value_usd])=>({reporter_iso3,period,value_usd,partner_iso3:'RUS'}));return route.fulfill({json:{data}});});
+ await page.route('**/api/v1/trade/russia-report?**',route=>{const data=sample();data.suppliers=[['CHN','2019',10],['CHN','2024',30],['KOR','2019',10],['KOR','2024',5]].map(([reporter_iso3,period,value_usd])=>({reporter_iso3,period,value_usd,partner_iso3:'RUS'}));return route.fulfill({json:{data}});});
  await page.goto('/deep-dives/russia-trade/?lang=en');
  await expect(page.locator('#rt-direct-year')).toHaveValue('2024');
  await expect(page.locator('#rt-direct-rank tbody tr')).toHaveCount(2);

@@ -285,6 +285,8 @@ function clearFlowView() {
   $("#energy-vintage").textContent = "—";
 }
 
+const periodResults=new Map();
+let timelineTimer;
 async function loadFlows({ retainMap = false } = {}) {
   const request = ++state.request;
   state.flows = null;
@@ -302,7 +304,8 @@ async function loadFlows({ retainMap = false } = {}) {
   $("#energy-status").classList.remove("partial"); $("#energy-status").textContent = `${tr("Načítám obchodní toky", "Loading trade flows")} · ${periodLabel(state.period)}…`;
   try {
     const url = `/api/v1/trade/energy/flows?product=${encodeURIComponent(state.product)}&frequency=${state.frequency}&period=${state.period}`;
-    const payload = await PSDData.loadJson(url, { timeoutMs: 20000 });
+    let payload=periodResults.get(url);
+    if(!payload){payload=await PSDData.loadJson(url,{timeoutMs:20000});periodResults.set(url,payload);while(periodResults.size>24)periodResults.delete(periodResults.keys().next().value);}
     if (request !== state.request) return; state.flows = payload.data; renderAll();
   } catch (error) {
     console.error("energy trade flows", error); if (request !== state.request) return;
@@ -325,7 +328,7 @@ function bind() {
   $("#energy-play").addEventListener("click", togglePlayback);
   $("#energy-previous").addEventListener("click", () => { const rows = periods(), index = rows.findIndex((item) => item.period === state.period); if (index > 0) changePeriod(rows[index - 1].period); });
   $("#energy-next").addEventListener("click", () => { const rows = periods(), index = rows.findIndex((item) => item.period === state.period); if (index >= 0 && index < rows.length - 1) changePeriod(rows[index + 1].period); });
-  $("#energy-timeline").addEventListener("input", (event) => { const period = periods()[Number(event.target.value)]?.period; if (period) changePeriod(period); });
+  $("#energy-timeline").addEventListener("input", (event) => { const period = periods()[Number(event.target.value)]?.period; if(period){clearTimeout(timelineTimer);timelineTimer=setTimeout(()=>changePeriod(period),200);} });
   window.addEventListener("pagehide", pausePlayback);
   document.addEventListener("visibilitychange", () => { if (document.hidden) pausePlayback(); });
 }

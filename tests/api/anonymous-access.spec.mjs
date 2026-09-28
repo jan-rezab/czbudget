@@ -49,7 +49,8 @@ test("read-only API routes answer without a token", async () => {
 test("anonymous answers are shared-cacheable and carry no user identity", async () => {
   const response = await anonymous("/api/v1/countries");
   assert.equal(response.status, 200);
-  assert.equal(response.headers.get("cache-control"), "public, max-age=300");
+  assert.equal(response.headers.get("cache-control"), "public, max-age=300, s-maxage=1800, stale-while-revalidate=3600");
+  assert.match(response.headers.get("vary"),/Cookie, Authorization/);
   assert.equal(response.headers.get("x-authenticated-user"), null);
 });
 

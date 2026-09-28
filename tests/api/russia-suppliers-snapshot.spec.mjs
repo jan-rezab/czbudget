@@ -29,11 +29,11 @@ test('verified supplier release avoids the 32 GiB query and pins object generati
  assert.equal(requests,3);assert.deepEqual(await source.rows('TOTAL'),f.rows);assert.equal(requests,3);
 });
 
-test('missing pointer uses bounded legacy path; corrupt pointer never triggers a scan',async()=>{
+test('missing and corrupt supplier pointers never trigger a visitor warehouse scan',async()=>{
  const missing=new RussiaSuppliersSnapshot({tokenProvider:async()=>'fixture',fetchImpl:async()=>new Response('',{status:404})});
  let calls=0;const legacy=new RussiaTradeStore({suppliersSource:missing});legacy.query=async(sql,params,options)=>{
   calls++;assert.equal(sql,RUSSIA_SUPPLIERS_SQL);assert.equal(options.maximumBytesBilled,'40000000000');return [];};
- assert.deepEqual(await legacy.suppliers('TOTAL'),[]);assert.equal(calls,1);
+ await assert.rejects(legacy.suppliers('TOTAL'),{code:'russia_suppliers_snapshot_unavailable'});assert.equal(calls,0);
  const f=fixture();f.pointer.sha256='b'.repeat(64);
  const corrupt=new RussiaSuppliersSnapshot({tokenProvider:async()=>'fixture',fetchImpl:async url=>new Response(url.includes('current.json')?JSON.stringify(f.pointer):f.objects.get(f.pointer.object))});
  const store=new RussiaTradeStore({suppliersSource:corrupt});store.query=()=>{throw Error('must not scan');};

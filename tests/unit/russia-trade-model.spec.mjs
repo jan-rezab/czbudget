@@ -79,9 +79,9 @@ test('paged consumer assembles the full comparison and rejects changing or incom
  const {readRussiaAggregate}=await import('../../lib/russia-trade-model.mjs');let calls=0;
  const pages=[{view_id:'v',observations:[{value_usd:null}],suppliers:[],pagination:{next_page:1,observation_count:1,supplier_count:1}},{view_id:'v',observations:[],suppliers:[{value_usd:0}],pagination:{next_page:null,observation_count:1,supplier_count:1}}];
  const fetcher=async url=>{assert.match(url,new RegExp(`page=${calls}$`));return Response.json({data:pages[calls++]});};
- const result=await readRussiaAggregate('A','TOTAL',fetcher);assert.equal(calls,2);assert.equal(result.observations[0].value_usd,null);assert.equal(result.suppliers[0].value_usd,0);assert.equal(result.pagination,undefined);
- calls=0;pages[1].view_id='changed';await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/changed/);
- calls=0;pages[1].view_id='v';pages[1].pagination.supplier_count=2;await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher),/Incomplete/);
+ const result=await readRussiaAggregate('A','TOTAL',fetcher,'/api/v1/trade/russia-aggregate?frequency=A&product=TOTAL');assert.equal(calls,2);assert.equal(result.observations[0].value_usd,null);assert.equal(result.suppliers[0].value_usd,0);assert.equal(result.pagination,undefined);
+ calls=0;pages[1].view_id='changed';await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher,'/api/v1/trade/russia-aggregate?frequency=A&product=TOTAL'),/changed/);
+ calls=0;pages[1].view_id='v';pages[1].pagination.supplier_count=2;await assert.rejects(readRussiaAggregate('A','TOTAL',fetcher,'/api/v1/trade/russia-aggregate?frequency=A&product=TOTAL'),/Incomplete/);
 });
 
 test('map selects major suppliers independently for each hub without discarding underlying rows',async()=>{
@@ -124,3 +124,10 @@ test('audit export retains each missing endpoint, exact decimal and ingestion pr
  const {deltaBasket,deltaAuditRows}=await import('../../lib/russia-trade-model.mjs');const basket=deltaBasket([{period:'2019',product_code:'75',reported_value_usd:'0.2',release_ids:'base'},{period:'2024',product_code:'75',reported_value_usd:'0.1',release_ids:['end']},{period:'2020',product_code:'06',reported_value_usd:'1'},{period:'2019',product_code:'14',reported_value_usd:'0'}]);const rows=deltaAuditRows(basket,{reporter:'CHN',flow:'M'});
  assert.equal(rows.length,3);assert.equal(rows.find(r=>r.code==='75').delta_usd,'-0.1');assert.equal(rows.find(r=>r.code==='75').endpoint_load_ids,'end');assert.equal(rows.find(r=>r.code==='75').base_load_ids,'base');assert.equal(rows.find(r=>r.code==='14').baseline_usd,'0');assert.equal(rows.find(r=>r.code==='14').comparison_status,'missing_endpoint');assert.equal(rows.find(r=>r.code==='06').comparison_status,'missing_both');assert.equal(rows[0].reporter_iso3,'CHN');
 });
+
+ test('published report consumer reads the complete comparison in one HTTP request',async()=>{
+  const {readRussiaAggregate}=await import('../../lib/russia-trade-model.mjs');let requests=0;
+  const value={view_id:'immutable',observations:[{reported_value_usd:'0.123456789',value_usd:.123456789}],suppliers:[{value_usd:null}]};
+  const result=await readRussiaAggregate('A','TOTAL',async url=>{requests++;assert.equal(url,'/api/v1/trade/russia-report?frequency=A&product=TOTAL');return Response.json({data:value});});
+  assert.deepEqual(result,value);assert.equal(requests,1);
+ });

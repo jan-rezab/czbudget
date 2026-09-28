@@ -2,6 +2,8 @@ import { TRADE_EXPLORER_SQL, tradeExplorerDataset } from './trade-explorer.mjs';
 import fs from "node:fs/promises";
 import path from "node:path";
 import { shareInFlight } from "./in-flight.mjs";
+import {costGate} from './cost-gate.mjs';
+import { ReportSnapshots } from './report-snapshots.mjs';
 import { EnergyPeriodsSnapshot } from './energy-periods-snapshot.mjs';
 import { decodeRows, metadataToken, parameter, requestJSON } from "./france-municipal-lines.mjs";
 
@@ -321,6 +323,7 @@ export class TradeStore {
     location = process.env.BQ_LOCATION || DEFAULT_LOCATION,
     now = () => Date.now(),
     energyPeriodsSource,
+    reportsSource,
     seedPath = path.join(path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html"), "data/trade/annual-hs2-2024.v1.json"),
   } = {}) {
     this.fetchImpl = fetchImpl;
@@ -329,12 +332,17 @@ export class TradeStore {
     this.location = location;
     this.now = now;
     this.energyPeriodsSource = energyPeriodsSource || new EnergyPeriodsSnapshot({fetchImpl, tokenProvider: this.tokenProvider, now});
+    this.reportsSource = reportsSource || (process.env.K_SERVICE ? new ReportSnapshots({fetchImpl, tokenProvider: this.tokenProvider, now}) : null);
+    this.phaseControlled=Boolean(process.env.K_SERVICE)&&!reportsSource;
+    this.reportsEnabled=Boolean(reportsSource);
     this.seedPath = seedPath;
     this.cache = new Map();
+    this.cacheBytes=0;
     this.pending = new Map();
   }
 
   async explorer(value) {
+    if(this.reportsSource)await this.syncReports();
     const countries = [...new Set(String(value || 'CZE,DEU,GBR,USA').split(',').map(normalizeCountryCode))];
     if (!countries.length || countries.length > 4) throw new TradeError(400, 'invalid_trade_countries', 'Select one to four countries.');
     const endYear = new Date(this.now()).getUTCFullYear() - 1;
@@ -354,6 +362,7 @@ export class TradeStore {
   }
 
   async countries() {
+    if(this.reportsSource)await this.syncReports();
     const cached = this.cache.get("countries");
     if (cached?.expiresAt > this.now()) return cached.value;
     return shareInFlight(this.pending, "countries", () => this.loadCountries());
@@ -376,6 +385,7 @@ export class TradeStore {
   }
 
   async profile(countryCode) {
+    if(this.reportsSource)await this.syncReports();
     const code = normalizeCountryCode(countryCode);
     const cached = this.cache.get(code);
     if (cached?.expiresAt > this.now()) return cached.value;
@@ -446,6 +456,7 @@ export class TradeStore {
   }
 
   async productPartners(countryCode, productCode) {
+    if(this.reportsSource)await this.syncReports();
     const code = normalizeCountryCode(countryCode);
     const product = normalizeProductCode(productCode);
     const cacheKey = `product-partners:${code}:${product}`;
@@ -481,6 +492,7 @@ export class TradeStore {
   }
 
   async energyPeriods() {
+    if(this.reportsSource)await this.syncReports();
     const cacheKey = "energy-periods";
     const cached = this.cache.get(cacheKey);
     if (cached?.expiresAt > this.now()) return cached.value;
@@ -521,6 +533,7 @@ export class TradeStore {
   }
 
   async energyFlows(productValue, frequencyValue, periodValue) {
+    if(this.reportsSource)await this.syncReports();
     const { id, code, name } = normalizeEnergyProduct(productValue);
     const frequency = normalizeEnergyFrequency(frequencyValue);
     const period = normalizeEnergyPeriod(periodValue, frequency);
@@ -570,12 +583,32 @@ export class TradeStore {
     });
   }
 
-  put(key, value) {
-    this.cache.set(key, { value, expiresAt: this.now() + CACHE_TTL_MS });
-    while (this.cache.size > 256) this.cache.delete(this.cache.keys().next().value);
+  async syncReports() {
+    if(!this.reportsSource)return;
+    const enabled=this.phaseControlled?(await costGate.status()).reports_only===true:true;
+    let release=null;
+    if(enabled){try {release=(await this.reportsSource.current?.())?.release_id||this.reportsSource.manifest?.release_id;}catch{throw new TradeError(503,'report_snapshot_unavailable','The published report is temporarily unavailable.');}}
+    if(this.reportsEnabled!==enabled||this.reportRelease!==release){this.cache.clear();this.cacheBytes=0;this.reportsEnabled=enabled;this.reportRelease=release;}
   }
 
-  async query(sql, queryParameters, { maxResults = "1000", maximumBytesBilled = "5000000000", purpose = 'trade-serving' } = {}) {
+  put(key, value) {
+    if(this.reportsSource?.manifest) value.source={...value.source,published_release:this.reportsSource.manifest.release_id,snapshot_as_of:this.reportsSource.manifest.snapshot_as_of};
+    const bytes=Buffer.byteLength(JSON.stringify(value));
+    this.cacheBytes-=this.cache.get(key)?.bytes||0;
+    this.cache.set(key, { value, bytes, expiresAt: this.now() + (this.reportsEnabled?6*60*60*1000:CACHE_TTL_MS) });this.cacheBytes+=bytes;
+    while (this.cache.size > 256 || (this.cacheBytes>48*1024*1024&&this.cache.size>1)) {const oldest=this.cache.keys().next().value;this.cacheBytes-=this.cache.get(oldest).bytes;this.cache.delete(oldest);}
+  }
+
+  async query(sql, queryParameters, { maxResults = "1000", maximumBytesBilled = "5000000000", purpose = 'trade-serving', snapshotKey } = {}) {
+    if(this.reportsSource&&this.reportsEnabled){
+      const get=name=>queryParameters.find(p=>p.name===name)?.parameterValue?.value;
+      const key=snapshotKey || (sql===TRADE_COUNTRIES_SQL?['countries']:sql===TRADE_PROFILE_SQL?['profile',get('reporter_iso3')]:sql===TRADE_PRODUCT_PARTNERS_SQL?['product-partners',get('reporter_iso3'),get('product_code')]:sql===ENERGY_FLOWS_SQL?['energy',get('product_code'),get('frequency'),get('period')]:sql===ENERGY_PERIODS_SQL?['energy-periods']:null);
+      try {
+        if(sql===TRADE_EXPLORER_SQL){const all=await this.reportsSource.rows(['explorer']);const codes=new Set(queryParameters.filter(p=>p.name.startsWith('country')).map(p=>p.parameterValue.value));return all.filter(row=>codes.has(row.reporter_iso3));}
+        if(!key)throw Error('Unregistered report query');
+        return await this.reportsSource.rows(key);
+      }catch{throw new TradeError(503,'report_snapshot_unavailable','The published report is temporarily unavailable. No live warehouse query was started.');}
+    }
     const token = await this.tokenProvider();
     const endpoint = `https://bigquery.googleapis.com/bigquery/v2/projects/${encodeURIComponent(this.project)}/queries`;
     const body = {

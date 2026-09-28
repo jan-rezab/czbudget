@@ -60,6 +60,12 @@ map $request_uri $country_canonical_path {
   ~^(?<country_path>/countries/(?:czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece|[a-z][a-z][a-z]))(?:\?|$) $country_path;
 }
 
+proxy_cache_path /tmp/psd-report-cache levels=1:2 keys_zone=psd_reports:2m max_size=64m inactive=24h;
+map "$http_authorization:$http_cookie" $psd_private_request {
+  default 1;
+  ":" 0;
+}
+
 upstream public_spending_api {
   server 127.0.0.1:8081;
   keepalive 32;
@@ -127,8 +133,28 @@ server {
   add_header Content-Security-Policy "default-src 'self'; base-uri 'self'; connect-src 'self' https://cloud.umami.is https://gateway.umami.is https://www.google.com/recaptcha/; frame-src 'self' https://www.google.com/recaptcha/ https://recaptcha.google.com/recaptcha/; font-src 'self'; form-action 'self'; frame-ancestors 'self'; img-src 'self' data:; object-src 'none'; script-src 'self' 'unsafe-inline' https://cloud.umami.is https://www.google.com/recaptcha/ https://www.gstatic.com/recaptcha/; style-src 'self' 'unsafe-inline'; upgrade-insecure-requests" always;
 
   client_max_body_size 32k;
+  add_header X-PSD-Cache $upstream_cache_status always;
+
+  # Static pages also stop at the shared project cutoff. The gate reads one small
+  # control object, cached in process; published data and health probes survive.
+  auth_request /_cost-check;
+  error_page 403 =503 /_cost-overload;
+  location = /_cost-check {
+    internal;
+    auth_request off;
+    proxy_pass http://public_spending_api/_cost-gate;
+    proxy_pass_request_body off;
+    proxy_set_header Content-Length "";
+  }
+  location = /_cost-overload {
+    internal;
+    auth_request off;
+    proxy_pass http://public_spending_api;
+  }
+
 
   location = /healthz {
+    auth_request off;
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
@@ -144,7 +170,32 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
   }
 
+  # Only public report APIs use this bounded cache. Sessions, Authorization,
+  # upstream private/no-store responses and errors bypass it automatically.
+  location ^~ /api/v1/trade {
+    auth_request /_cost-check;
+    error_page 403 =503 /_cost-api-overload;
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_cache psd_reports;
+    proxy_cache_key "$host$request_uri";
+    proxy_cache_methods GET HEAD;
+    proxy_cache_bypass $psd_private_request;
+    proxy_no_cache $psd_private_request;
+    proxy_cache_valid 200 30m;
+    proxy_cache_lock on;
+  }
+  location = /_cost-api-overload {
+    internal;
+    auth_request off;
+    proxy_pass http://public_spending_api;
+  }
+
   location ^~ /api/ {
+    auth_request off;
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
@@ -153,6 +204,7 @@ server {
   }
 
   location ^~ /public-data/ {
+    auth_request off;
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
     proxy_set_header Host $host;

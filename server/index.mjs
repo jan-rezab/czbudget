@@ -1,5 +1,7 @@
 import { readJSON as readEntityJSON } from './data-store.mjs';
 import http from "node:http";
+import {QueryAdmissionError} from './query-admission.mjs';
+import {costGate,overloadHTML} from "./cost-gate.mjs";
 import { ASSET_PATH, PUBLIC_ENTITY_PATH, AssetError, staticAssets, warmStaticAssetLock } from './static-assets.mjs';
 import { createReportAdmin, requireReportReviewer } from "./report-admin.mjs";
 import { createMiniReports, requireMiniAuthor } from './mini-reports.mjs';
@@ -67,9 +69,10 @@ function requestID(request) {
 
 export function sendJSON(response, status, payload, extraHeaders = {}, responsePath = "") {
   let body = JSON.stringify(payload);
+  if(status>=400){response.setHeader("Cache-Control","no-store");response.removeHeader("ETag");}
   // Registered immutable dataset downloads have their own bounded file contract.
   // Paginated API calls keep the existing API safety limit.
-  const byteLimit = PUBLIC_ENTITY_PATH.test(responsePath) ? MAX_REGISTERED_ENTITY_RESPONSE_BYTES : MAX_RESPONSE_BYTES;
+  const byteLimit = responsePath === "/api/v1/trade/russia-report" ? 24*1024*1024 : PUBLIC_ENTITY_PATH.test(responsePath) ? MAX_REGISTERED_ENTITY_RESPONSE_BYTES : MAX_RESPONSE_BYTES;
   if (status < 400 && Buffer.byteLength(body) > byteLimit) {
     status = 500;
     body = JSON.stringify({
@@ -216,9 +219,10 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
   if ((match = pathname.match(/^\/api\/v1\/countries\/([^/]+)$/))) return sendJSON(response, 200, { data: await countryProfile(match[1]) });
   if (pathname === "/api/v1/trade/russia-bilateral") return sendJSON(response, 200, {data:pageRussiaAggregate(await russiaTrade.bilateral(url.searchParams.get("country")),url.searchParams.get("page") || "0")});
+  if (pathname === "/api/v1/trade/russia-report") return sendJSON(response,200,{data:await russiaTrade.aggregate(url.searchParams.get("frequency"),url.searchParams.get("product"))},{},pathname);
   if (pathname === "/api/v1/trade/russia-aggregate") return sendJSON(response, 200, { data: pageRussiaAggregate(await russiaTrade.aggregate(url.searchParams.get("frequency"), url.searchParams.get("product")),url.searchParams.get("page") || "0") });
   if (pathname === "/api/v1/trade/russia-routes") return sendJSON(response, 200, { data: await russiaTrade.routes(url.searchParams.get("exporter"), url.searchParams.get("via"), url.searchParams.get("product")) });
-  if (pathname === "/api/v1/trade/explorer") return sendJSON(response, 200, { data: await trade.explorer(url.searchParams.get("countries")) }, { "cache-control": "public, max-age=900" });
+  if (pathname === "/api/v1/trade/explorer") return sendJSON(response, 200, { data: await trade.explorer(url.searchParams.get("countries")) }, {});
   if (pathname === "/api/v1/trade/countries") return sendJSON(response, 200, { data: await trade.countries() });
   if (pathname === "/api/v1/trade/energy/periods") return sendJSON(response, 200, { data: await trade.energyPeriods() });
   if (pathname === "/api/v1/trade/energy/flows") return sendJSON(response, 200, { data: await trade.energyFlows(url.searchParams.get("product"), url.searchParams.get("frequency"), url.searchParams.get("period")) });
@@ -340,6 +344,19 @@ export async function handler(request, response) {
     return sendError(response, 400, "invalid_request_url", "The request URL is invalid.", id);
   }
   try {
+    if(url.pathname==='/_cost-gate'){
+      const state=await costGate.status();response.writeHead(state.paused?403:204,{'Cache-Control':'no-store'});return response.end();
+    }
+    if(url.pathname==='/_cost-api-overload'){response.setHeader('Retry-After','900');return sendError(response,503,'service_budget_paused','The site is temporarily paused to protect its operating budget. Please try again later.',id);}
+    if(url.pathname==='/_cost-overload'){
+      response.writeHead(503,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'public, max-age=30','Retry-After':'900'});return response.end(request.method==='HEAD'?undefined:overloadHTML);
+    }
+    if(url.pathname==='/public-data/service-status'){
+      const state=await costGate.status();return sendJSON(response,200,{paused:state.paused},{'Cache-Control':'no-store'});
+    }
+    if(url.pathname!=='/healthz'&&(await costGate.status()).paused){
+      response.setHeader('Retry-After','900');return sendError(response,503,'service_budget_paused','The site is temporarily paused to protect its operating budget. Please try again later.',id);
+    }
     if (PUBLIC_ENTITY_PATH.test(url.pathname)) {
       if (!['GET', 'HEAD'].includes(request.method)) throw new DataError(405, 'method_not_allowed', 'Use GET or HEAD.');
       const value = await readEntityJSON(url.pathname.slice(1));
@@ -606,11 +623,13 @@ export async function handler(request, response) {
         if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_DAY_LIMIT, windowMs: 24 * 60 * 60 * 1000, group: "api-user-day" })) return;
         if (!enforceRateLimit(response, id, { key: userID, limit: API_USER_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-user-minute" })) return;
         response.setHeader("X-Authenticated-User", claims.user_id || claims.sub);
+        response.setHeader("Vary", [response.getHeader("Vary"),"Cookie, Authorization"].filter(Boolean).join(", "));
         response.setHeader("Cache-Control", "private, max-age=60");
       } else {
         if (!enforceRateLimit(response, id, { key: clientIP(request), limit: API_ANON_MINUTE_LIMIT, windowMs: 60 * 1000, group: "api-anon" })) return;
         // Anonymous answers are identical for every caller, so shared caches may hold them.
-        response.setHeader("Cache-Control", "public, max-age=300");
+        response.setHeader("Vary", [response.getHeader("Vary"),"Cookie, Authorization"].filter(Boolean).join(", "));
+        response.setHeader("Cache-Control", "public, max-age=300, s-maxage=1800, stale-while-revalidate=3600");
       }
       if (!acquireAPISlot(response, id)) return;
       try {
@@ -628,7 +647,7 @@ export async function handler(request, response) {
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);
     }
-    if (error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof RevenueError || error instanceof PrahaContractsError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof QueryAdmissionError || error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof RevenueError || error instanceof PrahaContractsError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

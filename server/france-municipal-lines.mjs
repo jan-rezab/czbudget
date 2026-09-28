@@ -1,3 +1,4 @@
+import {reserveWebQuery,settleWebQuery} from './query-admission.mjs';
 import { shareInFlight } from "./in-flight.mjs";
 
 const DEFAULT_PROJECT = "czbudget-janrezab";
@@ -210,6 +211,7 @@ export async function metadataToken(fetchImpl) {
 }
 
 export async function requestJSON(fetchImpl, url, options) {
+  const reservation=await reserveWebQuery(url,options);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 12_000);
   try {
@@ -218,6 +220,7 @@ export async function requestJSON(fetchImpl, url, options) {
     if (!response.ok) {
       throw new FranceLinesError(response.status === 403 ? 503 : 502, "france_lines_upstream_failed", "The detailed municipal source is temporarily unavailable.");
     }
+    if(url.startsWith("https://bigquery.googleapis.com/"))await settleWebQuery(payload,reservation);
     return payload;
   } catch (error) {
     if (error.name === "AbortError") throw new FranceLinesError(504, "france_lines_timeout", "The detailed municipal source timed out.");

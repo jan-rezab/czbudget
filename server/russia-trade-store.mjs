@@ -42,9 +42,10 @@ export class RussiaTradeStore extends TradeStore {
   try {rows=await this.suppliersSource.rows(product);}
   catch {throw new TradeError(503,'russia_suppliers_snapshot_unavailable','The verified supplier comparison is temporarily unavailable.');}
   if(rows!==null)return rows;
-  return this.query(RUSSIA_SUPPLIERS_SQL,[parameter('product','STRING',product)],{maxResults:'10000',maximumBytesBilled:'40000000000',purpose:'russia-suppliers'});
+  throw new TradeError(503,'russia_suppliers_snapshot_unavailable','The published supplier report is temporarily unavailable.');
  }
  async aggregate(frequency = 'A', product = 'TOTAL') {
+  await this.syncReports();
   frequency ||= 'A'; product ||= 'TOTAL';
   if (!['A','M'].includes(frequency) || !(product === 'TOTAL' || /^(0[1-9]|[1-8][0-9]|9[0-9])$/.test(product) || PRODUCTS.includes(product)))
    throw new TradeError(400, 'invalid_russia_aggregate_filter', 'Choose annual or monthly, and all goods, an HS chapter or a supported HS6 code.');
@@ -54,9 +55,9 @@ export class RussiaTradeStore extends TradeStore {
   return shareInFlight(this.pending, key, async () => {
    const params = [parameter('frequency','STRING',frequency),parameter('product','STRING',product)];
    const [rows, suppliers, countries] = await Promise.all([
-    this.query(RUSSIA_AGGREGATE_SQL,params,{maxResults:'25000',maximumBytesBilled:'40000000000',purpose:'russia-aggregate'}),
+    this.query(RUSSIA_AGGREGATE_SQL,params,{maxResults:'25000',maximumBytesBilled:'40000000000',purpose:'russia-aggregate',snapshotKey:['russia-aggregate',frequency,product]}),
     this.suppliers(product),
-    this.query("SELECT DISTINCT iso3, LOWER(iso2) iso2, name FROM `czbudget-janrezab.budget_detail.trade_areas` WHERE NOT is_group AND iso3 IS NOT NULL",[],{maxResults:'1000'})
+    this.query("SELECT DISTINCT iso3, LOWER(iso2) iso2, name FROM `czbudget-janrezab.budget_detail.trade_areas` WHERE NOT is_group AND iso3 IS NOT NULL",[],{maxResults:'1000',snapshotKey:['areas']})
    ]);
    const convert = row => ({...row, reported_value_usd:row.value_usd, value_usd:row.value_usd==null?null:Number(row.value_usd), product_count:Number(row.product_count)});
    const value = {schema_version:'russia-trade-aggregate.v1',frequency,product,unit:'current USD',
@@ -72,12 +73,13 @@ export class RussiaTradeStore extends TradeStore {
   });
  }
  async bilateral(country='CHN') {
+  await this.syncReports();
  country=String(country||'CHN').toUpperCase();
  if(!/^[A-Z]{3}$/.test(country)||country==='RUS')throw new TradeError(400,'invalid_russia_country','Choose a three-letter country code other than Russia.');
  const key=`russia-bilateral:${country}`,cached=this.cache.get(key);
  if(cached?.expiresAt>this.now())return cached.value;
  return shareInFlight(this.pending,key,async()=>{
-  const rows=await this.query(RUSSIA_BILATERAL_SQL,[parameter('country','STRING',country)],{maxResults:'5000',maximumBytesBilled:'4000000000'});
+  const rows=await this.query(RUSSIA_BILATERAL_SQL,[parameter('country','STRING',country)],{maxResults:'5000',maximumBytesBilled:'4000000000',snapshotKey:['russia-bilateral',country]});
   const value={schema_version:'russia-bilateral.v1',country,frequency:'A',product:'TOTAL',unit:'current USD',
    observations:rows.map(row=>({...row,reported_value_usd:row.value_usd,value_usd:row.value_usd==null?null:Number(row.value_usd),product_count:Number(row.product_count)})),suppliers:[],countries:[],
    source:{title:'UN Comtrade',url:'https://comtradeplus.un.org/',table:'czbudget-janrezab.budget_detail.trade_observations',retrieved_at:rows.map(r=>r.retrieved_at).filter(Boolean).sort().at(-1)||null,
@@ -88,6 +90,7 @@ export class RussiaTradeStore extends TradeStore {
  });
  }
  async routes(exporter = 'DEU', via = 'KAZ', product = '854231') {
+  await this.syncReports();
   exporter ||= 'DEU'; via ||= 'KAZ'; product ||= '854231';
   if (!EXPORTERS.includes(exporter) || !INTERMEDIARIES.includes(via) || !PRODUCTS.includes(product) || exporter === via)
    throw new TradeError(400, 'invalid_russia_trade_filter', 'Choose a supported exporter, different intermediary and HS6 product.');
@@ -98,7 +101,7 @@ export class RussiaTradeStore extends TradeStore {
    const rows = await this.query(RUSSIA_ROUTES_SQL, [parameter('exporter','STRING',exporter), parameter('via','STRING',via), parameter('product','STRING',product)], { maxResults:'5000', maximumBytesBilled:'8000000000' });
    const value = { schema_version:'russia-trade-routes.v1', exporter, via, product,
     frequency:'M', reporting_basis:'EXPORTER_REPORTED', unit:'current USD',
-    start_period:'201902', end_period:new Date(this.now()).toISOString().slice(0,7).replace('-',''),
+    start_period:'201902', end_period:new Date(this.reportsSource?.manifest?.snapshot_as_of || this.now()).toISOString().slice(0,7).replace('-',''),
     observations:rows.map(row => ({ ...row, reported_value_usd:row.value_usd, value_usd:row.value_usd == null ? null : Number(row.value_usd) })),
     source:{ title:'UN Comtrade', table:'czbudget-janrezab.budget_detail.trade_observations',
      url:`https://comtradeplus.un.org/TradeFlow?Frequency=M&Flows=X&CommodityCodes=${product}`, retrieved_at:rows.map(row=>row.retrieved_at).filter(Boolean).sort().at(-1) || null,
