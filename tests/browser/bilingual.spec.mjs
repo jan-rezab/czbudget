@@ -50,7 +50,9 @@ test("every public page family publishes language-matched social metadata", asyn
   test.setTimeout(180_000);
   for (const path of previewRoutes) {
     for (const lang of ["cs", "en"]) {
-      await page.goto(withLanguage(path, lang), { waitUntil: "networkidle" });
+      await page.goto(withLanguage(path, lang), { waitUntil: "domcontentloaded" });
+      await expect(page.locator('meta[property="og:locale"]'), `${path} (${lang}) metadata readiness`)
+        .toHaveAttribute("content", lang === "en" ? "en_GB" : "cs_CZ");
       await expect(page.locator("html"), `${path} (${lang})`).toHaveAttribute("lang", lang);
 
       const metadata = await page.evaluate(() => {
