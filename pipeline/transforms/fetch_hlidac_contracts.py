@@ -309,7 +309,16 @@ def fetch_page(token: str, query: str, page: int, retries: int = 8, progress_gua
         except (TimeoutError, urllib.error.URLError):
             if attempt == retries - 1:
                 raise
-        time.sleep(retry_delay)
+        # A server Retry-After must not bypass the stage/idle deadline.
+        # Check between bounded sleep slices without adding request retries.
+        if progress_guard:
+            while retry_delay>0:
+                progress_guard()
+                pause=min(retry_delay,10.0)
+                time.sleep(pause)
+                retry_delay-=pause
+        else:
+            time.sleep(retry_delay)
     raise RuntimeError("Hlídač státu request failed")
 
 

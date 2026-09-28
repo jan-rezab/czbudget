@@ -4,7 +4,7 @@ from pathlib import Path
 import unittest
 from unittest.mock import patch
 from pipeline.czech_hlidac_cloud.bounded_stage import PageCache,StageGuard,StageLimit
-from pipeline.transforms.fetch_hlidac_contracts import fetch_full_history
+from pipeline.transforms.fetch_hlidac_contracts import fetch_full_history,fetch_page
 
 class Blob:
     def __init__(self,bucket,name): self.bucket=bucket;self.name=name;self.generation='1'
@@ -19,6 +19,14 @@ class Bucket:
     def blob(self,name): return Blob(self,name)
 
 class BoundedReplay(unittest.TestCase):
+    def test_large_retry_after_cannot_bypass_idle_deadline(self):
+        from urllib.error import HTTPError
+        now=[0];guard=StageGuard(60,30,clock=lambda:now[0])
+        error=HTTPError('https://example.test',429,'limited',{'Retry-After':'5000'},None)
+        with patch('pipeline.transforms.fetch_hlidac_contracts.urllib.request.urlopen',side_effect=error) as request,\
+             patch('pipeline.transforms.fetch_hlidac_contracts.time.sleep',side_effect=lambda seconds:now.__setitem__(0,now[0]+seconds)):
+            with self.assertRaises(StageLimit): fetch_page('synthetic','query',1,progress_guard=guard.check)
+        self.assertEqual(request.call_count,1);self.assertEqual(now[0],30)
     def test_stage_and_idle_deadlines(self):
         now=[0];guard=StageGuard(60,30,clock=lambda:now[0]);now[0]=31
         with self.assertRaises(StageLimit): guard.check()
