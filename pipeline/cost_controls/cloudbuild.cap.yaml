@@ -1,0 +1,11 @@
+steps:
+  - id: project-cost-circuit
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    entrypoint: python3
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1']
+    args: ['pipeline/cost_controls/cap.py']
+timeout: 180s
+queueTtl: 120s
+tags: [plane-control, project-cost-cap]
+options:
+  logging: CLOUD_LOGGING_ONLY
