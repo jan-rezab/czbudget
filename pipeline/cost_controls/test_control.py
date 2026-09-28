@@ -18,11 +18,11 @@ class ControlsTests(unittest.TestCase):
         repo = {'name':'projects/czbudget-janrezab/locations/europe-west1/repositories/web',
                 'cleanupPolicies':{'existing':{'id':'existing','action':'KEEP',
                                              'condition':{'tagState':'TAGGED'}}}}
-        protected = ['europe-west1-docker.pkg.dev/czbudget-janrezab/web/app@sha256:123']
+        protected = ['europe-west1-docker.pkg.dev/czbudget-janrezab/web/app@sha256:'+'a'*64]
         plan = registry_policy(repo,protected)
         self.assertTrue(plan['cleanupPolicyDryRun'])
         self.assertEqual(plan['cleanupPolicies']['existing'],repo['cleanupPolicies']['existing'])
-        self.assertEqual(plan['cleanupPolicies']['psd-audit-keep-revisions']['condition']['versionNamePrefixes'],['sha256:123'])
+        self.assertEqual(plan['cleanupPolicies']['psd-audit-keep-revisions']['condition']['versionNamePrefixes'],['sha256:'+'a'*57])
         self.assertEqual(plan['cleanupPolicies']['psd-audit-keep-recent']['mostRecentVersions']['keepCount'],20)
 
     def test_old_live_revision_is_preserved_beyond_recent_rollback_window(self):

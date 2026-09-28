@@ -72,7 +72,10 @@ def registry_policy(repository, protected):
     host = repository['name'].split('/locations/',1)[1].split('/',1)[0]+'-docker.pkg.dev/'
     for image in protected:
         if image.startswith(host+PROJECT+'/') and repo_path in image:
-            digests.append(image.rsplit('@',1)[1])
+            # Registry prefix fields allow at most 64 characters, whereas
+            # sha256:<64 hex> is 71. A 64-character prefix preserves the exact
+            # revision and conservatively keeps any hypothetical collision.
+            digests.append(image.rsplit('@',1)[1][:64])
     if digests:
         additions['psd-audit-keep-revisions'] = {'id':'psd-audit-keep-revisions', 'action':'KEEP',
                     'condition':{'tagState':'ANY', 'versionNamePrefixes':sorted(set(digests))}}
