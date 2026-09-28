@@ -155,6 +155,7 @@ export class FranceMunicipalLinesStore {
       timeoutMs: 8_000,
       maxResults: "20000",
       maximumBytesBilled: "2000000000",
+      labels: {plane:'web',dataset:'municipal',purpose:'france-lines'},
       parameterMode: "NAMED",
       queryParameters: [
         parameter("entity_id", "STRING", entityID),

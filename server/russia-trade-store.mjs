@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { TradeStore, TradeError } from './trade-store.mjs';
 import { parameter } from './france-municipal-lines.mjs';
 import { shareInFlight } from './in-flight.mjs';
+import { RussiaSuppliersSnapshot } from './russia-suppliers-snapshot.mjs';
 
 export const EXPORTERS = ['DEU','CZE','POL','FRA','ITA','NLD','GBR','USA','JPN','KOR','CHN','TUR'];
 export const INTERMEDIARIES = ['KAZ','KGZ','ARM','GEO','TUR','UZB','ARE','CHN','BLR'];
@@ -32,6 +33,17 @@ FROM ranked WHERE rank = 1 ORDER BY period, reporter_iso3, partner_iso3
 `;
 
 export class RussiaTradeStore extends TradeStore {
+ constructor(options={}) {
+  super(options);
+  this.suppliersSource=options.suppliersSource || new RussiaSuppliersSnapshot({fetchImpl:this.fetchImpl,tokenProvider:this.tokenProvider,now:this.now});
+ }
+ async suppliers(product) {
+  let rows;
+  try {rows=await this.suppliersSource.rows(product);}
+  catch {throw new TradeError(503,'russia_suppliers_snapshot_unavailable','The verified supplier comparison is temporarily unavailable.');}
+  if(rows!==null)return rows;
+  return this.query(RUSSIA_SUPPLIERS_SQL,[parameter('product','STRING',product)],{maxResults:'10000',maximumBytesBilled:'40000000000',purpose:'russia-suppliers'});
+ }
  async aggregate(frequency = 'A', product = 'TOTAL') {
   frequency ||= 'A'; product ||= 'TOTAL';
   if (!['A','M'].includes(frequency) || !(product === 'TOTAL' || /^(0[1-9]|[1-8][0-9]|9[0-9])$/.test(product) || PRODUCTS.includes(product)))
@@ -42,8 +54,8 @@ export class RussiaTradeStore extends TradeStore {
   return shareInFlight(this.pending, key, async () => {
    const params = [parameter('frequency','STRING',frequency),parameter('product','STRING',product)];
    const [rows, suppliers, countries] = await Promise.all([
-    this.query(RUSSIA_AGGREGATE_SQL,params,{maxResults:'25000',maximumBytesBilled:'40000000000'}),
-    this.query(RUSSIA_SUPPLIERS_SQL,[parameter('product','STRING',product)],{maxResults:'10000',maximumBytesBilled:'40000000000'}),
+    this.query(RUSSIA_AGGREGATE_SQL,params,{maxResults:'25000',maximumBytesBilled:'40000000000',purpose:'russia-aggregate'}),
+    this.suppliers(product),
     this.query("SELECT DISTINCT iso3, LOWER(iso2) iso2, name FROM `czbudget-janrezab.budget_detail.trade_areas` WHERE NOT is_group AND iso3 IS NOT NULL",[],{maxResults:'1000'})
    ]);
    const convert = row => ({...row, reported_value_usd:row.value_usd, value_usd:row.value_usd==null?null:Number(row.value_usd), product_count:Number(row.product_count)});
@@ -53,6 +65,7 @@ export class RussiaTradeStore extends TradeStore {
      url:'https://comtradeplus.un.org/',retrieved_at:rows.map(r=>r.retrieved_at).filter(Boolean).sort().at(-1)||null,
      release_ids:[...new Set([...rows,...suppliers].flatMap(r=>(r.release_ids||'').split('|')).filter(Boolean))],
      method:'Calculated sums of deduplicated, originally reported HS6 observations. World partner rows are kept separate from bilateral rows. Annual and monthly grains are never combined.',
+     suppliers_snapshot:this.suppliersSource.manifest?{release_id:this.suppliersSource.manifest.release_id,snapshot_as_of:this.suppliersSource.manifest.snapshot_as_of}:null,
      release_note:'Ingestion IDs identify contributing loads, not an immutable snapshot. Product counts describe observed coverage, not completeness.'}};
    value.view_id=createHash('sha256').update(JSON.stringify(value)).digest('hex');
    this.put(key,value);return value;

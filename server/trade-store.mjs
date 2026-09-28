@@ -575,7 +575,7 @@ export class TradeStore {
     while (this.cache.size > 256) this.cache.delete(this.cache.keys().next().value);
   }
 
-  async query(sql, queryParameters, { maxResults = "1000", maximumBytesBilled = "5000000000" } = {}) {
+  async query(sql, queryParameters, { maxResults = "1000", maximumBytesBilled = "5000000000", purpose = 'trade-serving' } = {}) {
     const token = await this.tokenProvider();
     const endpoint = `https://bigquery.googleapis.com/bigquery/v2/projects/${encodeURIComponent(this.project)}/queries`;
     const body = {
@@ -585,6 +585,7 @@ export class TradeStore {
       timeoutMs: 8_000,
       maxResults,
       maximumBytesBilled,
+      labels: {plane:'web',dataset:'comtrade',purpose},
       parameterMode: "NAMED",
       queryParameters,
     };
