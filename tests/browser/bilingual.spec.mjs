@@ -90,13 +90,13 @@ test("every public page family publishes language-matched social metadata", asyn
 });
 
 test("the state-as-owner story is fully bilingual", async ({ page }) => {
-  await page.goto("/cesko.html?lang=en", { waitUntil: "networkidle" });
+  await page.goto("/cesko.html?lang=en", { waitUntil: "domcontentloaded" });
   await expect(page.locator(".enterprise-hero h1")).toContainText("Profit is not");
   await expect(page.locator("body")).toContainText(/What actually\s*reached the state\./);
   await expect(page.locator("body")).toContainText(/No double\s*counting\./);
   await expect(page.locator("body")).not.toContainText(/Co skutečně\s*přiteklo státu\./);
 
-  await page.goto("/cesko.html?lang=cs", { waitUntil: "networkidle" });
+  await page.goto("/cesko.html?lang=cs", { waitUntil: "domcontentloaded" });
   await expect(page.locator(".enterprise-hero h1")).toContainText("Zisk není");
   await expect(page.locator("body")).toContainText(/Co skutečně\s*přiteklo státu\./);
   await expect(page.locator("body")).toContainText(/Bez dvojího\s*započítání\./);
@@ -117,15 +117,15 @@ test("high-risk static and generated templates switch their visible copy", async
   ];
 
   for (const [path, selector, czech, english] of pairs) {
-    await page.goto(withLanguage(path, "cs"), { waitUntil: "networkidle" });
+    await page.goto(withLanguage(path, "cs"), { waitUntil: "domcontentloaded" });
     await expect(page.locator(selector), `${path} Czech copy`).toContainText(czech);
-    await page.goto(withLanguage(path, "en"), { waitUntil: "networkidle" });
+    await page.goto(withLanguage(path, "en"), { waitUntil: "domcontentloaded" });
     await expect(page.locator(selector), `${path} English copy`).toContainText(english);
   }
 });
 
 test("shared page modules do not retain Czech UI copy in English", async ({ page }) => {
-  await page.goto("/methodology.html?lang=en", { waitUntil: "networkidle" });
+  await page.goto("/methodology.html?lang=en", { waitUntil: "domcontentloaded" });
   // Expected copy comes from site-pages.js above, so the check is that the
   // English page renders the English entry and not the Czech one.
   expect(atlasTitleEn, "site-pages.js must define atlasTitle for cs and en").toBeTruthy();
@@ -135,15 +135,15 @@ test("shared page modules do not retain Czech UI copy in English", async ({ page
   await expect(page.locator("#surface-coverage-atlas .surface-map")).toBeVisible();
   await expect(page.locator(".atlas-table thead th").first()).toContainText("Country");
 
-  await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "networkidle" });
+  await page.goto("/cesky-rozpocet.html?lang=en", { waitUntil: "domcontentloaded" });
   await expect(page.locator(".hero-deficit small")).toHaveText("12.8% of expenditure");
   await expect(page.locator(".section-heading h2").first()).toHaveText("Revenue and expenditure over time");
   await expect(page.locator("body")).not.toContainText("Příjmy a výdaje v čase");
 
-  await page.goto("/cesko.html?lang=en", { waitUntil: "networkidle" });
+  await page.goto("/cesko.html?lang=en", { waitUntil: "domcontentloaded" });
   await expect(page.locator("#reconciliation-note")).not.toContainText("Součet 38 individuálních karet");
 
-  await page.goto("/cz/municipalities/praha/?lang=en", { waitUntil: "networkidle" });
+  await page.goto("/cz/municipalities/praha/?lang=en", { waitUntil: "domcontentloaded" });
   await expect(page.locator(".detail-hero .eyebrow")).toContainText("Czechia · official municipal finance");
   await expect(page.locator(".method-warning")).toContainText("The fiscal balance is consolidated throughout the series.");
   await expect(page.locator(".data-contract p")).toContainText("Missing cash, debt or history is not estimated.");
@@ -162,7 +162,7 @@ test("warehouse-only itemized coverage reads honestly in both languages", async 
 
   for (const lang of ["cs", "en"]) {
     const say = wording[lang];
-    await page.goto(withLanguage("/methodology.html", lang), { waitUntil: "networkidle" });
+    await page.goto(withLanguage("/methodology.html", lang), { waitUntil: "domcontentloaded" });
     const cells = page.locator(".coverage-matrix .coverage-warehouse-only");
     await expect(cells, `${lang} warehouse-only cell count`).toHaveCount(counts.warehouseOnlyCountries);
     await expect(page.locator(".coverage-legend"), `${lang} legend`).toContainText(say.legend);
@@ -209,7 +209,7 @@ test("representative pages contain no standalone labels from the other language"
 
   for (const path of previewRoutes) {
     for (const lang of ["cs", "en"]) {
-      await page.goto(withLanguage(path, lang), { waitUntil: "networkidle" });
+      await page.goto(withLanguage(path, lang), { waitUntil: "domcontentloaded" });
       const lines = new Set((await page.locator("body").innerText()).split("\n").map((line) => line.trim()).filter(Boolean));
       const leaked = forbidden[lang].filter((label) => lines.has(label));
       expect(leaked, `${path} (${lang}) contains labels from the other language`).toEqual([]);
