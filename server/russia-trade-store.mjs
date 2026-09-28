@@ -39,7 +39,7 @@ export class RussiaTradeStore extends TradeStore {
  }
  async suppliers(product) {
   let rows;
-  try {rows=await this.suppliersSource.rows(product);}
+  try {rows=this.reportsEnabled ? await this.reportsSource.rows(['russia-suppliers',product]) : await this.suppliersSource.rows(product);}
   catch {throw new TradeError(503,'russia_suppliers_snapshot_unavailable','The verified supplier comparison is temporarily unavailable.');}
   if(rows!==null)return rows;
   throw new TradeError(503,'russia_suppliers_snapshot_unavailable','The published supplier report is temporarily unavailable.');
@@ -66,7 +66,7 @@ export class RussiaTradeStore extends TradeStore {
      url:'https://comtradeplus.un.org/',retrieved_at:rows.map(r=>r.retrieved_at).filter(Boolean).sort().at(-1)||null,
      release_ids:[...new Set([...rows,...suppliers].flatMap(r=>(r.release_ids||'').split('|')).filter(Boolean))],
      method:'Calculated sums of deduplicated, originally reported HS6 observations. World partner rows are kept separate from bilateral rows. Annual and monthly grains are never combined.',
-     suppliers_snapshot:this.suppliersSource.manifest?{release_id:this.suppliersSource.manifest.release_id,snapshot_as_of:this.suppliersSource.manifest.snapshot_as_of}:null,
+     suppliers_snapshot:this.reportsEnabled?{release_id:this.reportsSource.manifest.release_id,snapshot_as_of:this.reportsSource.manifest.snapshot_as_of}:this.suppliersSource.manifest?{release_id:this.suppliersSource.manifest.release_id,snapshot_as_of:this.suppliersSource.manifest.snapshot_as_of}:null,
      release_note:'Ingestion IDs identify contributing loads, not an immutable snapshot. Product counts describe observed coverage, not completeness.'}};
    value.view_id=createHash('sha256').update(JSON.stringify(value)).digest('hex');
    this.put(key,value);return value;
@@ -98,7 +98,7 @@ export class RussiaTradeStore extends TradeStore {
   const cached = this.cache.get(key);
   if (cached?.expiresAt > this.now()) return cached.value;
   return shareInFlight(this.pending, key, async () => {
-   const rows = await this.query(RUSSIA_ROUTES_SQL, [parameter('exporter','STRING',exporter), parameter('via','STRING',via), parameter('product','STRING',product)], { maxResults:'5000', maximumBytesBilled:'8000000000' });
+   const rows = await this.query(RUSSIA_ROUTES_SQL, [parameter('exporter','STRING',exporter), parameter('via','STRING',via), parameter('product','STRING',product)], { maxResults:'5000', maximumBytesBilled:'8000000000', snapshotKey:['russia-routes',exporter,via,product] });
    const value = { schema_version:'russia-trade-routes.v1', exporter, via, product,
     frequency:'M', reporting_basis:'EXPORTER_REPORTED', unit:'current USD',
     start_period:'201902', end_period:new Date(this.reportsSource?.manifest?.snapshot_as_of || this.now()).toISOString().slice(0,7).replace('-',''),

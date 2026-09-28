@@ -498,7 +498,7 @@ export class TradeStore {
     if (cached?.expiresAt > this.now()) return cached.value;
     return shareInFlight(this.pending, cacheKey, async () => {
       let published;
-      try { published = await this.energyPeriodsSource.current(); }
+      try { if (!this.reportsEnabled) published = await this.energyPeriodsSource.current(); }
       catch { throw new TradeError(502, 'energy_periods_snapshot_unavailable', 'The verified energy period release is temporarily unavailable.'); }
       if (published) { this.put(cacheKey, published); return published; }
       // Global history spans all markets and seven annual partitions. Its

@@ -13,9 +13,12 @@ test('published trade and Russia results never submit BigQuery requests, includi
  const trade=new TradeStore({reportsSource:source,fetchImpl:noNetwork});
  assert.deepEqual((await trade.countries()).countries,[]);
  await assert.rejects(trade.energyFlows('gas','M','202601'),{code:'energy_trade_not_found'});
- const russia=new RussiaTradeStore({reportsSource:source,fetchImpl:noNetwork,suppliersSource:{rows:async()=>[]}});
+ const russia=new RussiaTradeStore({reportsSource:source,fetchImpl:noNetwork,suppliersSource:{rows:noNetwork}});
  const result=await russia.aggregate('M','85');assert.deepEqual(result.observations,[]);assert.equal(result.source.published_release,'fixed');
- assert.deepEqual(keys,[['countries'],['energy','271121','M','202601'],['russia-aggregate','M','85'],['areas']]);
+ await russia.routes('DEU','KAZ','854231');
+ await russia.bilateral('CZE');
+ await trade.energyPeriods();
+ assert.deepEqual(keys,[['countries'],['energy','271121','M','202601'],['russia-aggregate','M','85'],['russia-suppliers','85'],['areas'],['russia-routes','DEU','KAZ','854231'],['russia-bilateral','CZE'],['energy-periods']]);
 });
 
 test('verified report reader pins generations, coalesces callers and rejects corruption',async()=>{
