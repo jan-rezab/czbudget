@@ -1,14 +1,13 @@
 steps:
   - id: bounded-russia-suppliers-serving-publication
-    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
     env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1']
     args:
       - -ceu
       - |
-        pip install --quiet --disable-pip-version-check google-cloud-bigquery==3.38.0 google-cloud-storage==3.4.1
-        PYTHONPATH=pipeline/russia_suppliers python -m unittest test_publish
-        python pipeline/russia_suppliers/publish.py --loader-sha '${_LOADER_SHA}'
+        PYTHONPATH=pipeline/russia_suppliers python3 -m unittest test_publish test_cloud_clients
+        python3 pipeline/russia_suppliers/publish.py --loader-sha '${_LOADER_SHA}'
 timeout: 600s
 queueTtl: 300s
 tags: [plane-data, russia-suppliers-serving, bounded-bigquery]

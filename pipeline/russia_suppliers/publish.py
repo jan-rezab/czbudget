@@ -66,7 +66,7 @@ def main():
     if not os.environ.get('BUILD_ID'): raise RuntimeError('Cloud Build only; never run a local export')
     parser=argparse.ArgumentParser();parser.add_argument('--loader-sha',required=True);args=parser.parse_args()
     if not re.fullmatch(r'[a-f0-9]{40}',args.loader_sha): raise ValueError('Exact committed loader SHA required')
-    from google.cloud import bigquery,storage
+    from cloud_clients import bigquery,storage
     release=os.environ['BUILD_ID'];uuid.UUID(release)
     gcs=storage.Client(project=PROJECT);private=gcs.bucket(PRIVATE);public=gcs.bucket(PUBLIC)
     prefix='processing-runs/russia-trade-suppliers/'+release
@@ -98,7 +98,8 @@ def main():
             loader_sha=args.loader_sha,max_query_bytes=96*GIB,max_run_bytes=96*GIB)
         queries.labels.update(dataset='comtrade',purpose='russia-suppliers')
         snapshot=next(iter(queries.query('SELECT TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) snapshot_at')))['snapshot_at']
-        rows=[dict(r) for r in queries.query(sql,[bigquery.ScalarQueryParameter('snapshot_at','TIMESTAMP',snapshot)])]
+        snapshot=datetime.fromisoformat(snapshot.replace('Z','+00:00'))
+        rows=[dict(r) for r in queries.query(sql,[bigquery.ScalarQueryParameter('snapshot_at','TIMESTAMP',snapshot.isoformat())])]
         envelope=dict(schema_version='1.0.0',loader_git_sha=args.loader_sha,query_sha256=sql_sha,snapshot_as_of=snapshot.isoformat(),
             started_at=datetime.now(timezone.utc).isoformat(),previous_pointer_generation=expected,rows=rows,query_usage=queries.receipt())
     raw_body=dump(envelope)
