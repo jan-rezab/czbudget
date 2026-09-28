@@ -45,16 +45,16 @@ def prepare():
     policy=api.request(crm+':getIamPolicy',{'options':{'requestedPolicyVersion':3}});api.save('controller-project-iam-before',policy)
     bind(policy,COST_ROLE,MEMBER)
     api.request(crm+':setIamPolicy',{'policy':policy});api.save('controller-project-iam-after',api.request(crm+':getIamPolicy',{'options':{'requestedPolicyVersion':3}}))
-    existing=api.request(IAM+SA_RESOURCE+':getIamPolicy');bind(existing,'roles/iam.serviceAccountUser',MEMBER)
+    existing=api.request(IAM+SA_RESOURCE+':getIamPolicy',{});bind(existing,'roles/iam.serviceAccountUser',MEMBER)
     api.request(IAM+SA_RESOURCE+':setIamPolicy',{'policy':existing})
     for bucket,prefix,role,member,title in [
         (PROJECT+'-public-snapshots','static-assets/cost-control/', 'roles/storage.objectUser',MEMBER,'psd-cost-controller-state'),
         (PROJECT+'-public-snapshots','static-assets/cost-control/admission/', ADMISSION_ROLE,'serviceAccount:psd-web-runtime@'+PROJECT+'.iam.gserviceaccount.com','psd-web-query-admission'),
         (PROJECT+'-data-layers','processing-runs/cost-control/', 'roles/storage.objectViewer',MEMBER,'psd-cost-controller-source')]:
         url='https://storage.googleapis.com/storage/v1/b/'+bucket+'/iam'
-        policy=api.request(url);api.save(title+'-before',policy)
+        policy=api.request(url+'?optionsRequestedPolicyVersion=3');api.save(title+'-before',policy)
         condition={'title':title,'expression':"resource.name.startsWith('projects/_/buckets/"+bucket+'/objects/'+prefix+"')"}
-        bind(policy,role,member,condition);api.request(url,policy,'PUT');api.save(title+'-after',api.request(url))
+        bind(policy,role,member,condition);api.request(url,policy,'PUT');api.save(title+'-after',api.request(url+'?optionsRequestedPolicyVersion=3'))
     dataset='https://bigquery.googleapis.com/bigquery/v2/projects/'+PROJECT+'/datasets/psd_cost_control'
     view={'projectId':PROJECT,'datasetId':'psd_cost_control','tableId':'psd_project_costs'}
     # Authorize only this project-filtered view; the controller never receives a
