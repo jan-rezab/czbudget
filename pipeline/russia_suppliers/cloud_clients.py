@@ -74,6 +74,17 @@ class BigQueryClient:
         config=dict(query=query,labels=labels,dryRun=getattr(job_config,'dry_run',False))
         body=dict(configuration=config,jobReference={'projectId':self.project,'location':'EU'})
         return QueryJob(self.api,self.root,self.api.request(self.root+'/jobs',body),config['dryRun'])
+    def reuse(self,job_id,sql):
+        import re
+        if not re.fullmatch(r'[A-Za-z0-9_-]{1,256}',job_id): raise ValueError('Invalid source job ID')
+        data=self.api.request(self.root+'/jobs/'+job_id+'?location=EU')
+        config=data['configuration'];query=config['query'];status=data['status']
+        if status.get('state')!='DONE' or status.get('errorResult') or query.get('query')!=sql: raise ValueError('Source query is not the exact successful export')
+        if config.get('labels',{}).get('purpose')!='russia-suppliers' or config['labels'].get('plane')!='data': raise ValueError('Source job attribution differs')
+        if int(query.get('maximumBytesBilled','0'))>96*1024**3: raise ValueError('Source job allowance exceeds this export')
+        pins=[p['parameterValue']['value'] for p in query.get('queryParameters',[]) if p['name']=='snapshot_at' and p['parameterType']['type']=='TIMESTAMP']
+        if len(pins)!=1: raise ValueError('Source query has no exact timestamp pin')
+        return QueryJob(self.api,self.root,data),pins[0],config['labels']
 
 class Blob:
     def __init__(self,bucket,name,generation=None): self.bucket=bucket;self.name=name;self.generation=generation

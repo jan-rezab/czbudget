@@ -12,6 +12,19 @@ class FakeRest:
             'rows':[{'f':[{'v':'1790591400.123456'},{'v':'100000000000000000000.000000001'}]}]}
 
 class RestContracts(unittest.TestCase):
+    def test_reuse_requires_exact_query_pin_and_successful_bounded_job(self):
+        with patch('cloud_clients.Rest',FakeRest): client=BigQueryClient('p','EU')
+        data={'status':{'state':'DONE'},'jobReference':{'jobId':'source'},'configuration':{
+            'labels':{'plane':'data','purpose':'russia-suppliers','run_id':'prior'},
+            'query':{'query':'exact SQL','maximumBytesBilled':str(96*1024**3),'queryParameters':[
+                {'name':'snapshot_at','parameterType':{'type':'TIMESTAMP'},'parameterValue':{'value':'2026-09-28T00:00:00Z'}}]}},
+            'statistics':{'query':{'totalBytesProcessed':'100','totalBytesBilled':'100'}}}
+        client.api.request=lambda url:data
+        job,pin,labels=client.reuse('source','exact SQL')
+        self.assertEqual((job.job_id,pin,labels['run_id']),('source','2026-09-28T00:00:00Z','prior'))
+        with self.assertRaises(ValueError): client.reuse('source','different SQL')
+        data['status']['errorResult']={'reason':'failed'}
+        with self.assertRaises(ValueError): client.reuse('source','exact SQL')
     def test_query_cap_labels_timestamp_and_exact_decimal(self):
         with patch('cloud_clients.Rest',FakeRest): client=BigQueryClient('p','EU')
         job=client.query('SELECT x',QueryJobConfig(query_parameters=[ScalarQueryParameter('pin','TIMESTAMP','2026-09-28T00:00:00Z')],

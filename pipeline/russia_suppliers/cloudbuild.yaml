@@ -2,7 +2,7 @@ steps:
   - id: bounded-russia-suppliers-serving-publication
     name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
     entrypoint: bash
-    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1']
+    env: ['BUILD_ID=$BUILD_ID', 'PYTHONUNBUFFERED=1', 'SOURCE_QUERY_JOB=${_SOURCE_QUERY_JOB}']
     args:
       - -ceu
       - |
@@ -15,3 +15,4 @@ options:
   logging: CLOUD_LOGGING_ONLY
 substitutions:
   _LOADER_SHA: required
+  _SOURCE_QUERY_JOB: ''

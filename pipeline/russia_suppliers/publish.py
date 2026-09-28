@@ -3,6 +3,7 @@ import argparse
 from datetime import date, datetime, timezone
 from decimal import Decimal, localcontext
 import hashlib
+import gzip
 import json
 import os
 from pathlib import Path
@@ -86,25 +87,38 @@ def main():
             if len(body)!=ref['bytes'] or hashlib.sha256(body).hexdigest()!=ref['sha256']: raise ValueError('Completed retry object differs')
         print(json.dumps(dict(event='supplier_release_already_published',release_id=release)),flush=True);return
     sql=Path(__file__).with_name('suppliers.sql').read_text();sql_sha=hashlib.sha256(sql.encode()).hexdigest()
-    raw_blob=private.blob(prefix+'/raw/warehouse-extract.json')
+    raw_blob=private.blob(prefix+'/raw/warehouse-extract.json.gz')
     pointer=public.blob(PREFIX+'current.json')
     if raw_blob.exists():
-        envelope=json.loads(raw_blob.download_as_bytes(checksum='auto'))
+        envelope=json.loads(gzip.decompress(raw_blob.download_as_bytes(checksum='auto')))
         if envelope['loader_git_sha']!=args.loader_sha or envelope['query_sha256']!=sql_sha: raise ValueError('Retry source pin differs')
     else:
         if pointer.exists(): pointer.reload();expected=str(pointer.generation)
         else: expected='0'
-        queries=BudgetedQueries(bigquery.Client(project=PROJECT,location='EU'),bigquery,run_id=release,
+        client=bigquery.Client(project=PROJECT,location='EU')
+        queries=BudgetedQueries(client,bigquery,run_id=release,
             loader_sha=args.loader_sha,max_query_bytes=96*GIB,max_run_bytes=96*GIB)
         queries.labels.update(dataset='comtrade',purpose='russia-suppliers')
-        snapshot=next(iter(queries.query('SELECT TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) snapshot_at')))['snapshot_at']
-        snapshot=datetime.fromisoformat(snapshot.replace('Z','+00:00'))
-        rows=[dict(r) for r in queries.query(sql,[bigquery.ScalarQueryParameter('snapshot_at','TIMESTAMP',snapshot.isoformat())])]
+        source_job=os.environ.get('SOURCE_QUERY_JOB','')
+        source_labels=None
+        if source_job:
+            job,pin,source_labels=client.reuse(source_job,sql)
+            snapshot=datetime.fromisoformat(pin.replace('Z','+00:00'))
+            rows=[dict(r) for r in job.result()]
+            queries.billed_bytes=queries.admitted_bytes=int(job.total_bytes_billed or 0)
+            if queries.billed_bytes>queries.max_run_bytes: raise ValueError('Reused job exceeded this run allowance')
+            queries.jobs=[dict(job_id=source_job,billed_bytes=queries.billed_bytes,reused_completed_result=True,source_labels=source_labels)]
+        else:
+            snapshot=next(iter(queries.query('SELECT TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) snapshot_at')))['snapshot_at']
+            snapshot=datetime.fromisoformat(snapshot.replace('Z','+00:00'))
+            rows=[dict(r) for r in queries.query(sql,[bigquery.ScalarQueryParameter('snapshot_at','TIMESTAMP',snapshot.isoformat())])]
         envelope=dict(schema_version='1.0.0',loader_git_sha=args.loader_sha,query_sha256=sql_sha,snapshot_as_of=snapshot.isoformat(),
             started_at=datetime.now(timezone.utc).isoformat(),previous_pointer_generation=expected,rows=rows,query_usage=queries.receipt())
     raw_body=dump(envelope)
-    if len(raw_body)>32*1024*1024: raise ValueError('Raw extract exceeds 32 MiB')
-    raw=immutable(private,raw_blob.name,raw_body);query_ref=immutable(private,prefix+'/raw/query.sql',sql.encode(),'text/plain')
+    if len(raw_body)>128*1024*1024: raise ValueError('Raw extract exceeds 128 MiB uncompressed')
+    compressed=gzip.compress(raw_body,mtime=0)
+    if len(compressed)>32*1024*1024: raise ValueError('Compressed raw extract exceeds 32 MiB')
+    raw=immutable(private,raw_blob.name,compressed,'application/gzip');query_ref=immutable(private,prefix+'/raw/query.sql',sql.encode(),'text/plain')
     bodies,controls=payloads(json.loads(raw_body)['rows'],release,envelope['snapshot_as_of'])
     refs={};staged={}
     for product,body in bodies.items():

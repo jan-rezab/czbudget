@@ -12,6 +12,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Callable
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
@@ -281,7 +282,7 @@ def enrich_payload(payload: dict, budget_context: dict | None) -> dict:
     return payload
 
 
-def fetch_page(token: str, query: str, page: int, retries: int = 8) -> dict:
+def fetch_page(token: str, query: str, page: int, retries: int = 8, progress_guard=None) -> dict:
     url = API_URL + "?" + urllib.parse.urlencode({"dotaz": query, "strana": page, "razeni": 1})
     request = urllib.request.Request(
         url,
@@ -292,6 +293,7 @@ def fetch_page(token: str, query: str, page: int, retries: int = 8) -> dict:
         },
     )
     for attempt in range(retries):
+        if progress_guard: progress_guard()
         retry_delay = min(60.0, 2.0 ** attempt) + random.uniform(0.1, 0.5)
         try:
             with urllib.request.urlopen(request, timeout=30) as response:
@@ -351,7 +353,16 @@ def append_checkpoint(path: Path, start: date, end: date, page: int, contracts: 
         handle.flush()
 
 
-def fetch_full_history(token: str, ico: str, start: date, end: date, checkpoint: Path) -> tuple[list[dict], int, int]:
+def fetch_full_history(
+    token: str,
+    ico: str,
+    start: date,
+    end: date,
+    checkpoint: Path,
+    page_observer: Callable[[date, date, int, dict], None] | None = None,
+    page_fetcher=None,
+) -> tuple[list[dict], int, int]:
+    page_fetcher = page_fetcher or fetch_page
     completed, cached_contracts = load_checkpoint(checkpoint)
     requests_made = 0
     windows_completed = 0
@@ -360,7 +371,7 @@ def fetch_full_history(token: str, ico: str, start: date, end: date, checkpoint:
         window_start, window_end = pending.pop(0)
         query = window_query(ico, window_start, window_end)
         time.sleep(MIN_INTERVAL_SECONDS if requests_made else 0)
-        first_page = fetch_page(token, query, 1)
+        first_page = page_fetcher(token, query, 1)
         requests_made += 1
         results = first(first_page, "results", "Results") or []
         total = int(first(first_page, "total", "Total") or len(results))
@@ -387,6 +398,8 @@ def fetch_full_history(token: str, ico: str, start: date, end: date, checkpoint:
 
         first_key = (window_start.isoformat(), window_end.isoformat(), 1)
         if first_key not in completed:
+            if page_observer:
+                page_observer(window_start, window_end, 1, first_page)
             compacted = [compact_contract(item) for item in results]
             append_checkpoint(checkpoint, window_start, window_end, 1, compacted)
             cached_contracts.extend(compacted)
@@ -396,8 +409,10 @@ def fetch_full_history(token: str, ico: str, start: date, end: date, checkpoint:
             if key in completed:
                 continue
             time.sleep(MIN_INTERVAL_SECONDS)
-            page = fetch_page(token, query, page_number)
+            page = page_fetcher(token, query, page_number)
             requests_made += 1
+            if page_observer:
+                page_observer(window_start, window_end, page_number, page)
             compacted = [compact_contract(item) for item in (first(page, "results", "Results") or [])]
             append_checkpoint(checkpoint, window_start, window_end, page_number, compacted)
             cached_contracts.extend(compacted)
