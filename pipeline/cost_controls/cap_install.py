@@ -79,6 +79,8 @@ def prepare():
             conditions=[dict(displayName=name,conditionMatchedLog={'filter':'logName="projects/'+PROJECT+'/logs/psd-cost-control" AND jsonPayload.event="'+event+'"'})],
             notificationChannels=channels,alertStrategy={'notificationRateLimit':{'period':'900s'},'autoClose':'86400s'},
             documentation={'mimeType':'text/markdown','content':'PSD project total observed/estimated gross costs. Warning at 7,500 CZK/month or 1,500 CZK/Prague day; serving stops at 10,000 or 2,000. Billing/metric lag and retained storage mean this is not an exact invoice ceiling. Status is private static-assets/cost-control/current.json; the site serves a lightweight bilingual pause notice. Never delete retained data or cancel unrelated workers.'})
+        if event=='psd_cost_threshold':
+            desired['conditions'][0]['conditionMatchedLog']['labelExtractors']={key:'EXTRACT(jsonPayload.'+key+')' for key in ['scope','period','threshold']}
         matches=[p for p in api.pages(root+'?pageSize=100','alertPolicies') if p.get('displayName')==name and p.get('userLabels',{}).get('managed_by')=='psd-cost-cap']
         if len(matches)>1:raise RuntimeError('Duplicate owned cost alert')
         result=api.request('https://monitoring.googleapis.com/v3/'+matches[0]['name']+'?updateMask=displayName,userLabels,enabled,combiner,conditions,notificationChannels,alertStrategy,documentation',desired,'PATCH') if matches else api.request(root,desired)
