@@ -5,6 +5,23 @@ const dataset = JSON.parse(await readFile("data/cz-public-employment.v1.json", "
 const latest = dataset.history.at(-1);
 const number = (value) => new Intl.NumberFormat("en-GB", {maximumFractionDigits: 0}).format(value);
 
+test("public-employment language switch translates the report in both directions", async ({ page }) => {
+  await page.goto("/deep-dives/public-employment/?lang=en#growth", {waitUntil: "networkidle"});
+  await page.locator('[data-lang="cs"]').click();
+  await expect(page).toHaveURL(/\?lang=cs#growth$/);
+  await expect(page.locator("html")).toHaveAttribute("lang", "cs");
+  await expect(page.locator("h1")).toContainText("Kdo pracuje");
+  await expect(page.locator("#employment-kpis")).toContainText("Vládní instituce");
+  await expect(page.locator('[data-lang="cs"]')).toHaveAttribute("aria-pressed", "true");
+  expect(await page.evaluate(() => localStorage.getItem("psd-lang"))).toBe("cs");
+
+  await page.locator('[data-lang="en"]').click();
+  await expect(page).toHaveURL(/\?lang=en#growth$/);
+  await expect(page.locator("h1")).toContainText("Who works");
+  await expect(page.locator("#employment-kpis")).toContainText("General government");
+  await expect(page.locator('[data-lang="en"]')).toHaveAttribute("aria-pressed", "true");
+});
+
 test("public-employment report reconciles the control total and source layers", async ({ page }) => {
   const runtimeErrors = [];
   const datasetRequests = [];

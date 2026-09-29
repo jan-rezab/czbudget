@@ -400,6 +400,16 @@
   });
   window.psdLanguageReady?.();
 
+  document.addEventListener("click", (event) => {
+    const control = event.target.closest("[data-lang],[data-budget-lang],[data-deep-lang]");
+    const nextLang = control?.dataset.lang || control?.dataset.budgetLang || control?.dataset.deepLang;
+    if (!["cs", "en"].includes(nextLang) || nextLang === lang) return;
+    try { localStorage.setItem("psd-lang", nextLang); } catch {}
+    const next = new URL(location.href);
+    next.searchParams.set("lang", nextLang);
+    location.assign(`${next.pathname}${next.search}${next.hash}`);
+  });
+
   const $ = (selector) => document.querySelector(selector);
   const fmt = (value) => new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(value);
   const pct = (value) => new Intl.NumberFormat(locale, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(value);
