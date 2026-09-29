@@ -57,6 +57,24 @@ Rollback is `gcloud run services update-traffic czbudget-public
 
 ## Before you push
 
+**The JavaScript/CSS cache gate is mandatory before the first push.** Re-read
+`/Users/johnwick/dev/czbudget/DELIVERY_GUARDRAILS.md` for each release. Record changed
+assets, every consumer/import reference, old/new URLs and observed CDN cache headers.
+Ship deterministic reference versions with the code change in the first candidate.
+Verify the staged/served HTML references the new URL and that it serves the changed
+bytes. Runtime staging versions registered adapters; confirm this for the actual
+asset. Legacy/unregistered scripts need explicit versioned consumer references.
+
+On 29 September the public-employment handler shipped under the old script URL.
+Both cloud suites passed, but an existing browser kept the old code because the CDN
+advertised `max-age=14400, must-revalidate`. The second release only changed the
+script query. An HTML `?cb=` and `must-revalidate` do not invalidate a still-fresh
+script response. Before reporting completion, ordinarily reload the pre-release
+built-in browser session and verify the loaded URL and requested behavior, then
+check a fresh page load. Do not clear caches to hide a failed acceptance check.
+Record live cache failures separately from cloud failures and retain the original
+task clock. Instruction-only changes must not trigger a website release.
+
 The push hook runs source/component contracts. Broad changes require successful
 full cloud verification of the exact candidate before main; component changes
 run focused verification inside the one production build after the main push. Full integrity/API checks run in the
@@ -86,7 +104,9 @@ from another checkout is not already holding 4173.
   `scripts/create-release-manifest.mjs` regenerates it.
 - **Chart assets are centrally versioned.** Follow `COMPONENT_RELEASES.md`.
   Shared chart JS/CSS is content-addressed with retained old versions. Stable
-  legacy JS/CSS URLs revalidate; do not rewrite thousands of pages to bump a query.
+  legacy JS/CSS cache behavior must be checked at the public CDN; never assume it
+  revalidates. Version every consuming reference for a changed legacy asset when
+  staging does not already give it a new content-derived URL.
 - `cz/**` and `municipalities/**` generated pages are gitignored; shipping one
   needs `git add -f`.
 

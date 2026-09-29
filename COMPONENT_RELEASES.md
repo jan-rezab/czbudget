@@ -52,11 +52,23 @@ them by scraping rendered text or guessing the intended denominator.
 4. `chart-runtime.js` revalidates `assets/chart-releases/current.json`, then loads
    exactly the JS/CSS pair it names with browser subresource integrity checks.
 5. Prior content-addressed files are retained across releases. Rollback uses the
-   previous image/manifest. Stable legacy JS/CSS URLs revalidate, rather than
-   remaining fresh for an hour. HTML for runtime municipal profiles revalidates.
+   previous image/manifest. Inspect public CDN headers for stable legacy JS/CSS;
+   do not assume it revalidates. On 29 September the public-employment adapter
+   returned four-hour freshness despite `must-revalidate`. Changed legacy assets
+   need deterministic versioned references in the same candidate as their code.
+   Verify public cache headers for runtime municipal HTML as well.
 6. Runtime staging adds the full content hash to every registered adapter URL,
    including server-rendered municipal pages. This handles CDN/browser caches even
    when an intermediary overrides the origin's revalidation header.
+7. Complete the pre-push cache checklist in the workspace's
+   `DELIVERY_GUARDRAILS.md`: changed assets and every consumer/import, actual old/new
+   URLs, public CDN headers, and passing checks of candidate references/served bytes.
+   A changed HTML query is not a changed JavaScript/CSS cache key. Registered adapter
+   status alone does not prove runtime staging versions an asset; check the output.
+8. Preserve the pre-release built-in browser session. After deployment, ordinarily
+   reload it, confirm the loaded asset URL and requested behavior, and also check a
+   fresh page load. Do not clear caches to make a stale-asset failure disappear.
+   Record live acceptance failures even when the cloud suite passed.
 
 `PSDPlot.render()` exposes one canonical accessor used by its values and available
 to `PSDChart.register({accessor})`. Table and CSV rows therefore come from the same

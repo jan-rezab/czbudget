@@ -56,6 +56,29 @@
 
 ## Shared chart and release rules
 
+### Mandatory browser asset cache gate
+
+- Before every JavaScript/CSS release, re-read the workspace's
+  `/Users/johnwick/dev/czbudget/DELIVERY_GUARDRAILS.md`, including from older worktrees.
+- Before the first production push, record every changed asset and all consuming
+  HTML/template/import references, previous/candidate URLs, deterministic versioning,
+  and observed public CDN cache headers. Missing evidence blocks the push.
+- Ship the asset change and its versioned references in the same first candidate.
+  Confirm runtime staging hashes registered adapters. Legacy/unregistered assets
+  need explicit reference versioning; their classification does not prove staging
+  versions them. Include indirect JavaScript imports and CSS dependencies.
+- A query on HTML does not version its JS/CSS. `must-revalidate` does not invalidate
+  a still-fresh `max-age` response. Cache-policy changes do not evict old responses.
+- Before claiming completion, verify the actual loaded asset URL and behavior in
+  the same pre-release built-in browser session after ordinary reload, plus a fresh
+  page load. Check dynamic/translated content and console errors. Do not clear caches
+  to make acceptance pass. Build SUCCESS and fresh local tests are insufficient.
+- Log live cache acceptance failures as well as cloud gate failures, with the
+  original task start time. Documentation/memory-only corrections need diff review
+  and must not start a website build or deployment.
+
+### Existing component contracts
+
 - Read `COMPONENT_RELEASES.md` before changing charts, page adapters, assets or verification.
 - `chart-components.json` is the single chart ownership/consumer/test/release registry;
   `chart-coverage.json` is its generated coverage report. Never hand-edit the report.

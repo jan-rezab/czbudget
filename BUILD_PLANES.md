@@ -6,6 +6,17 @@ merge, or publish data.
 
 ## Web plane
 
+Before the first push changing browser JavaScript or CSS, complete the mandatory
+cache checklist in `/Users/johnwick/dev/czbudget/DELIVERY_GUARDRAILS.md`. Record
+changed assets and every consumer/import, observed CDN cache headers, previous and
+candidate asset URLs, and verified staged/served references. Ship deterministic
+asset versions with the code fix in that first candidate. An HTML query cannot
+version JS/CSS, and `must-revalidate` cannot evict a still-fresh response.
+After promotion, verify the pre-release built-in browser session after ordinary
+reload and a fresh page load before claiming completion. Do not clear caches to
+mask a failed acceptance check. Instruction-only markdown changes do not require
+a website build or deployment.
+
 - Region: `europe-west1`.
 - Trigger: `czbudget-public-main`.
 - Config: `cloudbuild.yaml`.
