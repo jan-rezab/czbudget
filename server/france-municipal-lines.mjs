@@ -5,6 +5,11 @@ const DEFAULT_PROJECT = "czbudget-janrezab";
 const DEFAULT_LOCATION = "EU";
 const CACHE_TTL_MS = 60 * 60 * 1000;
 const CACHE_SIZE = 1_000;
+// Clustered-table estimates are upper bounds before entity block pruning. The
+// reviewed country queries currently estimate up to 5.29 GB; a 2 GB ceiling
+// rejects valid detail reads before they run. Keep a fixed ceiling and the
+// existing daily/monthly query admission rather than removing cost controls.
+export const MUNICIPAL_LINES_MAXIMUM_BYTES_BILLED = "6000000000";
 let metadataAccessToken = null;
 
 // Expand each filtered fact into its two classifications before aggregating, so
@@ -155,7 +160,7 @@ export class FranceMunicipalLinesStore {
       location: this.location,
       timeoutMs: 8_000,
       maxResults: "20000",
-      maximumBytesBilled: "2000000000",
+      maximumBytesBilled: MUNICIPAL_LINES_MAXIMUM_BYTES_BILLED,
       labels: {plane:'web',dataset:'municipal',purpose:'france-lines'},
       parameterMode: "NAMED",
       queryParameters: [

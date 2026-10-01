@@ -100,6 +100,27 @@ test("repeat reads are served from the bounded cache", async () => {
   assert.equal(capture.count, 1, "the second read should not hit the warehouse");
 });
 
+test("current clustered estimates fit a bounded municipal detail allowance", async () => {
+  // Free warehouse dry runs on 2 October: estimates are upper bounds before
+  // pruning the entity's clustered blocks. Reproduce the upstream rejection
+  // that left valid profiles with an empty detail section under the old 2 GB cap.
+  const estimates = { CZE: 2203304921, FRA: 5280836554, CHL: 2211582500, ESP: 2274435139, BRA: 3704359817 };
+  for (const [code, estimatedBytes] of Object.entries(estimates)) {
+    const store = new MunicipalLinesStore({
+      tokenProvider: async () => "test-token",
+      fetchImpl: async (_url, options) => {
+        const body = JSON.parse(options.body);
+        const ceiling = Number(body.maximumBytesBilled);
+        assert.ok(ceiling <= 6_000_000_000, "detail reads retain a fixed cost ceiling");
+        if (ceiling < estimatedBytes) return new Response(JSON.stringify({ error: { message: "Query exceeded limit for bytes billed" } }), { status: 400 });
+        return new Response(JSON.stringify({ jobComplete: true, schema: { fields: FIELDS.map((name) => ({ name })) }, rows: [row(["2025", "actual", "expenditure", "standalone_municipality", "X", null, "1", "fixture"])] }));
+      },
+    });
+    const rows = await store.query(resolveCountry(code), `${COUNTRIES[code].prefix}:fixture`);
+    assert.equal(rows.length, 1, `${code} should return detail rather than an upstream error`);
+  }
+});
+
 test("resolveCountry is case-insensitive and returns the warehouse prefix", () => {
   assert.equal(resolveCountry("bra").prefix, "BR");
   assert.equal(resolveCountry("BRA").code, "BRA");

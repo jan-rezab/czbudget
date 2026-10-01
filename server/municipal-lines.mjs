@@ -21,6 +21,7 @@
 import { shareInFlight } from "./in-flight.mjs";
 import {
   FRANCE_MUNICIPAL_LINES_SQL,
+  MUNICIPAL_LINES_MAXIMUM_BYTES_BILLED,
   FranceLinesError,
   decodeRows,
   economicLabels,
@@ -520,7 +521,7 @@ export class MunicipalLinesStore {
       location: this.location,
       timeoutMs: 8_000,
       maxResults: "20000",
-      maximumBytesBilled: "2000000000",
+      maximumBytesBilled: MUNICIPAL_LINES_MAXIMUM_BYTES_BILLED,
       labels: {plane:'web',dataset:'municipal',purpose:'municipal-lines'},
       parameterMode: "NAMED",
       queryParameters: [

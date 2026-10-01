@@ -48,3 +48,16 @@ test("French municipality codes are validated before any warehouse request", asy
   await assert.rejects(() => store.profile("55001 OR TRUE"), (error) => error.code === "invalid_france_commune_code");
 });
 
+test("legacy French detail route admits the current estimate within a fixed ceiling", async () => {
+  const store = new FranceMunicipalLinesStore({
+    tokenProvider: async () => "test-token",
+    fetchImpl: async (_url, options) => {
+      const body = JSON.parse(options.body);
+      const ceiling = Number(body.maximumBytesBilled);
+      assert.ok(ceiling <= 6_000_000_000, "legacy route retains a fixed cost ceiling");
+      if (ceiling < 5_280_836_554) return new Response(JSON.stringify({ error: { message: "Query exceeded limit for bytes billed" } }), { status: 400 });
+      return new Response(JSON.stringify({ jobComplete: true, schema: { fields: fields.map((name) => ({ name })) }, rows: [{ f: ["economic", "2025", "actual", "expenditure", "main_budget", "60612", "M57", "1250.50", "fixture"].map((v) => ({ v })) }] }));
+    },
+  });
+  assert.equal((await store.profile("55001")).economic.length, 1);
+});
