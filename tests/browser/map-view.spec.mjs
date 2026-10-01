@@ -46,6 +46,27 @@ test("map view switches all visible interface copy to Czech", async ({ page }) =
   await expect(page.locator("body")).not.toContainText("The public spending map");
 });
 
+test("map language toggle updates both views and preserves the selected country", async ({ page }) => {
+  await page.goto("/map.html?lang=en&country=UKR", { waitUntil: "networkidle" });
+  await page.locator('[data-lang="cs"]').click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "cs");
+  await expect(page).toHaveURL(/lang=cs/);
+  await expect(page).toHaveURL(/country=UKR/);
+  await expect(page.locator(".map-hero h1")).toHaveText("Mapa veřejných výdajů");
+  await expect(page.locator(".map-detail")).toContainText("Ukrajina");
+  await expect(page.locator(".map-detail-head a")).toHaveAttribute("href", /lang=cs/);
+  await page.locator('[data-map-view="published"]').click();
+  await expect(page.locator("#published-coverage-title")).toHaveText("Co je na webu publikované");
+  await page.locator('[data-lang="en"]').click();
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator("#published-coverage-title")).toHaveText("What is published on this site");
+  await page.locator('[data-map-view="spending"]').click();
+  await expect(page.locator(".map-detail")).toContainText("Ukraine");
+  await page.reload({ waitUntil: "networkidle" });
+  await expect(page.locator("html")).toHaveAttribute("lang", "en");
+  await expect(page.locator(".map-detail")).toContainText("Ukraine");
+});
+
 test('published-section view links current trade grains and the full report catalogue', async ({page}) => {
   await page.goto('/map.html?lang=en&view=published&section=trade_monthly&country=CZE', {waitUntil:'networkidle'});
   await expect(page.locator('.map-workbench')).toBeHidden();

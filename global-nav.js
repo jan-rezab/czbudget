@@ -289,7 +289,20 @@
       location.href = `${next.pathname}${next.search}${next.hash}`;
       return;
     }
-    setTimeout(() => document.querySelectorAll(HEADER_TAG).forEach((host) => host.renderNavigation()), 0);
+    setTimeout(() => {
+      const requested = languageControl.dataset.lang || languageControl.dataset.budgetLang || languageControl.dataset.deepLang;
+      // Older pages translate in their own click handlers. Pages that only listen
+      // for language events still need a working toggle: load their translated
+      // page while retaining its selected country, filters and section.
+      if (["cs", "en"].includes(requested) && language() !== requested) {
+        try { localStorage.setItem("psd-lang", requested); } catch {}
+        const next = new URL(location.href);
+        next.searchParams.set("lang", requested);
+        location.href = `${next.pathname}${next.search}${next.hash}`;
+        return;
+      }
+      document.querySelectorAll(HEADER_TAG).forEach((host) => host.renderNavigation());
+    }, 0);
   });
   const languageObserver = new MutationObserver(() => {
     if (document.documentElement.lang === document.documentElement.dataset.navLang) return;

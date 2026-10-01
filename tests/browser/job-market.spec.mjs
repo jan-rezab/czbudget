@@ -24,3 +24,20 @@ test('full service table and public ownership render from one pointed release',a
   await expect(page.locator('#jm-ownership')).toContainText('25.0 %');
   await expect(page.locator('#jm-ownership')).toContainText('National public employment');
 });
+
+test('shared language toggle translates job-market data and retains the country', async ({ page }) => {
+  await page.route('**/api/v1/job-market/2024', route => route.fulfill({status:200,contentType:'application/json',body:JSON.stringify(payload)}));
+  await page.goto('/deep-dives/job-market/?lang=en&country=CZE');
+  await expect(page.locator('#jm-divisions tr')).toHaveCount(45);
+  await page.locator('[data-lang="cs"]').click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'cs');
+  await expect(page).toHaveURL(/lang=cs/);
+  await expect(page).toHaveURL(/country=CZE/);
+  await expect(page.locator('h1')).toContainText('Kde lidé pracují');
+  await expect(page.locator('#jm-country')).toHaveValue('CZE');
+  await expect(page.locator('#jm-divisions tr')).toHaveCount(45);
+  await page.locator('[data-lang="en"]').click();
+  await expect(page.locator('html')).toHaveAttribute('lang', 'en');
+  await expect(page.locator('h1')).toContainText('Where people work');
+  await expect(page.locator('#jm-country')).toHaveValue('CZE');
+});
