@@ -9,6 +9,31 @@
  const euFeature=topojson.merge(topology,topology.objects.features.geometries.filter(g=>euIds.has(g.properties.id)));
  const point=id=>d3.geoCentroid(byId.get(id));
  const routeDefs=[{key:'eu',id:'EU',name:'EU-27',color:'var(--oa-germany)',coord:d3.geoCentroid(euFeature)},{key:'china',id:'CHN',name:'China',color:'var(--oa-china)',coord:point('CHN')},{key:'india',id:'IND',name:'India',color:'var(--oa-india)',coord:point('IND')}];
+ // Annual extensions read only the independently published data plane.
+ function annualObservation(payload){
+  if(payload?.frequency!=='A'||payload.period!=='2025'||payload.product?.code!=='270900'||!Array.isArray(payload.routes))throw Error('Unexpected annual oil dataset');
+  const routes=payload.routes.filter(r=>r.origin.code==='RUS'),days=365,estimated=[];
+  const weight=r=>r.net_weight_kg==null?null:Number(r.net_weight_kg);
+  if(routes.some(r=>weight(r)!=null&&(!Number.isFinite(weight(r))||weight(r)<0)))throw Error('Invalid annual route weight');
+  const observation={year:'2025',period:'2025',frequency:'A',days,markets:payload.totals.reporting_markets,estimated,source:payload.source};
+  const subtotal=(key,selected)=>{
+   const available=selected.filter(r=>weight(r)!=null);
+   if(available.some(r=>r.net_weight_is_estimated))estimated.push(key);
+   return available.length?available.reduce((sum,r)=>sum+weight(r),0)/days/1000000:null;
+  };
+  for(const [key,code] of [['china','CHN'],['india','IND'],['germany','DEU'],['netherlands','NLD'],['poland','POL']])observation[key]=subtotal(key,routes.filter(r=>r.market.code===code));
+  observation.eu=subtotal('eu',routes.filter(r=>euIds.has(r.market.code)));
+  observation.rest=subtotal('rest',routes.filter(r=>euIds.has(r.market.code)&&!['DEU','NLD','POL'].includes(r.market.code)));
+  observation.euRoutes=routes.filter(r=>euIds.has(r.market.code)&&weight(r)!=null).length;
+  observation.euReporting=new Set(payload.routes.filter(r=>euIds.has(r.market.code)).map(r=>r.market.code)).size;
+  return observation;
+ }
+ try{
+  const response=await fetch('/api/v1/trade/energy/flows?product=petroleum&frequency=A&period=2025',{signal:AbortSignal.timeout(8000)});
+  if(response.ok){const observation=annualObservation((await response.json()).data);if(observation.india!=null||observation.china!=null)sets.annual.push(observation);}
+ }catch(error){console.warn('2025 annual data unavailable; verified history retained.',error.message);}
+ data=sets[mode];
+ const annualEdition=()=>sets.annual[0].year+'–'+sets.annual.at(-1).year;
  const existing=null;
  let index=existing?.design==='oil-charts'&&Number.isInteger(existing.observation)?Math.max(0,Math.min(data.length-1,existing.observation)):0;
  let selected=existing?.design==='oil-charts'&&['china','india','eu'].includes(existing.destination)?existing.destination:null,compare=false,playing=false,raf=0,timer=0,current={...data[index]},rotation=[],W=0,H=0,moving=false,map,projection,geo,land,grid,flows=[],ghosts=[],underlays=[],nodes=[],labels=[],particles=[],arrows=[],leaders=[],worldLand,halo;
@@ -16,7 +41,7 @@
  // A single frame clock owns camera, flow morphs, particles, holds and pause.
  let phase=null,running=false,lastFrame=0,hold=0,motionTime=0,pose={x:0,y:0,z:1,lon:-35,lat:-24},routeCurves=[],basePoints=[],projectionKey=null;
  const annualShots=[{x:0,y:0,z:1,lon:-35,lat:-24},{x:0,y:0,z:1.015,lon:-43,lat:-26},{x:0,y:0,z:1.035,lon:-54,lat:-29},{x:0,y:0,z:1.05,lon:-66,lat:-31},{x:0,y:0,z:1.025,lon:-77,lat:-29}];
- const makeShots=()=>mode==='annual'?annualShots:data.map((d,i)=>({x:0,y:0,z:1.025+i*.001,lon:-77+i*.8,lat:-29+i*.45}));
+ const makeShots=()=>mode==='annual'?data.map((d,i)=>annualShots[i]||{...annualShots.at(-1),lon:-77-(i-4)*8}):data.map((d,i)=>({x:0,y:0,z:1.025+i*.001,lon:-77+i*.8,lat:-29+i*.45}));
  let shots=makeShots();pose={...shots[index]};
  const smooth=t=>{t=Math.max(0,Math.min(1,t));return t*t*t*(t*(t*6-15)+10);};
 
@@ -53,8 +78,8 @@
   const heads=['Before the<br>great pivot.','The old pattern<br>holds.','India’s imports<br>accelerate.','A new balance<br>takes shape.','The pivot<br>is established.'];
   const copies=['The EU-27 reported subtotal exceeds China’s imports. India is still a small buyer.','One final annual view before the sharp change in India’s imports.','India’s average daily intake rises sharply compared with the previous year.','India’s reported crude imports approach China’s. The EU-27 reported subtotal falls sharply.','China and India lead this comparison. Open EU-27 to see the original major buyers and the rest of the bloc.'];
   $('oa-chapter-number').textContent=String(index+1).padStart(2,'0')+' / '+String(data.length).padStart(2,'0')+' — '+(monthly?'MONTHLY INDIA':'ANNUAL HISTORY');
-  $('oa-chapter-title').innerHTML=monthly?'The monthly<br>pulse.':heads[index];
-  $('oa-chapter-copy').textContent=monthly?'Russian-origin crude reported by India, month by month. China and EU figures are unavailable for this monthly comparison.':copies[index];
+  $('oa-chapter-title').innerHTML=monthly?'The monthly<br>pulse.':heads[index]||'The latest<br>annual picture.';
+  $('oa-chapter-copy').textContent=monthly?'Russian-origin crude reported by India, month by month. China and EU figures are unavailable for this monthly comparison.':copies[index]||'Published annual imports for 2025. EU-27 is the available reported subtotal; missing destinations remain unavailable.';
   $('oa-map-year').textContent=period(index);$('oa-observation').textContent=statusLabel(index);$('oa-time').value=index;$('oa-time').setAttribute('aria-valuetext',period(index)+' '+modeLabel(index).toLowerCase());
   root.style.setProperty('--oa-progress',(index/(data.length-1)*100)+'%');root.querySelectorAll('[data-year]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.year===index)));
   routeDefs.forEach(r=>{$('oa-'+r.key+'-value').textContent=valueLabel(d,r.key);const b=root.querySelector('[data-country="'+r.key+'"]');b.disabled=d[r.key]==null;});
@@ -103,7 +128,7 @@
    const plot=window.PSDPlot.render(chart,{type:'line',height:230,title:r.name+' · Russian-origin crude imports',unit:'Thousand tonnes / day',yDomain:{min:0,max:400,ticks:[0,100,200,300,400]},rows:data.map(d=>({...d,label:d.year})),fields:[{key:r.key,label:r.name,color:r.color,format:(v,row)=>v.toFixed(3)+(row.estimated.includes(r.key)?'*':'')}],playhead:0,onSelect:row=>choose(data.findIndex(d=>d.period===row.period))});
     trendPanels.push({r,value,plot,panel});
   });
-  window.PSDChart.register({slug:'oil-pivot-'+mode,el:host,title:'Russian-origin crude imports',accessor:window.PSDPlot.model({type:'line',rows:data.map(d=>({...d,label:d.year})),fields:series.map(r=>({key:r.key,label:r.name}))}).accessor,source:{name:'Published UN Comtrade observations',url:'https://publicspendingdata.org/api/v1/trade/energy/flows?product=petroleum&frequency='+data[0].frequency+'&period='+data[0].period,table:'HS 270900 · importer-reported Russian origin',extracted:'2026-09-21',edition:mode==='annual'?'2020–2024':'October 2025–July 2026',definition:'Net weight kg / calendar days / 1,000,000; thousand tonnes per day.',caveat:'EU-27 is an available-route subtotal. Missing is not zero. * denotes source-estimated weight. Monthly is India only; August is excluded.',vintage:'outturn'},exports:['csv','png'],embeddable:false});
+  window.PSDChart.register({slug:'oil-pivot-'+mode,el:host,title:'Russian-origin crude imports',accessor:window.PSDPlot.model({type:'line',rows:data.map(d=>({...d,label:d.year})),fields:series.map(r=>({key:r.key,label:r.name}))}).accessor,source:{name:'Published UN Comtrade observations',url:'https://publicspendingdata.org/api/v1/trade/energy/flows?product=petroleum&frequency='+data[0].frequency+'&period='+data[0].period,table:'HS 270900 · importer-reported Russian origin',extracted:mode==='annual'&&sets.annual.at(-1).source?.snapshot_as_of?sets.annual.at(-1).source.snapshot_as_of.slice(0,10):'2026-09-21',edition:mode==='annual'?annualEdition():'October 2025–July 2026',definition:'Net weight kg / calendar days / 1,000,000; thousand tonnes per day.',caveat:'EU-27 is an available-route subtotal. Missing is not zero. * denotes source-estimated weight. Monthly is India only; August is excluded.',vintage:'outturn'},exports:['csv','png'],embeddable:false});
   $('oa-trend-scope').textContent=mode==='annual'?'Three destinations · one scale':'India only · monthly observations';paintTrends();
  }
  function paintTrends(){
@@ -115,7 +140,7 @@
  let playhead=index,anchorPosition=index,startedAt=0,localInteraction=false;
  function playerLabel(){
   $('oa-play-label').textContent=playing?'Pause':phase||playhead>index?'Resume':index===data.length-1?'Replay':'Play entire story';
-  $('oa-play-status').textContent=(mode==='annual'?'2020–2024 · 20 seconds':'Oct 2025–Jul 2026 · 27 seconds')+(reduced.matches?' · reduced camera motion':'');
+  $('oa-play-status').textContent=(mode==='annual'?annualEdition()+' · '+((sets.annual.length-1)*5)+' seconds':'Oct 2025–Jul 2026 · 27 seconds')+(reduced.matches?' · reduced camera motion':'');
   setIcon(playing);root.toggleAttribute('data-playing',playing);$('oa-next').hidden=mode!=='annual'||index!==data.length-1||playing||!!phase;
  }
  function stop(){playing=false;running=false;cancelAnimationFrame(raf);playerLabel();drawGeometry();}
@@ -208,6 +233,8 @@
  document.addEventListener('visibilitychange',()=>{if(running&&!document.hidden){cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);}});
  reduced.addEventListener('change',()=>{if(phase)renderSeek(phase.elapsed);else renderPosition(playhead);playerLabel();});
  const requestedPeriod=new URL(location.href).searchParams.get('period');const requestedIndex=data.findIndex(d=>String(d.period)===requestedPeriod);if(requestedIndex>=0){index=requestedIndex;playhead=index;current={...data[index]};pose={...shots[index]};}
+ const description=$('oa-map-desc');if(description)description.textContent=description.textContent.replace('2020–2024',annualEdition());
+ const edition=document.querySelector('.story-edition');if(edition&&sets.annual.length>5)edition.textContent='Annual: '+annualEdition()+' · 2025 from published UN Comtrade data · EU-27 reported subtotal · Monthly India: October 2025–July 2026.';
  modeControls();
 
  new ResizeObserver(()=>render()).observe(root.querySelector('.oa-map-frame'));render();syncText();paintReadouts();playerLabel();

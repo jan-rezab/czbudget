@@ -69,6 +69,7 @@ test('article narrative and chart tables survive without JavaScript',async({brow
 
 test('oil story plays through, keeps its clock when expanded and separates monthly coverage',async({page})=>{
   const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.route('**/api/v1/trade/energy/flows?*',route=>route.fulfill({status:404,body:'Unavailable'}));
   await page.clock.install();
   await page.goto('/stories/the-great-oil-pivot/?lang=en');
   const atlas=page.locator('#oil-atlas');await expect(atlas).toHaveAttribute('data-ready','true');
@@ -115,3 +116,24 @@ test('oil story supports keyboard chart selection, reduced motion and mobile exp
   await expect(frame.locator('#rt-growth-KGZ')).toBeAttached();
   await expect(frame.locator('#rt-lead-chart')).toBeAttached();
  });
+
+
+test('oil story extends annual history from published 2025 routes and preserves deep links',async({page})=>{
+  const rows=[['IND',88723174160],['CHN',100855331239],['SVK',5110849000],['HUN',4280875000],['CZE',526941000]].map(([code,weight])=>({origin:{code:'RUS'},market:{code},net_weight_kg:weight,net_weight_is_estimated:false}));
+  await page.route('**/api/v1/trade/energy/flows?*',route=>route.fulfill({json:{data:{frequency:'A',period:'2025',product:{code:'270900'},routes:rows,totals:{reporting_markets:81},source:{snapshot_as_of:'2026-10-04T19:00:00Z'}}}}));
+  await page.goto('/stories/the-great-oil-pivot/?lang=en&view=annual&period=2025');
+  await expect(page.locator('#oil-atlas')).toHaveAttribute('data-ready','true');
+  await expect(page.locator('#oa-map-year')).toHaveText('2025');
+  await expect(page.locator('[data-year]')).toHaveCount(6);
+  await expect(page.locator('#oa-source-rows tr').last()).toContainText('276.316');
+  await expect(page.locator('#oa-source-rows tr').last()).toContainText('243.077');
+  await expect(page.locator('.story-edition')).toContainText('2020–2025');
+  await page.locator('[data-country="eu"]').click();
+  await expect(page.locator('#oa-inspection')).toContainText('Netherlands');
+  await expect(page.locator('#oa-inspection')).toContainText('—');
+  await page.reload();await expect(page.locator('#oa-map-year')).toHaveText('2025');
+  await page.goto('/stories/the-great-oil-pivot/?lang=en&view=annual&period=2024');
+  await expect(page.locator('#oa-map-year')).toHaveText('2024');
+  await page.locator('#oa-monthly').check();
+  await expect(page.locator('[data-country="china"]')).toBeDisabled();
+});

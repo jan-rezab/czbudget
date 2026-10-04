@@ -81,3 +81,22 @@ test('published story pages link only to files that ship with the site',async()=
     }
   }
 });
+
+
+test('annual oil extension keeps units, EU membership and unavailable weights explicit',async()=>{
+ const {runInNewContext}=await import('node:vm');
+ const script=await read('stories/oil-pivot.js');
+ const start=script.indexOf(' function annualObservation('),end=script.indexOf('\n try{',start);
+ const normalise=runInNewContext(script.slice(start,end)+'; annualObservation',{euIds:new Set(['CZE','HUN','SVK','DEU','NLD','POL'])});
+ const route=(code,weight,estimated=false)=>({origin:{code:'RUS'},market:{code},net_weight_kg:weight,net_weight_is_estimated:estimated});
+ const payload={frequency:'A',period:'2025',product:{code:'270900'},totals:{reporting_markets:80},routes:[route('IND',88723174160),route('CHN',100855331239),route('SVK',5110849000),route('HUN',4280875000,true),route('CZE',526941000),route('DEU',null),route('TUR',9000000000)]};
+ const result=normalise(payload);
+ assert.equal(result.india,88723174160/365/1000000);
+ assert.equal(result.china,100855331239/365/1000000);
+ assert.equal(result.eu,(5110849000+4280875000+526941000)/365/1000000);
+ assert.equal(result.poland,null);assert.equal(result.germany,null);
+ assert.equal(result.euRoutes,3);assert.ok(result.estimated.includes('eu'));
+ assert.equal(normalise({...payload,routes:[route('IND',5)]}).china,null);
+ assert.throws(()=>normalise({...payload,frequency:'M'}),/Unexpected annual/);
+ assert.throws(()=>normalise({...payload,routes:[route('IND',-1)]}),/Invalid annual/);
+});
