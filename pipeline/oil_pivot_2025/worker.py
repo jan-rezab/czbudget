@@ -90,9 +90,9 @@ def load_warehouse(objects,api,run,observations,responses,confirmed,staging_pref
  reporter_codes=','.join(str(code) for code,iso in REPORTERS.items() if iso in confirmed)
  sql=f'''BEGIN TRANSACTION;
 DELETE FROM `{PROJECT}.budget_detail.trade_observations` WHERE period_start=DATE '2025-01-01' AND product_type='C' AND frequency='A' AND product_code='270900' AND flow_code='M' AND partner_area_code=643 AND partner2_area_code=0 AND customs_code='C00' AND mode_of_transport_code=0 AND is_original_classification AND reporter_area_code IN ({reporter_codes});
-INSERT INTO `{PROJECT}.budget_detail.trade_observations` ({oc}) SELECT {oc} FROM `{PROJECT}.budget_detail.{stages['observations']}`;
-DELETE FROM `{PROJECT}.budget_detail.trade_source_responses` WHERE period_start=DATE '2025-01-01' AND STRUCT(crawl_task_id,source_response_sha256) IN (SELECT AS STRUCT crawl_task_id,source_response_sha256 FROM `{PROJECT}.budget_detail.{stages['responses']}`);
-INSERT INTO `{PROJECT}.budget_detail.trade_source_responses` ({rc}) SELECT {rc} FROM `{PROJECT}.budget_detail.{stages['responses']}`;
+INSERT INTO `{PROJECT}.budget_detail.trade_observations` ({oc}) SELECT {oc} FROM `{PROJECT}.budget_detail.{stages['observations']}` WHERE period_start=DATE '2025-01-01';
+DELETE FROM `{PROJECT}.budget_detail.trade_source_responses` WHERE period_start=DATE '2025-01-01' AND STRUCT(crawl_task_id,source_response_sha256) IN (SELECT AS STRUCT crawl_task_id,source_response_sha256 FROM `{PROJECT}.budget_detail.{stages['responses']}` WHERE period_start=DATE '2025-01-01');
+INSERT INTO `{PROJECT}.budget_detail.trade_source_responses` ({rc}) SELECT {rc} FROM `{PROJECT}.budget_detail.{stages['responses']}` WHERE period_start=DATE '2025-01-01';
 ASSERT (SELECT COUNT(*) FROM `{PROJECT}.budget_detail.trade_observations` WHERE period_start=DATE '2025-01-01' AND ingestion_run_id='{run}')={len(observations)} AS 'Warehouse row count differs';
 COMMIT TRANSACTION;'''
  # A single partition-pruned transaction, with a deterministic retry identity.
