@@ -10,11 +10,11 @@ export default [
   },
   {
     slug:'the-great-oil-pivot',status:'published',format:'interactive',
-    title:'The great oil pivot.',description:'Russian crude imports shifted from Europe to China and India. Reported trade on one globe, with the latest published annual data.',
+    title:'The great oil pivot.',description:'By 2025, China and India remain the major buyers of Russian crude in this comparison. Follow the shift from Europe on one globe.',
     date:'2026-09-26',updated:'2026-10-04',minutes:4,topic:'Energy & trade',author:'Public Spending Data',language:'en',featured:true,
-    takeaway:'Europe’s reported subtotal falls. China and India become the major buyers in this comparison.',
-    edition:'Annual: 2020–2024 embedded history, extended to 2025 when published data are available · Monthly India: October 2025–July 2026 · Missing reporting is not zero trade.',
-    cover:{eyebrow:'THE WORLD, IN MOTION',title:'The great oil pivot.',note:'Europe. China. India.',detail:'Play the story. Explore the evidence.'},
+    takeaway:'The pivot holds in 2025: China and India lead, while the EU’s reported subtotal falls again.',
+    edition:'Updated 4 October 2026 · Annual: 2020–2025 · EU-27 reported subtotal · Monthly India: October 2025–July 2026.',
+    cover:{eyebrow:'THE WORLD, IN MOTION',title:'The great oil pivot.',note:'Europe. China. India.',detail:'Now through 2025. Explore the evidence.'},
   },
   {
     slug: 'tariffs-went-up-did-america-win', status: 'published', format: 'story',

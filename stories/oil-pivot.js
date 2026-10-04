@@ -75,8 +75,8 @@
  $('oa-continue-monthly').addEventListener('click',()=>changeView('monthly',true));
  function syncText(){
   const d=data[index],monthly=mode==='monthly';
-  const heads=['Before the<br>great pivot.','The old pattern<br>holds.','India’s imports<br>accelerate.','A new balance<br>takes shape.','The pivot<br>is established.'];
-  const copies=['The EU-27 reported subtotal exceeds China’s imports. India is still a small buyer.','One final annual view before the sharp change in India’s imports.','India’s average daily intake rises sharply compared with the previous year.','India’s reported crude imports approach China’s. The EU-27 reported subtotal falls sharply.','China and India lead this comparison. Open EU-27 to see the original major buyers and the rest of the bloc.'];
+  const heads=['Before the<br>great pivot.','The old pattern<br>holds.','India’s imports<br>accelerate.','A new balance<br>takes shape.','The pivot<br>is established.','The pivot holds<br>in 2025.'];
+  const copies=['The EU-27 reported subtotal exceeds China’s imports. India is still a small buyer.','One final annual view before the sharp change in India’s imports.','India’s average daily intake rises sharply compared with the previous year.','India’s reported crude imports approach China’s. The EU-27 reported subtotal falls sharply.','China and India lead this comparison. Open EU-27 to see the original major buyers and the rest of the bloc.','China and India remain the major buyers in 2025. Their reported daily averages are below 2024; the available EU-27 subtotal falls again.'];
   $('oa-chapter-number').textContent=String(index+1).padStart(2,'0')+' / '+String(data.length).padStart(2,'0')+' — '+(monthly?'MONTHLY INDIA':'ANNUAL HISTORY');
   $('oa-chapter-title').innerHTML=monthly?'The monthly<br>pulse.':heads[index]||'The latest<br>annual picture.';
   $('oa-chapter-copy').textContent=monthly?'Russian-origin crude reported by India, month by month. China and EU figures are unavailable for this monthly comparison.':copies[index]||'Published annual imports for 2025. EU-27 is the available reported subtotal; missing destinations remain unavailable.';
@@ -234,7 +234,7 @@
  reduced.addEventListener('change',()=>{if(phase)renderSeek(phase.elapsed);else renderPosition(playhead);playerLabel();});
  const requestedPeriod=new URL(location.href).searchParams.get('period');const requestedIndex=data.findIndex(d=>String(d.period)===requestedPeriod);if(requestedIndex>=0){index=requestedIndex;playhead=index;current={...data[index]};pose={...shots[index]};}
  const description=$('oa-map-desc');if(description)description.textContent=description.textContent.replace('2020–2024',annualEdition());
- const edition=document.querySelector('.story-edition');if(edition&&sets.annual.length>5)edition.textContent='Annual: '+annualEdition()+' · 2025 from published UN Comtrade data · EU-27 reported subtotal · Monthly India: October 2025–July 2026.';
+ const edition=document.querySelector('.story-edition');if(edition&&sets.annual.length>5)edition.textContent='Updated 4 October 2026 · Annual: '+annualEdition()+' · EU-27 reported subtotal · Monthly India: October 2025–July 2026.';
  modeControls();
 
  new ResizeObserver(()=>render()).observe(root.querySelector('.oa-map-frame'));render();syncText();paintReadouts();playerLabel();
