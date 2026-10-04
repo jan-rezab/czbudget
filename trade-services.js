@@ -12,7 +12,7 @@
     trend: 'Annual services trend', categories: 'Largest service groups', partners: 'Largest partners',
     coverage: (a, b) => `${a} of ${b} years with a reported World total · unavailable years remain blank`,
     note: 'Source: UN Comtrade. Balance = reported World exports minus reported World imports (calculated). World totals are not sums of bilateral partners. EBOPS categories are hierarchical; a missing year is not zero.',
-    none: 'No reported observations', year: 'Latest reported year'
+    none: 'No reported observations', year: 'Year', table: 'Annual values in a table'
   } : {
     nav: 'Služby', kicker: 'Roční obchod se službami', title: 'Služby mají vlastní mapu obchodu',
     intro: 'Vývoz, dovoz, kategorie EBOPS a partnerské země. Roční údaje jsou oddělené od měsíčního obchodu se zbožím.',
@@ -21,7 +21,7 @@
     trend: 'Roční vývoj služeb', categories: 'Největší skupiny služeb', partners: 'Největší partneři',
     coverage: (a, b) => `${a} z ${b} let s hlášeným světovým součtem · chybějící roky zůstávají prázdné`,
     note: 'Zdroj: UN Comtrade. Bilance = hlášený vývoz do světa minus hlášený dovoz ze světa (výpočet). Světové součty nejsou součtem partnerů. Kategorie EBOPS tvoří hierarchii; chybějící rok není nula.',
-    none: 'Žádná hlášená pozorování', year: 'Poslední hlášený rok'
+    none: 'Žádná hlášená pozorování', year: 'Rok', table: 'Roční hodnoty v tabulce'
   };
   const number = new Intl.NumberFormat(en ? 'en-US' : 'cs-CZ', {notation: 'compact', maximumFractionDigits: 1});
   const exact = new Intl.NumberFormat(en ? 'en-US' : 'cs-CZ', {maximumFractionDigits: 0});
@@ -38,6 +38,10 @@
   setText('trade-services-export-label', copy.export);
   setText('trade-services-import-label', copy.import);
   setText('trade-services-note-copy', copy.note);
+  setText('trade-services-table-title', copy.table);
+  setText('trade-services-table-year', copy.year);
+  setText('trade-services-table-export', `${copy.export} · USD`);
+  setText('trade-services-table-import', `${copy.import} · USD`);
   setText('trade-services-status', copy.select);
   const buttons = [...$('trade-services-flow').querySelectorAll('button')];
   buttons.forEach(button => {
@@ -72,40 +76,38 @@
     renderRank($('trade-services-partners'), data.partners || []);
   }
   function drawTrend(data) {
-    const target = $('trade-services-chart'); target.replaceChildren();
-    const rows = (data.totals || []).filter(row => row.value_usd >= 0);
-    const max = Math.max(1, ...rows.map(row => row.value_usd));
-    const left = 42, right = 12, top = 12, bottom = 30, width = 540, height = 250;
-    const x = year => left + (year - 2000) / 24 * (width - left - right);
-    const y = value => top + (1 - value / max) * (height - top - bottom);
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
-    svg.setAttribute('aria-hidden', 'true');
-    const element = (type, attrs, className) => {
-      const node = document.createElementNS(svg.namespaceURI, type);
-      Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, String(value)));
-      if (className) node.setAttribute('class', className);
-      svg.append(node); return node;
-    };
-    for (const fraction of [0, .5, 1]) {
-      const yy = y(max * fraction);
-      element('line', {x1:left, x2:width-right, y1:yy, y2:yy}, 'grid');
-      element('text', {x:0, y:yy+4}).textContent = number.format(max * fraction);
-    }
-    for (const year of [2000, 2005, 2010, 2015, 2020, 2024])
-      element('text', {x:x(year), y:height-4, 'text-anchor':'middle'}).textContent = year;
-    for (const flow of ['export', 'import']) {
-      const lookup = new Map(rows.filter(row => row.flow === flow).map(row => [row.year, row.value_usd]));
-      let path = '', continuous = false;
-      for (let year = 2000; year <= 2024; year++) {
-        if (!lookup.has(year)) {continuous = false; continue;}
-        path += `${continuous ? 'L' : 'M'}${x(year).toFixed(1)} ${y(lookup.get(year)).toFixed(1)} `;
-        continuous = true;
+    const target = $('trade-services-chart');
+    const table = $('trade-services-table-body');
+    const totals = new Map((data.totals || []).map(row => [`${row.year}:${row.flow}`, row]));
+    const rows = Array.from({length: 25}, (_, index) => {
+      const year = 2000 + index;
+      const exports = totals.get(`${year}:export`);
+      const imports = totals.get(`${year}:import`);
+      return {year, export: exports?.value_usd ?? null, import: imports?.value_usd ?? null,
+        source_export: exports?.source_value_usd ?? null, source_import: imports?.source_value_usd ?? null};
+    });
+    table.replaceChildren();
+    rows.slice().reverse().forEach(row => {
+      const tr = document.createElement('tr');
+      const year = document.createElement('th'); year.scope = 'row'; year.textContent = String(row.year); tr.append(year);
+      for (const flow of ['export', 'import']) {
+        const cell = document.createElement('td');
+        cell.textContent = row[`source_${flow}`] == null ? '—' : `${row[`source_${flow}`]} USD`;
+        tr.append(cell);
       }
-      if (path) element('path', {d:path.trim()}, `series ${flow}`);
-    }
-    target.append(svg);
+      table.append(tr);
+    });
     target.setAttribute('aria-label', `${copy.trend}, 2000–2024. ${copy.coverage(data.available_years.length, 25)}`);
+    window.PSDPlotReady.then(plot => {
+      if (state.data !== data) return;
+      plot.render(target, {type:'line',rows,unit:'USD',locale:en?'en-GB':'cs-CZ',compact:true,height:250,
+        title:copy.trend,showPoints:true,
+        fields:[
+          {key:'export',label:copy.export,color:'#17635b',format:(_value,row)=>`${row.source_export} USD`},
+          {key:'import',label:copy.import,color:'#b16b44',format:(_value,row)=>`${row.source_import} USD`},
+        ],
+      });
+    }).catch(() => {if (state.data === data) target.textContent = copy.error;});
   }
   function render(data) {
     state.data = data;

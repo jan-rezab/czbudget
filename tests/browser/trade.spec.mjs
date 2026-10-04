@@ -44,12 +44,38 @@ const productPartners = { data: { country:"CZE", product_code:"87", year:2025, p
   {year:2025,flow:"export",code:"DEU",name:"Germany",value_usd:20},
   {year:2025,flow:"import",code:"CHN",name:"China",value_usd:18},
 ] } };
+const services = { data: {
+  country: "CZE", latest_year: 2024, available_years: [2023, 2024],
+  totals: [
+    {year:2023,flow:"export",value_usd:100.25,source_value_usd:"100.25"},
+    {year:2023,flow:"import",value_usd:90.5,source_value_usd:"90.5"},
+    {year:2024,flow:"export",value_usd:125.125,source_value_usd:"125.125"},
+    {year:2024,flow:"import",value_usd:110.75,source_value_usd:"110.75"},
+  ],
+  categories: [{year:2024,flow:"export",code:"S2",name:"Transport",value_usd:40}],
+  partners: [{year:2024,flow:"export",code:"DEU",name:"Germany",value_usd:32}],
+} };
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/v1/trade/explorer?*', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ data: tradeExplorer }) }));
   await page.route("**/api/v1/trade/countries", (route) => route.fulfill({ contentType:"application/json", body:JSON.stringify(catalog) }));
   await page.route("**/api/v1/trade?country=*", (route) => route.fulfill({ contentType:"application/json", body:JSON.stringify(profile) }));
   await page.route("**/api/v1/trade/product-partners?country=*&product=*", (route) => route.fulfill({ contentType:"application/json", body:JSON.stringify(productPartners) }));
+  await page.route("**/api/v1/trade/services?country=*", (route) => route.fulfill({ contentType:"application/json", body:JSON.stringify(services) }));
+});
+
+test("annual services use the shared accessible plot and preserve exact missing-year values", async ({ page }) => {
+  await page.goto("/deep-dives/trade/?code=CZE&lang=en");
+  await expect(page.locator("#trade-services-title")).toHaveText("Services have their own trade map");
+  await expect(page.locator("#trade-services-chart.psd-shared-plot svg")).toHaveCount(1);
+  await expect(page.locator("#trade-services-chart [data-point]")).toHaveCount(25);
+  await page.locator("#trade-services-table-title").click();
+  await expect(page.locator("#trade-services-table-body tr").first()).toContainText("125.125 USD");
+  await expect(page.locator("#trade-services-table-body tr").nth(2)).toContainText("—");
+  await expect(page.locator("#trade-services-categories")).toContainText("Transport");
+  await expect(page.locator("#trade-services-partners")).toContainText("Germany");
+  await page.locator("#trade-services-flow [data-flow=import]").click();
+  await expect(page.locator("#trade-services-categories")).toContainText("No reported observations");
 });
 
 test("trade deep dive exposes balance, chart state, and linked rankings", async ({ page }) => {
