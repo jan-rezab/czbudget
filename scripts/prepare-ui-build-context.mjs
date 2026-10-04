@@ -28,6 +28,8 @@ const files = [
   "deep-dives/trade/index.html",
   "trade-deep-dive.js",
   "trade-deep-dive.css",
+  "trade-services.js",
+  "trade-services.css",
   "deep-dives/product-markets/index.html",
   "trade-product-intelligence.js",
   "trade-product-intelligence.css",

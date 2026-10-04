@@ -224,6 +224,7 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/trade/russia-routes") return sendJSON(response, 200, { data: await russiaTrade.routes(url.searchParams.get("exporter"), url.searchParams.get("via"), url.searchParams.get("product")) });
   if (pathname === "/api/v1/trade/explorer") return sendJSON(response, 200, { data: await trade.explorer(url.searchParams.get("countries")) }, {});
   if (pathname === "/api/v1/trade/countries") return sendJSON(response, 200, { data: await trade.countries() });
+  if (pathname === "/api/v1/trade/services") return sendJSON(response, 200, { data: await trade.services(url.searchParams.get("country")) });
   if (pathname === "/api/v1/trade/energy/periods") return sendJSON(response, 200, { data: await trade.energyPeriods() });
   if (pathname === "/api/v1/trade/energy/flows") return sendJSON(response, 200, { data: await trade.energyFlows(url.searchParams.get("product"), url.searchParams.get("frequency"), url.searchParams.get("period")) });
   if (pathname === "/api/v1/trade/product-partners") return sendJSON(response, 200, { data: await trade.productPartners(url.searchParams.get("country"), url.searchParams.get("product")) });

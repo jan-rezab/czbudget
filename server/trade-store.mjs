@@ -4,6 +4,7 @@ import path from "node:path";
 import { shareInFlight } from "./in-flight.mjs";
 import {costGate} from './cost-gate.mjs';
 import { ReportSnapshots } from './report-snapshots.mjs';
+import { ServicesSnapshots } from './services-snapshots.mjs';
 import { EnergyPeriodsSnapshot } from './energy-periods-snapshot.mjs';
 import { decodeRows, metadataToken, parameter, requestJSON } from "./france-municipal-lines.mjs";
 
@@ -153,6 +154,64 @@ SELECT * FROM totals
 UNION ALL SELECT * FROM partner_rows
 UNION ALL SELECT * FROM product_rows
 ORDER BY row_kind, period_start, flow_code, value_usd DESC
+`;
+
+// Services are a separate annual EBOPS grain. Source World totals are kept
+// apart from bilateral partners, and parent/child EBOPS codes are never summed.
+export const TRADE_SERVICES_SQL = `
+WITH scoped AS (
+  SELECT period_start, ref_year, flow_code, partner_area_code, partner_iso3,
+    partner_name, classification_code, product_code, product_name,
+    aggregation_level, primary_value_usd, source_last_released, retrieved_at
+  FROM \`czbudget-janrezab.budget_detail.trade_observations\`
+  WHERE period_start BETWEEN DATE '2000-01-01' AND DATE '2024-12-31'
+    AND reporter_iso3 = @reporter_iso3
+    AND product_type = 'S' AND frequency = 'A'
+    AND classification_code IN ('EB10S', 'EB02')
+    AND flow_code IN ('M', 'X')
+    AND (customs_code IS NULL OR customs_code = 'C00')
+    AND (mode_of_transport_code IS NULL OR mode_of_transport_code = 0)
+    AND (partner2_area_code IS NULL OR partner2_area_code = 0)
+),
+preferred AS (
+  SELECT ref_year, flow_code,
+    ARRAY_AGG(DISTINCT classification_code ORDER BY classification_code DESC LIMIT 1)[OFFSET(0)] AS classification_code
+  FROM scoped
+  WHERE partner_area_code = 0 AND product_code = 'S'
+  GROUP BY ref_year, flow_code
+),
+selected AS (
+  SELECT scoped.* FROM scoped JOIN preferred USING (ref_year, flow_code, classification_code)
+),
+totals AS (
+  SELECT 'total' AS row_kind, ref_year, flow_code, classification_code,
+    CAST(NULL AS STRING) AS code, CAST(NULL AS STRING) AS name,
+    primary_value_usd AS value_usd, source_last_released, retrieved_at
+  FROM selected WHERE partner_area_code = 0 AND product_code = 'S'
+),
+latest AS (SELECT MAX(ref_year) AS ref_year FROM totals),
+categories AS (
+  SELECT 'category' AS row_kind, ref_year, flow_code, classification_code,
+    product_code AS code, product_name AS name, primary_value_usd AS value_usd,
+    source_last_released, retrieved_at
+  FROM selected WHERE ref_year = (SELECT ref_year FROM latest)
+    AND partner_area_code = 0 AND aggregation_level = 2
+),
+partners AS (
+  SELECT 'partner' AS row_kind, ref_year, flow_code, classification_code,
+    COALESCE(partner_iso3, CAST(partner_area_code AS STRING)) AS code,
+    partner_name AS name, primary_value_usd AS value_usd,
+    source_last_released, retrieved_at
+  FROM selected WHERE ref_year = (SELECT ref_year FROM latest)
+    AND product_code = 'S' AND partner_area_code != 0
+    AND partner_area_code IN (
+      SELECT area_code FROM \`czbudget-janrezab.budget_detail.trade_areas\`
+      WHERE is_partner AND NOT is_group
+    )
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY flow_code ORDER BY primary_value_usd DESC, partner_area_code) <= 12
+)
+SELECT * FROM totals UNION ALL SELECT * FROM categories UNION ALL SELECT * FROM partners
+ORDER BY row_kind, ref_year, flow_code, value_usd DESC
 `;
 
 // Both windows run over the same scope. Including ref_year in the grain window
@@ -324,6 +383,7 @@ export class TradeStore {
     now = () => Date.now(),
     energyPeriodsSource,
     reportsSource,
+    servicesSource,
     seedPath = path.join(path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html"), "data/trade/annual-hs2-2024.v1.json"),
   } = {}) {
     this.fetchImpl = fetchImpl;
@@ -333,6 +393,7 @@ export class TradeStore {
     this.now = now;
     this.energyPeriodsSource = energyPeriodsSource || new EnergyPeriodsSnapshot({fetchImpl, tokenProvider: this.tokenProvider, now});
     this.reportsSource = reportsSource || (process.env.K_SERVICE ? new ReportSnapshots({fetchImpl, tokenProvider: this.tokenProvider, now}) : null);
+    this.servicesSource = servicesSource || (process.env.K_SERVICE ? new ServicesSnapshots({fetchImpl, tokenProvider: this.tokenProvider, now}) : null);
     this.phaseControlled=Boolean(process.env.K_SERVICE)&&!reportsSource;
     this.reportsEnabled=Boolean(reportsSource);
     this.seedPath = seedPath;
@@ -390,6 +451,46 @@ export class TradeStore {
     const cached = this.cache.get(code);
     if (cached?.expiresAt > this.now()) return cached.value;
     return shareInFlight(this.pending, code, () => this.loadProfile(code));
+  }
+
+  async services(countryCode) {
+    if (this.reportsSource) await this.syncReports();
+    const code = normalizeCountryCode(countryCode);
+    const cacheKey = `services:${code}`;
+    const cached = this.reportsEnabled ? null : this.cache.get(cacheKey);
+    if (cached?.expiresAt > this.now()) return cached.value;
+    return shareInFlight(this.pending, cacheKey, async () => {
+      let rows;
+      if (this.reportsSource && this.reportsEnabled) {
+        try { rows = await this.servicesSource.rows(code); }
+        catch { throw new TradeError(503, 'services_snapshot_unavailable', 'The verified annual services report is temporarily unavailable.'); }
+      } else rows = await this.query(TRADE_SERVICES_SQL, [parameter('reporter_iso3', 'STRING', code)]);
+      const mapped = rows.map((row) => ({
+        kind: row.row_kind, year: Number(row.ref_year),
+        flow: row.flow_code === 'X' ? 'export' : 'import',
+        classification: row.classification_code,
+        code: row.code || null, name: row.name || null,
+        source_value_usd: row.value_usd == null ? null : String(row.value_usd),
+        value_usd: row.value_usd == null ? null : Number(row.value_usd),
+        source_last_released: row.source_last_released || null,
+        retrieved_at: row.retrieved_at || null,
+      })).filter((row) => Number.isFinite(row.year) && Number.isFinite(row.value_usd));
+      const years = [...new Set(mapped.filter((row) => row.kind === 'total').map((row) => row.year))].sort((a, b) => a - b);
+      const value = {
+        schema_version: 'trade-services.v1', country: code, frequency: 'A',
+        latest_year: years.at(-1) || null, available_years: years,
+        missing_years: Array.from({ length: 25 }, (_, index) => 2000 + index).filter((year) => !years.includes(year)),
+        totals: mapped.filter((row) => row.kind === 'total'),
+        categories: mapped.filter((row) => row.kind === 'category'),
+        partners: mapped.filter((row) => row.kind === 'partner'),
+        source: { title: 'United Nations Comtrade Database', url: 'https://comtrade.un.org/', table: 'budget_detail.trade_observations', classification: 'EBOPS' },
+        note: 'World totals are source observations, not sums of bilateral partners. EBOPS categories are hierarchical. Missing years and directions remain missing.',
+      };
+      if (this.reportsEnabled && this.servicesSource?.manifest)
+        value.source = {...value.source, published_release: this.servicesSource.manifest.release_id, snapshot_as_of: this.servicesSource.manifest.snapshot_as_of};
+      if (!this.reportsEnabled) this.put(cacheKey, value);
+      return value;
+    });
   }
 
   async loadProfile(code) {

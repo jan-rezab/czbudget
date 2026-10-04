@@ -7,8 +7,9 @@
   <meta name="description" content="Interaktivní vývoj dovozu, vývozu a obchodní bilance podle země, partnera a zboží z UN Comtrade.">
   <link rel="canonical" href="https://publicspendingdata.org/deep-dives/trade/">
   <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/trade/?lang=cs"><link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/trade/?lang=en">
-  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-country-markets">
+  <link rel="icon" href="../../assets/favicon.svg"><link rel="stylesheet" href="../../styles.css?v=20260822-section-rail"><link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand"><link rel="stylesheet" href="../../chart-system.css?v=20260822-deep-dives"><link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional"><link rel="stylesheet" href="../../trade-deep-dive.css?v=20260901-country-markets"><link rel="stylesheet" href="../../trade-services.css?v=25e1814accc5">
   <script src="../../trade-deep-dive.js?v=20260901-trade-i18n" defer></script>
+  <script src="../../trade-services.js?v=3edf014486e3" defer></script>
   <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/psd-chart.css"><link rel="stylesheet" href="/chart-explorer.css"><script src="/chart-runtime.js" defer></script><script src="/psd-chart.js" defer></script><script src="/lib/chart-explorer-model.js" defer></script><script src="/chart-explorer.js" defer></script></head>
   <body class="deep-dives-page trade-page">
@@ -16,7 +17,7 @@
   <main id="top">
     <section class="deep-hero deep-topic-hero trade-hero" id="overview"><div><h1><span data-trade-copy="titleLead">Obchodní trh</span> <em data-trade-copy="titleEm">na jednom plátně</em></h1><p data-trade-copy="intro">Velikost ukazuje hodnotu obchodu, barva přebytek nebo deficit. Klikněte na sektor, zboží a potom partnera.</p></div><div class="deep-hero-aside deep-filter-panel"><label><span data-trade-copy="countryLabel">Země</span><select id="trade-country" aria-label="Země"></select></label><div class="deep-country-readout"><b id="trade-country-code">DEU</b><strong id="trade-country-name">Německo</strong><small id="trade-data-vintage">UN Comtrade · —</small></div></div></section>
 
-    <nav class="deep-topic-rail" aria-label="Trade sections" data-sticky-filter="#trade-country" data-sticky-filter-kind="country"><a href="#pulse" data-trade-copy="pulseNav">Bilance</a><a href="#matrix" data-trade-copy="matrixNav">Mapa trhu</a><a href="#routes" data-trade-copy="routesNav">Směry obchodu</a><a href="#trend" data-trade-copy="trendNav">Vývoj</a><a href="#composition" data-trade-copy="compositionNav">Žebříčky</a><a href="#method" data-trade-copy="methodNav">Metodika</a></nav>
+    <nav class="deep-topic-rail" aria-label="Trade sections" data-sticky-filter="#trade-country" data-sticky-filter-kind="country"><a href="#pulse" data-trade-copy="pulseNav">Bilance</a><a href="#matrix" data-trade-copy="matrixNav">Mapa trhu</a><a href="#routes" data-trade-copy="routesNav">Směry obchodu</a><a href="#trend" data-trade-copy="trendNav">Vývoj</a><a href="#composition" data-trade-copy="compositionNav">Žebříčky</a><a href="#services" id="trade-services-nav">Služby</a><a href="#method" data-trade-copy="methodNav">Metodika</a></nav>
 
     <section class="trade-section trade-pulse" id="pulse">
       <header class="trade-heading"><div><span data-trade-copy="pulseKicker">Poslední období</span><h2 data-trade-copy="pulseTitle">Obchodní bilance na první pohled</h2></div><p id="trade-period-context" data-trade-copy="pulseIntro">Vývoz minus dovoz. Červená znamená deficit, zelená přebytek.</p></header>
@@ -70,6 +71,16 @@
       <div class="trade-flow-tabs" id="trade-flow-tabs"><button type="button" data-flow="export" aria-pressed="true" data-trade-copy="exports">Vývoz</button><button type="button" data-flow="import" aria-pressed="false" data-trade-copy="imports">Dovoz</button></div>
       <div class="trade-composition-grid"><article><header><span>01</span><h3 data-trade-copy="partnersTitle">Největší obchodní partneři</h3></header><div id="trade-partners" class="trade-ranking"></div></article><article><header><span>02</span><h3 data-trade-copy="productsTitle">Největší kapitoly zboží</h3></header><div id="trade-products" class="trade-ranking"></div></article></div>
       <aside class="trade-detail" id="trade-detail" aria-live="polite"></aside>
+    </section>
+
+    <section class="trade-section trade-services" id="services" aria-labelledby="trade-services-title">
+      <header class="trade-heading"><div><span id="trade-services-kicker">Roční obchod se službami</span><h2 id="trade-services-title">Služby mají vlastní mapu obchodu</h2></div><p id="trade-services-intro">Vývoz, dovoz, kategorie EBOPS a partnerské země. Roční údaje jsou oddělené od měsíčního obchodu se zbožím.</p></header>
+      <div id="trade-services-status" class="trade-status" role="status" aria-live="polite"></div>
+      <div id="trade-services-content" hidden>
+        <div class="trade-services-summary"><div id="trade-services-kpis" class="trade-services-kpis"></div><div class="trade-services-coverage"><strong id="trade-services-year">—</strong><span id="trade-services-coverage"></span></div></div>
+        <div class="trade-services-grid"><article class="trade-services-card trade-services-trend"><header><span>01 / EBOPS</span><h3 id="trade-services-trend-title">Roční vývoj služeb</h3></header><div id="trade-services-chart" class="trade-services-chart" role="img"></div><div class="trade-services-legend"><span class="export"><i></i><b id="trade-services-export-label">Vývoz</b></span><span class="import"><i></i><b id="trade-services-import-label">Dovoz</b></span></div></article><article class="trade-services-card"><header><span>02 / EBOPS</span><h3 id="trade-services-categories-title">Největší skupiny služeb</h3></header><div class="trade-flow-tabs" id="trade-services-flow"><button type="button" data-flow="export" aria-pressed="true">Vývoz</button><button type="button" data-flow="import" aria-pressed="false">Dovoz</button></div><div id="trade-services-categories" class="trade-services-ranking"></div></article><article class="trade-services-card"><header><span>03 / GEO</span><h3 id="trade-services-partners-title">Největší partneři</h3></header><div id="trade-services-partners" class="trade-services-ranking"></div></article></div>
+      </div>
+      <p id="trade-services-note" class="trade-source-line"><span id="trade-services-note-copy">Zdroj: UN Comtrade. Bilance = hlášený vývoz do světa minus hlášený dovoz ze světa (výpočet). Světové součty nejsou součtem partnerů. Kategorie EBOPS tvoří hierarchii; chybějící rok není nula.</span> <a href="https://comtrade.un.org/" target="_blank" rel="noopener">UN Comtrade ↗</a></p>
     </section>
 
     <section class="trade-section trade-method" id="method">

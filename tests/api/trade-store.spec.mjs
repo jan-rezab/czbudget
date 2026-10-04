@@ -3,7 +3,7 @@ import { test } from "node:test";
 import { mkdtemp, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { ENERGY_FLOWS_SQL, ENERGY_PERIODS_SQL, normalizeCountryCode, normalizeEnergyFrequency, normalizeEnergyPeriod, normalizeEnergyProduct, normalizeProductCode, TRADE_PRODUCT_PARTNERS_SQL, TRADE_PROFILE_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
+import { ENERGY_FLOWS_SQL, ENERGY_PERIODS_SQL, normalizeCountryCode, normalizeEnergyFrequency, normalizeEnergyPeriod, normalizeEnergyProduct, normalizeProductCode, TRADE_PRODUCT_PARTNERS_SQL, TRADE_PROFILE_SQL, TRADE_SERVICES_SQL, TradeError, TradeStore } from "../../server/trade-store.mjs";
 
 test("trade country codes are strict ISO-3 values", () => {
   assert.equal(normalizeCountryCode(" cze "), "CZE");
@@ -29,6 +29,45 @@ test("product-partner query is partition-pruned and constrained to a chapter", (
   assert.match(TRADE_PRODUCT_PARTNERS_SQL, /STARTS_WITH\(product_code, @product_code\)/);
   assert.match(TRADE_PRODUCT_PARTNERS_SQL, /WHERE is_partner AND NOT is_group/);
   assert.doesNotMatch(TRADE_PRODUCT_PARTNERS_SQL, /SELECT \* FROM `czbudget-janrezab\.budget_detail\.trade_observations`/);
+});
+
+test("annual services use source World totals and one EBOPS classification per year", () => {
+  assert.match(TRADE_SERVICES_SQL, /period_start BETWEEN DATE '2000-01-01' AND DATE '2024-12-31'/);
+  assert.match(TRADE_SERVICES_SQL, /product_type = 'S' AND frequency = 'A'/);
+  assert.match(TRADE_SERVICES_SQL, /partner_area_code = 0 AND product_code = 'S'/);
+  assert.match(TRADE_SERVICES_SQL, /aggregation_level = 2/);
+  assert.match(TRADE_SERVICES_SQL, /NOT is_group/);
+  assert.doesNotMatch(TRADE_SERVICES_SQL, /SUM\(primary_value_usd\)/);
+});
+
+test("services response preserves missing years and source precision without adding partners", async () => {
+  const store = new TradeStore({ tokenProvider: async () => "unused" });
+  store.query = async () => [
+    {row_kind:'total',ref_year:'2024',flow_code:'X',classification_code:'EB10S',code:null,name:null,value_usd:'125.123456'},
+    {row_kind:'total',ref_year:'2024',flow_code:'M',classification_code:'EB10S',code:null,name:null,value_usd:'100'},
+    {row_kind:'category',ref_year:'2024',flow_code:'X',classification_code:'EB10S',code:'SA',name:'Manufacturing services',value_usd:'20'},
+    {row_kind:'partner',ref_year:'2024',flow_code:'X',classification_code:'EB10S',code:'DEU',name:'Germany',value_usd:'40'},
+  ];
+  const result = await store.services('CZE');
+  assert.equal(result.latest_year, 2024);
+  assert.equal(result.totals[0].source_value_usd, '125.123456');
+  assert.equal(result.totals[0].value_usd, 125.123456);
+  assert.equal(result.totals.length, 2);
+  assert.equal(result.categories.length, 1);
+  assert.equal(result.partners.length, 1);
+  assert.deepEqual(result.available_years, [2024]);
+  assert.equal(result.missing_years.length, 24);
+});
+
+test("reports-only services use the verified snapshot and never start a warehouse query", async () => {
+  const reportsSource = {current: async () => ({release_id:'goods-release'}), manifest:{release_id:'goods-release'}};
+  const servicesSource = {manifest:{release_id:'services-release',snapshot_as_of:'2026-10-04T12:00:00Z'},
+    rows: async code => code === 'CZE' ? [{row_kind:'total',ref_year:'2024',flow_code:'X',classification_code:'EB10S',value_usd:'12'}] : []};
+  const store = new TradeStore({reportsSource,servicesSource,tokenProvider:async()=> 'unused'});
+  store.query = async () => {throw Error('visitor warehouse query');};
+  const result = await store.services('CZE');
+  assert.equal(result.source.published_release,'services-release');
+  assert.equal(result.totals[0].value_usd,12);
 });
 
 test("energy filters default to petroleum and reject ambiguous inputs", () => {
