@@ -80,8 +80,8 @@ def extract(objects,run,loader_sha,raw_run=None):
  if len({o['trade_observation_id'] for o in observations})!=len(observations):raise ValueError('Duplicate normalized observations')
  return checkpoint_ref,observations,responses,raw_sources,confirmed
 
-def load_warehouse(objects,api,run,observations,responses,confirmed):
- stages={};base='processing-runs/oil-pivot-2025/'+run+'/staging/'
+def load_warehouse(objects,api,run,observations,responses,confirmed,staging_prefix=None):
+ stages={};base=staging_prefix or 'processing-runs/oil-pivot-2025/'+run+'/staging/'
  for kind,rows,target in [('observations',observations,'trade_observations'),('responses',responses,'trade_source_responses')]:
   packed=gzip.compress(b'\n'.join(encode(r) for r in rows)+b'\n',mtime=0);ref=objects.write(PRIVATE,base+kind+'.jsonl.gz',packed,content_type='application/gzip')
   table='oil_2025_'+run.replace('-','_')+'_'+kind;stages[kind]=table;warehouse.create_stage(table,target)
@@ -157,11 +157,53 @@ def publish_reports(objects,run,base_pointer,base_generation,manifest,observatio
  receipt.update(publication_status='published',pointer=pr,published_release_id=run,completed_at=now());objects.write(PRIVATE,root+'completed.json',body(receipt))
  print(json.dumps({'event':'annual_oil_published','release_id':run,'rows':len(observations),'receipt':'gs://'+PRIVATE+'/'+root+'completed.json'}),flush=True)
 
+def prepare_phase(objects,run,loader_sha,raw_run):
+ checkpoint,observations,responses,sources,confirmed=extract(objects,run,loader_sha,raw_run)
+ base='processing-runs/un-comtrade/oil-pivot-2025/'+run+'/'
+ c=objects.verified(PRIVATE,checkpoint)
+ for e in c['entries']:
+  for name in ['metadata','response']:
+   if name not in e:continue
+   ref=e[name];raw=objects.read(PRIVATE,ref['object'],ref['generation']);assert sha(raw)==ref['sha256'] and len(raw)==ref['bytes']
+   e[name]=objects.write(PRIVATE,base+'raw/'+e['iso3']+'-'+name+'-'+sha(raw)+'.json',raw)
+ new_checkpoint=objects.write(PRIVATE,base+'checkpoint.json',body(c))
+ normalized=objects.write(PRIVATE,base+'normalized.json',body({'observations':observations,'responses':responses}))
+ payload={'schema_version':'oil-pivot-prepared.v1','loader_sha':loader_sha,'source_checkpoint':checkpoint,'checkpoint':new_checkpoint,'normalized':normalized,'confirmed':confirmed,'sources':sources,'observations':len(observations),'created_at':now()}
+ ref=objects.write(PRIVATE,base+'prepared-inputs.json',body(payload))
+ print(json.dumps({'event':'annual_inputs_prepared','prepared_run':run,'prepared_ref':ref,'observations':len(observations)}),flush=True)
+
+def prepared_inputs(objects,prepared_run,expected_sha):
+ path='processing-runs/un-comtrade/oil-pivot-2025/'+prepared_run+'/prepared-inputs.json';meta=objects.meta(PRIVATE,path);raw=objects.read(PRIVATE,path,meta['generation'])
+ if sha(raw)!=expected_sha:raise ValueError('Prepared input pin differs')
+ p=json.loads(raw);checkpoint=objects.verified(PRIVATE,p['checkpoint'])
+ received=0
+ for e in checkpoint['entries']:
+  objects.verified(PRIVATE,e['metadata'])
+  if 'response' not in e:continue
+  ref=e['response'];raw=objects.read(PRIVATE,ref['object'],ref['generation']);assert sha(raw)==ref['sha256'] and len(raw)==ref['bytes']
+  received+=len(source_rows(decimal_json(raw),e['reporter']))
+ n=objects.verified(PRIVATE,p['normalized'])
+ if received!=len(n['observations']) or received!=p['observations']:raise ValueError('Pinned normalized count differs')
+ return p,n
+
 def main():
- p=argparse.ArgumentParser();p.add_argument('--loader-sha',required=True);p.add_argument('--raw-run');args=p.parse_args();run=os.environ.get('BUILD_ID','')
+ p=argparse.ArgumentParser();p.add_argument('--loader-sha',required=True);p.add_argument('--raw-run');p.add_argument('--phase',choices=['prepare','warehouse','publish'],required=True);p.add_argument('--prepared-run');p.add_argument('--prepared-sha');p.add_argument('--warehouse-run');args=p.parse_args();run=os.environ.get('BUILD_ID','')
  if not re.fullmatch('[a-f0-9-]{36}',run) or not re.fullmatch('[a-f0-9]{40}',args.loader_sha):raise ValueError('Cloud worker and clean loader SHA required')
- api=Rest();objects=Objects(api);meta=objects.meta(SERVING,PREFIX+'current.json');base=json.loads(objects.read(SERVING,PREFIX+'current.json',meta['generation']));manifest=objects.verified(SERVING,base)
- checkpoint,observations,responses,sources,confirmed=extract(objects,run,args.loader_sha,args.raw_run)
- wr=load_warehouse(objects,api,run,observations,responses,confirmed);print(json.dumps({'event':'annual_warehouse_committed',**wr}),flush=True)
- publish_reports(objects,run,base,meta['generation'],manifest,observations,confirmed,checkpoint,wr,sources,args.loader_sha)
+ api=Rest();objects=Objects(api)
+ if args.phase=='prepare':prepare_phase(objects,run,args.loader_sha,args.raw_run);return
+ if not args.prepared_run or not re.fullmatch('[a-f0-9]{64}',args.prepared_sha or ''):raise ValueError('Exact prepared input pin required')
+ inputs,normal=prepared_inputs(objects,args.prepared_run,args.prepared_sha)
+ observations=normal['observations'];responses=normal['responses']
+ if args.phase=='warehouse':
+  for r in observations+responses:r['ingestion_run_id']=run;r['loaded_at']=now()
+  base='processing-runs/un-comtrade/oil-pivot-2025/'+run+'/'
+  wr=load_warehouse(objects,api,run,observations,responses,inputs['confirmed'],base+'staging/')
+  wr.update(build_id=run,loader_sha=args.loader_sha,prepared_run=args.prepared_run,prepared_sha=args.prepared_sha,checkpoint=inputs['checkpoint'],service_account='comtrade-builder@'+PROJECT+'.iam.gserviceaccount.com',completed_at=now())
+  objects.write(PRIVATE,base+'warehouse-completed.json',body(wr));print(json.dumps({'event':'annual_warehouse_committed',**wr}),flush=True);return
+ if not re.fullmatch('[a-f0-9-]{36}',args.warehouse_run or ''):raise ValueError('Exact warehouse completion required')
+ path='processing-runs/un-comtrade/oil-pivot-2025/'+args.warehouse_run+'/warehouse-completed.json';meta=objects.meta(PRIVATE,path);wr=json.loads(objects.read(PRIVATE,path,meta['generation']))
+ if wr['status']!='committed' or wr['prepared_run']!=args.prepared_run or wr['prepared_sha']!=args.prepared_sha or wr['normalized_rows']!=len(observations):raise ValueError('Warehouse receipt differs')
+ wr['receipt_object']=path;wr['receipt_generation']=meta['generation']
+ meta=objects.meta(SERVING,PREFIX+'current.json');base=json.loads(objects.read(SERVING,PREFIX+'current.json',meta['generation']));manifest=objects.verified(SERVING,base)
+ publish_reports(objects,run,base,meta['generation'],manifest,observations,inputs['confirmed'],inputs['source_checkpoint'],wr,inputs['sources'],args.loader_sha)
 if __name__=='__main__':main()
