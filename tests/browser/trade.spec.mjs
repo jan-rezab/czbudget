@@ -52,7 +52,7 @@ const services = { data: {
     {year:2024,flow:"export",value_usd:125.125,source_value_usd:"125.125"},
     {year:2024,flow:"import",value_usd:110.75,source_value_usd:"110.75"},
   ],
-  categories: [{year:2024,flow:"export",code:"S2",name:"Transport",value_usd:40}],
+  categories: [{year:2024,flow:"export",code:"S2",name:"Transport services and other very long classification descriptions",value_usd:40}],
   partners: [{year:2024,flow:"export",code:"DEU",name:"Germany",value_usd:32}],
 } };
 
@@ -74,6 +74,7 @@ test("annual services use the shared accessible plot and preserve exact missing-
   await expect(page.locator("#trade-services-table-body tr").nth(2)).toContainText("—");
   await expect(page.locator("#trade-services-categories")).toContainText("Transport");
   await expect(page.locator("#trade-services-partners")).toContainText("Germany");
+  expect(await page.locator("#trade-services-categories").evaluate(element => element.scrollWidth <= element.clientWidth + 1)).toBe(true);
   await page.locator("#trade-services-flow [data-flow=import]").click();
   await expect(page.locator("#trade-services-categories")).toContainText("No reported observations");
 });
