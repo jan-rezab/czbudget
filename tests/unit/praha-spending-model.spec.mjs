@@ -42,3 +42,18 @@ test('project income includes income-only native rows while preserving zero and 
  assert.equal(r.projects.length,1);assert.equal(r.projects[0].amount,100);assert.equal(r.projects[0].income,50);
  assert.equal(investigate(null,{rows:[row('allocation','5168',10)]},2025).projects[0].income,null);
 });
+
+test('multi-source joins keep years and dimensions separate, with unknown distinct from zero',()=>{
+ const {comparePublication,unmatchedPublication,reconcileAccounting}=createRequire(import.meta.url)('../../lib/praha-spending-model.js');
+ const rows=[row('zero','5169',0,{income:0}),row('credit','5169',-5,{paragraphCode:'2212',income:0}),row('old','5169',100,{year:2024}),row('uncoded','',7,{paragraphCode:'',income:0})];
+ assert.equal(comparePublication(rows,{year:2025,dimension:'economic',codes:['5169'],available:true}).amount,-5);
+ assert.equal(comparePublication(rows,{year:2025,dimension:'functional',codes:['6171'],available:true}).amount,0);
+ assert.equal(comparePublication(rows,{year:2025,dimension:'economic',codes:['6125'],available:true}).amount,null);
+ assert.equal(comparePublication(rows,{year:2025,dimension:'economic',codes:['5169']}).amount,null);
+ assert.deepEqual(unmatchedPublication(rows,{year:2025,dimension:'economic',codes:['5169']}),{amount:7,matchedRows:1});
+ const accountingRows=[{income:1.01,expenditure:2.02,budgetIncome:3.03,budgetExpenditure:4.04}],source_api_control={income_actual_cents:101,expenditure_actual_cents:202,income_budget_cents:303,expenditure_budget_cents:404};
+ const detail={coverage:{accounting:{status:'available'}},accountingRows,annualFinance:{source_api_control}};
+ assert.equal(reconcileAccounting(detail).status,'reconciled');source_api_control.expenditure_actual_cents=203;
+ assert.equal(reconcileAccounting(detail).status,'not_verified');delete detail.annualFinance;
+ assert.equal(reconcileAccounting(detail).status,'not_verified');
+});

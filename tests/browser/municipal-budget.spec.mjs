@@ -23,6 +23,7 @@ const statementTotals = { income_budget_cents: 300000000, income_actual_cents: 3
 
 async function fixtureCity(page, { city = PRAHA, records = true, contextUnavailable = false, ledgerUnavailable = false } = {}) {
   const requests = { payments: 0 };
+  await page.route('**/api/v1/praha/reconciliation/2025', route => route.fulfill({json:{status:'not_published',year:2025,municipality_ico:city.ico}}));
   const series = Array.from({ length: 6 }, (_, index) => {
     const expense = 1750000 + index * 250000;
     return {
@@ -401,4 +402,16 @@ test('Prague publishes connection gaps and opens held organisation plans without
   await page.locator('[data-organization-row="0"]').click();
   await expect(page.locator('#record-body')).toContainText('expenditure_budget_cents');
   await expect(page.locator('#record-body')).toContainText('100000');
+});
+
+test('multi-source spending keeps code matches, controls and unmatched records visible without automatic invoice loading',async({page})=>{
+ const requests=await fixtureCity(page);await open(page);
+ await expect(page.locator('#source-comparison-table')).toBeVisible();
+ await expect(page.locator('#source-control-status')).toContainText('all four controls reconcile');
+ await expect(page.locator('#source-unmatched')).toContainText('2');
+ await expect(page.locator('#official-reconciliation-status')).toContainText('not yet been published');
+ expect(requests.payments).toBe(0);
+ await page.locator('[data-source-load]').click();
+ await expect.poll(()=>requests.payments).toBe(1);
+ await expect(page.locator('#source-comparison-table')).toContainText('allocations');
 });

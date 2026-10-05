@@ -108,7 +108,7 @@
           <div id="spending-map" class="pb-map"></div>
           <div class="pb-list"><table class="pb-table" id="budget-table"><thead><tr><th>${T('Line', 'Řádek')}</th><th>${T('Amount', 'Částka')}</th><th>${T('Share', 'Podíl')}</th></tr></thead><tbody></tbody></table></div>
         </div>
-        <div id="purpose-detail" class="pb-panel" hidden></div>`)}
+        <div id="purpose-detail" class="pb-panel" hidden></div>${ext()?.connectedResults ? `<div id="source-comparison" class="pb-card"></div>` : ''}`)}
       ${hasRecords ? recordsShell() : ''}
       ${ext()?.connectedResults ? connectionsShell() : ''}
       ${section('outcomes', T(`Life in ${c.name}`, `Život v obci ${c.name}`), T('Local conditions next to the budget. A correlation is a question to investigate, not proof that spending caused the change.', 'Místní podmínky vedle rozpočtu. Korelace je otázka k prověření, nikoli důkaz, že změnu způsobily výdaje.'), `
@@ -118,6 +118,11 @@
         <ul class="pb-rules">${[T('Amounts are nominal CZK. Per resident divides by that year’s mid-year population.', 'Částky jsou v běžných Kč. Na obyvatele dělí populací daného roku k 1. 7.'), T('Missing values stay missing; they are never shown as zero.', 'Chybějící hodnoty zůstávají chybějícími; nikdy je neukazujeme jako nulu.'), T('Services, types of cost and records are different views of the same money. Never add them together.', 'Služby, druhy výdajů a záznamy jsou různé pohledy na tytéž peníze. Nikdy je nesčítejte.'), T('The budget is not a balance sheet of the whole local economy, and it excludes city-owned companies.', 'Rozpočet není rozvahou celé místní ekonomiky a nezahrnuje městské firmy.')].map(item => `<li>${item}</li>`).join('')}</ul>`)}
       <dialog id="record-dialog" class="pb-dialog"><div class="pb-dialog-head"><h2 id="record-title"></h2><button type="button" id="record-close" aria-label="${T('Close details', 'Zavřít detail')}">×</button></div><div class="pb-dialog-body" id="record-body"></div></dialog>`;
     bind();
+    $('#source-comparison')?.addEventListener('click', event => {
+      const row=event.target.closest('[data-source-node]');
+      if(row) activate(nodes[Number(row.dataset.sourceNode)]);
+      if(event.target.closest('[data-source-load]')) loadPayments();
+    });
   }
 
   function recordsShell() {
@@ -253,7 +258,7 @@
       const latest = detailYears.at(-1);
       $('#spending-map').innerHTML = `<div class="pb-empty">${!state.detail ? T('Loading the breakdown…', 'Načítání rozpadu…') : state.detail.error ? T('The breakdown could not be loaded. Nothing has been substituted.', 'Rozpad se nepodařilo načíst. Nic nebylo dosazeno.') : latest ? `${T(`The line-by-line breakdown is published for ${detailYears.join(', ')}. The totals for ${state.year} are in the overview above.`, `Rozpad po řádcích je publikován pro rok ${detailYears.join(', ')}. Součty za rok ${state.year} jsou v přehledu výše.`)} <button type="button" class="pb-button secondary" data-goto-year="${latest}">${T(`Show ${latest}`, `Zobrazit ${latest}`)}</button>` : T('No line-by-line breakdown is published for this municipality.', 'Pro tuto obec není publikován rozpad po řádcích.')}</div>`;
       $('#spending-map').querySelector('[data-goto-year]')?.addEventListener('click', event => selectYear(Number(event.target.dataset.gotoYear)));
-      $('#budget-table tbody').innerHTML = ''; status.textContent = ''; $('#purpose-detail').hidden = true;
+      $('#budget-table tbody').innerHTML = ''; status.textContent = ''; $('#purpose-detail').hidden = true; renderSourceComparison(model);
       return;
     }
     const reconciles = Number.isFinite(model.total) && Number.isFinite(model.target) && Math.abs(model.total - model.target) < .02;
@@ -263,6 +268,27 @@
     plot('#spending-map', { type: 'treemap', title: `${title} · ${stageLabel(state.stage)} · ${state.year}`, rows: nodes.map(node => ({ ...node, value: shownValue(node.value) })), fields: [{ key: 'value', label: stageLabel(state.stage) }], unit: unit(), valueFormat: value => state.unit === 'per-capita' ? `${number(value)} ${T('CZK', 'Kč')}` : money(value), format: displayedExact, height: 440, onSelect: activate }, { name: 'MONITOR · FIN 2-12 M', url: monitor(state.year), table: state.overview.evidence[0]?.datasetId, edition: state.overview.evidence[0]?.generatedAt, definition: T('Native budget classification of the selected stage. Groups are navigation labels built from the codes; each code appears once.', 'Původní rozpočtová klasifikace vybrané fáze. Skupiny jsou navigační štítky sestavené z kódů; každý kód je zahrnut jednou.'), caveat: T('Services and types of cost classify the same money two ways. Never add the views together.', 'Služby a druhy výdajů třídí tytéž peníze dvěma způsoby. Pohledy nikdy nesčítejte.') });
     renderSpendingList(model);
     renderPurposeDetail();
+    renderSourceComparison(model);
+  }
+  function renderSourceComparison(model = explorerModel()) {
+    const host=$('#source-comparison'); if(!host) return;
+    const source=state.detail?.sourceReconciliation, overviewScope=$('#overview .pb-section-head p');
+    if(overviewScope) overviewScope.textContent=source?.status==='available'&&source.scope_verified===true?T(source.scope_note_en,source.scope_note_cs):ext()?.scopeNote?.[lang]||'';
+    if(!state.detail || !model.leaves.length) { host.innerHTML=`<h3>${T('Spending across sources', 'Výdaje napříč zdroji')}</h3><p class="pb-empty">${T('Comparable annual detail is not available for this selection.', 'Pro tento výběr není dostupný srovnatelný roční detail.')}</p>`; return; }
+    const dimension=state.view==='services'?'functional':'economic', side=state.view==='revenue'?'revenue':'expenditure';
+    const accountingAvailable=state.detail.coverage.accounting?.status==='available', paymentsAvailable=!!state.payments&&!state.payments.error;
+    const controls=Spending.reconcileAccounting(state.detail);
+    const rows=nodes.map((node,index)=>{
+      const codes=(node.rows||[node.row]).filter(Boolean).map(row=>row.code);
+      const accounting=Spending.comparePublication(state.detail.accountingRows,{year:state.year,dimension,codes,side,available:accountingAvailable});
+      const invoices=Spending.comparePublication(state.payments?.rows||[],{year:state.year,dimension,codes,side,available:paymentsAvailable});
+      return `<tr><td><button type="button" data-source-node="${index}">${esc(node.label)}</button><small>${esc(codes.join(', '))}</small></td><td class="pb-currency">${displayedExact(shownValue(node.value))}</td><td class="pb-currency">${accounting.amount===null?'—':displayedExact(shownValue(accounting.amount))}<small>${accounting.matchedRows} ${T('matched-code rows','řádků se shodným kódem')}</small></td><td class="pb-currency">${invoices.amount===null?'—':displayedExact(shownValue(invoices.amount))}<small>${paymentsAvailable?invoices.matchedRows+' '+T('allocations','alokací'):T('Load to inspect','Načtěte k prověření')}</small></td></tr>`;
+    });
+    const allCodes=state.detail.rows.filter(row=>row.year===state.year&&row.stage===state.stage&&row.side===side&&row.dimension===dimension).map(row=>row.code);
+    const outside=Spending.unmatchedPublication(state.detail.accountingRows,{year:state.year,dimension,codes:allCodes,side});
+    const unmatched=accountingAvailable?`<p class="pb-note" id="source-unmatched">${T('Accounting rows with a code outside this published budget classification (including missing codes)','Účetní řádky s kódem mimo tuto publikovanou rozpočtovou klasifikaci (včetně chybějících kódů)')}: ${outside.matchedRows} · ${outside.amount===null?'—':displayedExact(shownValue(outside.amount))}. ${T('This is a subset of CityVizor, not a residual of the city budget. The complete accounting rows remain available in Records.','Jde o podmnožinu CityVizoru, nikoli o nevysvětlený zbytek rozpočtu města. Úplné účetní řádky jsou k dispozici v Záznamech.')}</p>`:'';
+    const official=source?.status==='available'?`<p class="pb-note">${T('Official source reconciliation', 'Odsouhlasení oficiálních zdrojů')} · ${esc(source.release_id)}</p><div class="pb-table-wrap"><table class="pb-table" id="official-reconciliation-table"><thead><tr><th>${T('Official observation and scope','Oficiální údaj a rozsah')}</th><th>${T('Reported amount','Vykázaná částka')}</th><th>${T('Evidence','Doklad')}</th></tr></thead><tbody>${source.observations.map(o=>{const evidence=source.sources.find(s=>s.id===o.source_id);return `<tr><td>${esc(T(o.label_en||o.label,o.label_cs||o.label))}<small>${esc(T(o.scope_en||o.scope,o.scope_cs||o.scope))} · ${o.year}</small></td><td class="pb-currency">${exact(Number(o.amount_exact))}<small>${esc(o.original_value)} ${esc(o.original_unit)}</small></td><td>${link(evidence.url,T('Official account','Oficiální účet'))} · ${T('page','strana')} ${esc(o.page)}</td></tr>`;}).join('')}</tbody></table></div><p class="pb-note" id="official-reconciliation-status">${esc(T(source.summary_en||'',source.summary_cs||''))}</p>`:`<p class="pb-note" id="official-reconciliation-status">${T('The official final-account reconciliation has not yet been published here. The city/district boundary is still being verified.', 'Odsouhlasení oficiálního závěrečného účtu zde ještě není publikováno. Rozsah města a městských částí se stále ověřuje.')}</p>`;
+    host.innerHTML=`<h3>${T('Spending across sources','Výdaje napříč zdroji')}</h3><p class="pb-note">${state.year} · ${unit()} · ${T('MONITOR keeps the selected budget stage. CityVizor columns are published actuals from the magistrate, matched by exact classification code. These sources have different unverified scopes: amounts are not added and no unmatched spending or coverage percentage is inferred from their difference.', 'MONITOR zachovává vybranou fázi rozpočtu. Sloupce CityVizoru jsou publikované skutečné částky magistrátu, propojené přesným kódem klasifikace. Zdroje mají odlišné neověřené rozsahy: částky se nesčítají a z rozdílu neodvozujeme nevysvětlené výdaje ani procento pokrytí.')}</p><div class="pb-table-wrap"><table class="pb-table" id="source-comparison-table"><thead><tr><th>${T('Purpose or cost','Účel nebo druh výdaje')}</th><th>MONITOR · ${stageLabel(state.stage)}</th><th>CityVizor · ${T('accounting actual','účetní skutečnost')}</th><th>CityVizor · ${T('invoice allocations','fakturační alokace')}</th></tr></thead><tbody>${rows.join('')}</tbody></table></div><p class="pb-note" id="source-control-status">${T('CityVizor publication controls','Zdrojové kontroly CityVizoru')}: ${controls.status==='reconciled'?T('all four controls reconcile to loaded accounting rows','všechny čtyři kontroly souhlasí s načtenými účetními řádky'):T('not verified for this selection','pro tento výběr neověřeno')} · ${T('source valid to','platnost zdroje')} ${esc(state.detail.sourceValidity||'—')} · ${link(records()?.profile_url||ext().recordsUrl,'CityVizor')} · ${link(monitor(state.year),'MONITOR')}</p>${!paymentsAvailable&&records()?`<button type="button" class="pb-button" data-source-load>${T('Load invoice allocations for comparison','Načíst fakturační alokace pro porovnání')}</button>`:''}${unmatched}${official}`;
   }
   function renderSpendingList(model = explorerModel()) {
     const base = Number.isFinite(model.total) && model.total !== 0 ? model.total : null;
@@ -381,7 +407,7 @@
     const year = state.year, token = state.request, button = $('#ledger-load'); button.disabled = true; button.textContent = T('Loading…', 'Načítání…');
     try { const payments = await client.loadPayments(year); if (token !== state.request) return; state.payments = payments; }
     catch (error) { if (token !== state.request) return; state.payments = { rows: [], error: error.message }; }
-    if (token === state.request) { renderLedger(); renderRecords(); renderPurposeDetail(); renderEvidence(); }
+    if (token === state.request) { renderLedger(); renderRecords(); renderPurposeDetail(); renderEvidence(); renderSourceComparison(); }
   }
   function ledgerRows() {
     if (state.ledgerKind === 'payments') return state.payments?.rows || [];
