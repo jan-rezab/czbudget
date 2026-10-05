@@ -379,3 +379,26 @@ test("an invalid IČO asks for a municipality instead of guessing one", async ({
   await expect(page.locator("#budget-app")).toContainText("eight-digit IČO");
   await expect(page.locator("#budget-app a[href^='/cz-obce.html']")).toBeVisible();
 });
+
+test('Prague publishes connection gaps and opens held organisation plans without substituting years', async ({ page }) => {
+  await fixtureCity(page);
+  const parent = { key: PRAHA.profileKey, name: PRAHA.profileName, ico: PRAHA.ico, type: 'municipality', available_years: [2025] };
+  const org = { key: 'cityvizor.praha.eu/81', name: 'Fixture school', ico: '63831708', parent_profile_key: PRAHA.profileKey, available_years: [2025], payment_years: [], profile_url: 'https://cityvizor.praha.eu/mss_slunicko' };
+  const older = { ...org, key: 'cityvizor.praha.eu/100', name: 'Older school', ico: '60460041', available_years: [2024] };
+  await page.route('**/public-data/municipality-cityvizor?*', route => route.fulfill({ json: { release_id: 'municipal-browser-fixture', municipality_profiles: [parent], organizations: [org, older] } }));
+  await page.route('**/public-data/cityvizor/profile?key=cityvizor.praha.eu%2F81*', route => route.fulfill({ json: { release_id: 'municipal-browser-fixture', profile: org, years: [{ year: 2025, source_validity: '2024-03-31', plans: { rows: 1 }, accounting: { rows: 0 }, payments: { rows: 0 }, events: { rows: 0 }, assets: { plans: [{ part: 1 }], accounting: [], payments: [], events: [] } }] } }));
+  await page.route('**/public-data/cityvizor/shard?key=cityvizor.praha.eu%2F81*', route => route.fulfill({ json: { profile_key: org.key, year: 2025, kind: 'plans', rows: [{ synthetic_account: '521', expenditure_budget_cents: 100000, expenditure_actual_cents: 25000 }] } }));
+  await page.goto('/praha-budget.html?lang=en');
+  await expect(page.locator('#connection-status')).toContainText('Links unverified');
+  await page.locator('#organization-directory summary').click();
+  await expect(page.locator('#organization-coverage')).toContainText('2 city-linked profiles; 1 have some 2025 data; 0 advertise 2025 payments');
+  await expect(page.locator('#organization-table tr').filter({ hasText: 'Older school' })).toContainText('Not published');
+  await page.getByRole('button', { name: 'Open records · 2025' }).click();
+  await expect(page.locator('#organization-records')).toContainText('2024-03-31');
+  await expect(page.locator('#organization-records')).toContainText('1,000.00 CZK');
+  await expect(page.locator('#organization-records')).toContainText('250.00 CZK');
+  await expect(page.locator('#organization-records [data-organization-kind="payments"]')).toBeDisabled();
+  await page.locator('[data-organization-row="0"]').click();
+  await expect(page.locator('#record-body')).toContainText('expenditure_budget_cents');
+  await expect(page.locator('#record-body')).toContainText('100000');
+});

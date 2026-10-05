@@ -284,3 +284,16 @@ test("a code from the wrong country is rejected, not silently queried", async ()
   await assert.rejects(() => store.profile("ESP", "3101"), (e) => e.code === "invalid_municipality_code");
   await assert.rejects(() => store.profile("ITA", "SIPP-ABANGARES"), (e) => e.code === "invalid_municipality_code");
 });
+
+test('Czech joint facts stay outside marginal lines and preserve original decimals', async () => {
+  const fields = ['dimension', 'fiscal_year', 'fiscal_period', 'budget_stage', 'budget_side', 'reporting_scope', 'code', 'name_native', 'amount_local', 'source_ids', 'functional_code', 'economic_code'];
+  const store = new MunicipalLinesStore({ tokenProvider: async () => 'fixture', fetchImpl: async () => new Response(JSON.stringify({ jobComplete: true, schema: { fields: fields.map(name => ({ name })) }, rows: [
+    { f: ['economic', '2025', '2025-12', 'actual', 'expenditure', 'standalone_accounting_unit', '5011', 'Pay', '1250.50', 'fixture', null, null].map(v => ({ v })) },
+    { f: ['joint', '2025', '2025-12', 'actual', 'expenditure', 'standalone_accounting_unit', '5011', 'Pay', '1250.500000000', 'fixture', '3113', '5011'].map(v => ({ v })) },
+  ] }), { status: 200 }) });
+  const result = await store.profile('CZE', '00064581');
+  assert.equal(result.lines.length, 1); assert.equal(result.joint_lines.length, 1); assert.equal(result.coverage.line_count, 1);
+  assert.deepEqual(result.coverage.dimensions, { economic: 1, functional: 0 });
+  assert.equal(result.joint_lines[0].functional_code, '3113'); assert.equal(result.joint_lines[0].economic_code, '5011');
+  assert.equal(result.joint_lines[0].amount_exact, '1250.500000000');
+});

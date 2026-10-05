@@ -89,17 +89,20 @@ export const CZE_MUNICIPAL_LINES_SQL = `
     labels.name_en,
     labels.name_cs,
     CAST(SUM(amount_local) AS STRING) AS amount_local,
-    STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids
+    STRING_AGG(DISTINCT source_id, ',' ORDER BY source_id) AS source_ids,
+    classification.functional_code,
+    classification.economic_code
   FROM facts
   CROSS JOIN UNNEST([
-    STRUCT('economic' AS dimension, economic_item_code AS code, 'CZ_RS_ITEM_2025' AS classification_id),
-    STRUCT('functional' AS dimension, functional_paragraph_code AS code, 'CZ_RS_PARAGRAPH_2025' AS classification_id)
+    STRUCT('economic' AS dimension, economic_item_code AS code, 'CZ_RS_ITEM_2025' AS classification_id, CAST(NULL AS STRING) AS functional_code, CAST(NULL AS STRING) AS economic_code),
+    STRUCT('functional' AS dimension, functional_paragraph_code AS code, 'CZ_RS_PARAGRAPH_2025' AS classification_id, CAST(NULL AS STRING) AS functional_code, CAST(NULL AS STRING) AS economic_code),
+    STRUCT('joint' AS dimension, economic_item_code AS code, 'CZ_RS_ITEM_2025' AS classification_id, functional_paragraph_code AS functional_code, economic_item_code AS economic_code)
   ]) AS classification
   LEFT JOIN labels
     ON labels.classification_id = classification.classification_id
     AND labels.node_code = classification.code
-  WHERE classification.dimension = 'economic' OR classification.code IS NOT NULL
-  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+  WHERE classification.dimension IN ('economic', 'joint') OR classification.code IS NOT NULL
+  GROUP BY 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 14
   ORDER BY fiscal_year, fiscal_period, dimension, budget_side, code
 `;
 
@@ -445,6 +448,7 @@ export class MunicipalLinesStore {
   async loadProfile(country, normalised, key) {
     const rows = await this.query(country, `${country.prefix}:${normalised}`);
     const lines = [];
+    const jointLines = [];
     const sources = new Set();
     const years = new Set();
 
@@ -453,7 +457,8 @@ export class MunicipalLinesStore {
       if (!Number.isFinite(amount) || !row.code) continue;
       // A country that reports more than one classification says which this row belongs to;
       // one that reports a single classification leaves the field off rather than inventing it.
-      const dimension = country.dimensions
+      const isJoint = country.code === "CZE" && row.dimension === "joint";
+      const dimension = isJoint ? "joint" : country.dimensions
         ? (country.dimensions.includes(row.dimension) ? row.dimension : country.dimensions[0])
         : null;
       const labels = country.label ? country.label(dimension, row.code) : null;
@@ -476,12 +481,15 @@ export class MunicipalLinesStore {
         // upstream filing provides, and inventing a translation would misreport it.
         ...(row.column_label ? { source_column: row.column_label } : {}),
         amount,
+        amount_exact: String(row.amount_local),
+        ...(isJoint ? { functional_code: row.functional_code || null, economic_code: row.economic_code || row.code } : {}),
         currency: country.currency,
         source_ids: String(row.source_ids || "").split(",").filter(Boolean),
       };
       item.source_ids.forEach((source) => sources.add(source));
       years.add(item.year);
-      lines.push(item);
+      if (isJoint) jointLines.push(item);
+      else lines.push(item);
     }
 
     const value = {
@@ -503,6 +511,7 @@ export class MunicipalLinesStore {
           : "No line detail is warehoused for this municipality.",
       },
       lines,
+      ...(country.code === "CZE" ? { joint_lines: jointLines, joint_methodology: "Purpose and economic item on the same reported fact; joint rows and the two marginal views overlap and must never be added." } : {}),
       sources: [...sources].sort(),
       source_url: country.sourceUrl,
       methodology: country.methodology,

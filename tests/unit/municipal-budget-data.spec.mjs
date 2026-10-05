@@ -182,3 +182,39 @@ test('annual statements pin fiscal year and publication without fetching raw sha
   await assert.rejects(() => client.loadStatement(2024, 'r1'), /year/);
   assert.equal(calls.some(url => url.includes('/shard?')), false);
 });
+
+test('joint facts retain both codes and original decimals; wrong scope and incorrect purpose allocations fail', () => {
+  const native = { year: 2025, dimension: 'joint', stage: 'actual', side: 'expenditure', reporting_scope: 'standalone_accounting_unit', functional_code: '3113', economic_code: '5331', amount: 80, amount_exact: '80.000000000', currency: 'CZK' };
+  const payload = { country: 'CZE', entity_code: PRAHA, joint_lines: [native] };
+  const joint = data.normalizeJoint(payload, PRAHA, 2025, null, labels);
+  assert.equal(joint[0].functional_code, '3113'); assert.equal(joint[0].economic_code, '5331'); assert.equal(joint[0].amount_exact, '80.000000000');
+  assert.throws(() => data.normalizeJoint({ ...payload, entity_code: '00254398' }, PRAHA, 2025), /identity/);
+  assert.throws(() => data.normalizeJoint({ ...payload, joint_lines: [{ ...native, reporting_scope: 'other' }] }, PRAHA, 2025), /scope/);
+  const cells = [], marginal = [];
+  for (const stage of ['approved', 'adjusted', 'actual']) {
+    cells.push({ ...joint[0], stage }, { ...joint[0], stage, side: 'revenue', functional_code: null, economic_code: '1111' });
+    marginal.push({ stage, side: 'expenditure', dimension: 'functional', code: '3113', amount: 80 }, { stage, side: 'expenditure', dimension: 'economic', code: '5331', amount: 80 }, { stage, side: 'revenue', dimension: 'economic', code: '1111', amount: 80 });
+  }
+  assert.equal(data.reconcileJoint(cells, marginal).status, 'reconciled');
+  assert.equal(data.reconcileJoint(cells.map(row => row.stage === 'actual' && row.side === 'expenditure' ? { ...row, functional_code: '3111' } : row), marginal).status, 'unreconciled');
+  assert.equal(data.reconcileJoint([], marginal).status, 'not_published');
+});
+
+test('organisation records enforce parent, year, payment coverage, release and layer count', async () => {
+  const profile = { key: 'cityvizor.praha.eu/81', name: 'School', ico: '63831708', parent_profile_key: 'cityvizor.praha.eu/4', available_years: [2024], payment_years: [] };
+  let release = 'release-1', declaredRows = 1;
+  const client = data.createClient({ ico: PRAHA, fetch: async url => {
+    if (url.includes('/municipal-history/')) return json({ municipality: { national_id: PRAHA }, series: [{ year: 2025 }] });
+    if (url.includes('/entities/')) return json({ entity: { national_id: PRAHA } });
+    if (url.includes('municipality-cityvizor')) return json({ release_id: 'release-1', municipality_profiles: [{ key: 'cityvizor.praha.eu/4', ico: PRAHA, type: 'municipality' }], organizations: [profile] });
+    if (url.includes('/profile?')) return json({ release_id: release, profile, years: [{ year: 2024, accounting: { rows: declaredRows }, assets: { accounting: [{ part: 1 }] } }] });
+    if (url.includes('/shard?')) return json({ profile_key: profile.key, year: 2024, kind: 'accounting', rows: [{ income_actual_cents: 10000 }] });
+    throw new Error('Unexpected request');
+  } });
+  assert.equal((await client.loadOrganizationRecords(profile.key, 2024, 'accounting')).rows[0].income_actual_cents, 10000);
+  await assert.rejects(() => client.loadOrganizationRecords(profile.key, 2025), /year/);
+  await assert.rejects(() => client.loadOrganizationRecords(profile.key, 2024, 'payments'), /payments/);
+  await assert.rejects(() => client.loadOrganizationRecords('cityvizor.praha.eu/999', 2024), /parent/);
+  client.clearCache(); release = 'other'; await assert.rejects(() => client.loadOrganizationRecords(profile.key, 2024, 'accounting'), /Publication changed/);
+  client.clearCache(); release = 'release-1'; declaredRows = 2; await assert.rejects(() => client.loadOrganizationRecords(profile.key, 2024, 'accounting'), /row count/);
+});
