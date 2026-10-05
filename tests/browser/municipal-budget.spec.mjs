@@ -136,7 +136,7 @@ test("published Praha budget exposes the annual history and a reconciled breakdo
   await expect((await trajectoryTable(page)).locator("tr")).toHaveCount(16);
   await expect(page.locator("#spending-map .pb-plot")).toHaveAttribute("data-chart-component", "treemap");
   await expect(page.locator("#budget-status")).toContainText("add up to the reported total of 123,970,124,035.39 CZK");
-  await expect(page.locator("#kpi-spending")).toContainText("123.97");
+  await expect(page.locator("#kpi-spending")).toContainText("124 bn CZK");
   const firstPoint = page.locator("#trajectory-chart [data-point]").first();
   await firstPoint.focus();
   await page.keyboard.press("ArrowRight");
