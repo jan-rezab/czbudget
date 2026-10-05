@@ -29,6 +29,7 @@ import { TradeError, TradeStore } from "./trade-store.mjs";
 import { ProcessLogError, processLogStore } from "./process-log-store.mjs";
 import {PrahaContractsError,prahaContractsStore} from './praha-contracts.mjs';
 import {PrahaReconciliationError,prahaReconciliationStore} from './praha-reconciliation.mjs';
+import {PrahaLivingCostError,prahaLivingCostStore} from './praha-living-cost.mjs';
 import {RevenueError, revenueStore} from "./revenue-store.mjs";
 import { JobMarketError, jobMarketStore } from "./job-market-store.mjs";
 
@@ -215,6 +216,7 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/process-log/data-runs") return sendJSON(response, 200, { data: await processLogStore.dataRuns() }, { "cache-control": "public, max-age=60" });
   if (pathname === "/api/v1/praha/related-contracts") return sendJSON(response, 200, await prahaContractsStore.related({payer:url.searchParams.get("payer"),supplier:url.searchParams.get("supplier"),date:url.searchParams.get("date")||"",term:url.searchParams.get("term")||""}));
   if (pathname === "/api/v1/revenue/current") return sendJSON(response, 200, await revenueStore.current());
+  if (pathname === "/api/v1/praha/living-cost") { const report = await prahaLivingCostStore.current(); return sendJSON(response, 200, report, {"cache-control": report.status === "available" ? "public, max-age=60, s-maxage=60" : "no-store"}); }
   if (pathname === "/api/v1/praha/reconciliation/2025") { const report = await prahaReconciliationStore.current(); return sendJSON(response, 200, report, {"cache-control": report.status === "available" ? "public, max-age=60, s-maxage=60" : "no-store"}); }
   if (pathname === "/api/v1/job-market/2024") return sendJSON(response, 200, await jobMarketStore.current());
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
@@ -650,7 +652,7 @@ export async function handler(request, response) {
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);
     }
-    if (error instanceof QueryAdmissionError || error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof RevenueError || error instanceof PrahaContractsError || error instanceof PrahaReconciliationError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof QueryAdmissionError || error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof RevenueError || error instanceof PrahaContractsError || error instanceof PrahaReconciliationError || error instanceof PrahaLivingCostError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

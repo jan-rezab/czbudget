@@ -21,9 +21,10 @@ const statementItems = [
 ];
 const statementTotals = { income_budget_cents: 300000000, income_actual_cents: 310000000, expenditure_budget_cents: 350000000, expenditure_actual_cents: 250000000 };
 
-async function fixtureCity(page, { city = PRAHA, records = true, contextUnavailable = false, ledgerUnavailable = false } = {}) {
+async function fixtureCity(page, { city = PRAHA, records = true, contextUnavailable = false, ledgerUnavailable = false, livingCost = null } = {}) {
   const requests = { payments: 0 };
   await page.route('**/api/v1/praha/reconciliation/2025', route => route.fulfill({json:{status:'not_published',year:2025,municipality_ico:city.ico}}));
+  await page.route('**/api/v1/praha/living-cost', route => route.fulfill({json: livingCost || {status:'not_published',municipality_ico:city.ico}}));
   const series = Array.from({ length: 6 }, (_, index) => {
     const expense = 1750000 + index * 250000;
     return {
@@ -414,4 +415,20 @@ test('multi-source spending keeps code matches, controls and unmatched records v
  await page.locator('[data-source-load]').click();
  await expect.poll(()=>requests.payments).toBe(1);
  await expect(page.locator('#source-comparison-table')).toContainText('allocations');
+});
+
+// Household costs must not inherit the municipal budget's per-resident conversion.
+test('Prague housing average is below local indicators, year-bound and per household', async ({page}) => {
+  await fixtureCity(page, {livingCost:{status:'available',municipality_ico:PRAHA.ico,release_id:'fixture',validation:{passed:true},sources:[{id:'csu',url:'https://csu.gov.cz/pha/zivotni-podminky-prazskych-domacnosti-v-roce-2025'}],observations:[{metric:'average_monthly_housing_cost',amount_exact:'1000',year:2025,currency:'CZK',geography:'Prague',denominator:'household',frequency:'month',source_id:'csu'}]}});
+  await page.goto('/praha-budget.html?lang=en&year=2025#outcomes');
+  const card=page.locator('#living-cost');
+  await expect(card).toContainText('CZK / household / month');
+  await expect(card).toContainText('Food, transport');
+  await expect(card.locator('.pb-outcome-value')).toContainText('1,000');
+  expect(await card.evaluate(el=>Boolean(el.previousElementSibling?.classList.contains('pb-outcome-grid')))).toBe(true);
+  await page.locator('#budget-unit').selectOption('per-capita');
+  await expect(card.locator('.pb-outcome-value')).toContainText('1,000');
+  await page.locator('#budget-year').selectOption('2024');
+  await expect(card).toContainText('No verified Prague');
+  await expect(card.locator('.pb-outcome-value')).toHaveCount(0);
 });

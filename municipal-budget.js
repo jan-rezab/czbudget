@@ -36,7 +36,7 @@
   const client = Data.createClient({ ico });
   const monitor = year => Data.monitorUrl(ico, year);
   const views = ['services', 'cost', 'revenue'], recordTabs = ['statements', 'projects', 'ledger', 'it', 'companies'];
-  const state = { year: Number(query.get('year')) || null, unit: query.get('unit') === 'per-capita' ? 'per-capita' : 'total', trend: query.get('trend') === 'split' ? 'split' : 'balance', stage: 'actual', view: views.includes(query.get('view')) ? query.get('view') : 'services', group: query.get('group') || '', purpose: query.get('purpose') || null, records: recordTabs.includes(query.get('records')) ? query.get('records') : 'statements', ledgerPurpose: null, ledgerKind: 'payments', ledgerPage: 0, projectService: 'all', project: query.get('project') || null, projectTab: 'invoices', projectVendor: null, detail: null, payments: null, context: null, overview: null, request: 0 };
+  const state = { year: Number(query.get('year')) || null, unit: query.get('unit') === 'per-capita' ? 'per-capita' : 'total', trend: query.get('trend') === 'split' ? 'split' : 'balance', stage: 'actual', view: views.includes(query.get('view')) ? query.get('view') : 'services', group: query.get('group') || '', purpose: query.get('purpose') || null, records: recordTabs.includes(query.get('records')) ? query.get('records') : 'statements', ledgerPurpose: null, ledgerKind: 'payments', ledgerPage: 0, projectService: 'all', project: query.get('project') || null, projectTab: 'invoices', projectVendor: null, detail: null, payments: null, context: null, livingCost: null, overview: null, request: 0 };
   const itState = { profiles: [], key: null, item: 'it', result: null, loaded: false, loading: false, vendor: null, page: 0, request: 0, error: null, started: false };
   const itLabels = { 'it': ['All identified IT · five codes', 'Veškeré doložitelné IT · pět položek'], '5168': ['Data processing & ICT services', 'Zpracování dat a ICT služby'], '5042': ['Software usage fees', 'Odměny za užití programů'], '5172': ['Small software purchases', 'Programové vybavení pod limitem'], '6111': ['Software capital assets', 'Programové vybavení · investice'], '6125': ['Computing equipment', 'Výpočetní technika'], '5162': ['Telecommunications · separate', 'Elektronické komunikace · samostatně'] };
   const chartControllers = new Map();
@@ -113,7 +113,7 @@
       ${ext()?.connectedResults ? connectionsShell() : ''}
       ${section('outcomes', T(`Life in ${c.name}`, `Život v obci ${c.name}`), T('Local conditions next to the budget. A correlation is a question to investigate, not proof that spending caused the change.', 'Místní podmínky vedle rozpočtu. Korelace je otázka k prověření, nikoli důkaz, že změnu způsobily výdaje.'), `
         <div class="pb-toolbar"><label class="pb-field pb-field-grow"><span>${T('Indicator', 'Ukazatel')}</span><select id="context-series"><option>${T('Loading…', 'Načítání…')}</option></select></label><label class="pb-field"><span>${T('Compare with', 'Porovnat s')}</span><select id="context-budget"><option value="expense_actual">${T('Total spending', 'Celkové výdaje')}</option><option value="capital_expense">${T('Capital spending', 'Kapitálové výdaje')}</option><option value="current_expense">${T('Operating spending', 'Běžné výdaje')}</option></select></label><label class="pb-field"><span>${T('Lag', 'Zpoždění')}</span><select id="context-lag"><option value="0">${T('Same year', 'Stejný rok')}</option><option value="1">${T('One year later', 'O rok později')}</option></select></label></div>
-        <div class="pb-outcome-grid"><div class="pb-card"><h3 class="pb-card-title" id="context-title"></h3><div id="context-chart"></div></div><aside class="pb-context-detail" id="context-detail"><p role="status">${T('Loading published observations…', 'Načítání publikovaných pozorování…')}</p></aside></div>`)}
+        <div class="pb-outcome-grid"><div class="pb-card"><h3 class="pb-card-title" id="context-title"></h3><div id="context-chart"></div></div><aside class="pb-context-detail" id="context-detail"><p role="status">${T('Loading published observations…', 'Načítání publikovaných pozorování…')}</p></aside></div>${ext()?.livingCostApi ? `<div class="pb-card" id="living-cost"><p role="status">${T('Loading living-cost context…', 'Načítání nákladů na život…')}</p></div>` : ''}`)}
       ${section('evidence', T('Sources and limits', 'Zdroje a omezení'), '', `<div class="pb-sources" id="evidence-list"></div>
         <ul class="pb-rules">${[T('Amounts are nominal CZK. Per resident divides by that year’s mid-year population.', 'Částky jsou v běžných Kč. Na obyvatele dělí populací daného roku k 1. 7.'), T('Missing values stay missing; they are never shown as zero.', 'Chybějící hodnoty zůstávají chybějícími; nikdy je neukazujeme jako nulu.'), T('Services, types of cost and records are different views of the same money. Never add them together.', 'Služby, druhy výdajů a záznamy jsou různé pohledy na tytéž peníze. Nikdy je nesčítejte.'), T('The budget is not a balance sheet of the whole local economy, and it excludes city-owned companies.', 'Rozpočet není rozvahou celé místní ekonomiky a nezahrnuje městské firmy.')].map(item => `<li>${item}</li>`).join('')}</ul>`)}
       <dialog id="record-dialog" class="pb-dialog"><div class="pb-dialog-head"><h2 id="record-title"></h2><button type="button" id="record-close" aria-label="${T('Close details', 'Zavřít detail')}">×</button></div><div class="pb-dialog-body" id="record-body"></div></dialog>`;
@@ -206,7 +206,7 @@
     if (!state.overview.history.some(row => row.year === year)) return;
     state.year = year; $('#budget-year').value = year; $('#budget-year').dispatchEvent(new Event('input', { bubbles: true }));
     state.detail = null; state.payments = null; state.ledgerPage = 0; state.project = null;
-    writeURL(); renderOverview(); renderSpending(); renderContext(); renderEvidence();
+    writeURL(); renderOverview(); renderSpending(); renderContext(); renderLivingCost(); renderEvidence();
     if (ext()?.connectedResults) { organizationState.request++; organizationState.result = null; organizationState.error = null; organizationState.loading = false; renderConnections(); }
     if (records()) { statements?.select(year); renderRecords(); if (itState.started) selectIT(); }
     const token = ++state.request;
@@ -537,6 +537,16 @@
   }
 
   // ---------------------------------------------------------------- life in the town
+  function renderLivingCost() {
+    const target = $('#living-cost');
+    if (!target) return;
+    const data = state.livingCost;
+    const observation = data?.status === 'available' ? data.observations.filter(o => o.year <= state.year).sort((a, b) => b.year - a.year)[0] : null;
+    const heading = `<h3 class="pb-card-title">${T('Cost of living · housing', 'Náklady na život · bydlení')}</h3>`;
+    if (!observation) { target.innerHTML = heading + `<p role="status">${T('No verified Prague housing-cost average is published here for the selected year or earlier.', 'Pro vybraný rok ani dřívější roky zde není publikován ověřený průměr nákladů pražských domácností na bydlení.')}</p>`; return; }
+    const source = data.sources.find(s => s.id === observation.source_id);
+    target.innerHTML = heading + `<p class="pb-kicker">${T('Average monthly housing expenditure', 'Průměrné měsíční výdaje na bydlení')}</p><div class="pb-outcome-value">${number(Number(observation.amount_exact), 0)} <span>${T('CZK / household / month', 'Kč / domácnost / měsíc')}</span></div><p class="pb-note">${observation.year} · ${T('Prague · all households · official survey', 'Praha · všechny domácnosti · oficiální šetření')} · ${link(source.url, 'ČSÚ')}</p><p>${T('Includes rent or housing charges, energy, water and other housing services across tenants and owners. This is housing spending, one component of living costs. Food, transport and other spending are outside this figure.', 'Zahrnuje nájemné nebo úhrady za užívání bytu, energie, vodu a další služby spojené s bydlením u nájemníků i vlastníků. Jde o výdaje na bydlení, jednu složku životních nákladů. Potraviny, doprava a další výdaje v této částce nejsou.')}</p><p class="pb-note">${T('The household survey average stays per household when the budget view switches to per resident.', 'Průměr ze šetření zůstává na domácnost i při přepnutí rozpočtu na obyvatele.')}</p>`;
+  }
   function renderContext() {
     if (!state.context?.series?.length) return;
     const series = state.context.series.find(item => item.id === $('#context-series').value) || state.context.series[0], points = series.points.filter(row => row.year <= state.year), latest = points.filter(row => row.value !== null).at(-1), title = name(series), nativeUnit = series.unit || T('source units', 'jednotky zdroje');
@@ -663,7 +673,8 @@
     if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
     const detail = selectYear(state.year);
     const context = client.loadContext().then(value => { state.context = value; $('#context-series').innerHTML = value.series.map(series => `<option value="${esc(series.id)}">${esc(name(series))}</option>`).join(''); renderContext(); renderEvidence(); }).catch(() => { $('#context-series').innerHTML = `<option>${T('Unavailable', 'Nedostupné')}</option>`; $('#context-series').disabled = true; state.context = { unavailable: true }; $('#context-detail').innerHTML = `<p id="association-status" role="status">${T('Local indicators are unavailable for this municipality. No other place or estimate has been substituted.', 'Místní ukazatele pro tuto obec nejsou dostupné. Jiné místo ani odhad nebyl dosazen.')}</p>`; renderEvidence(); });
-    await Promise.allSettled([detail, context]); app.dataset.loaded = 'true';
+    const livingCost = ext()?.livingCostApi ? client.loadLivingCost().then(value => { state.livingCost = value; renderLivingCost(); }).catch(() => { state.livingCost = { status: 'unavailable' }; renderLivingCost(); }) : Promise.resolve();
+    await Promise.allSettled([detail, context, livingCost]); app.dataset.loaded = 'true';
     let resizeTimer; window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(() => { renderTrajectory(); renderSpending(); renderContext(); }, 160); });
   } catch (error) {
     fatal(T('This budget could not be opened.', 'Rozpočet se nepodařilo otevřít.'), `${T('The published data is unavailable for this IČO. Nothing old, partial or invented has been substituted.', 'Publikovaná data pro toto IČO nejsou dostupná. Nic starého, neúplného ani vymyšleného nebylo dosazeno.')} ${link(`https://monitor.statnipokladna.gov.cz/ucetni-jednotka/${ico}/prehled`, T('Official accounts', 'Oficiální výkazy'))}`);
