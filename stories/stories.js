@@ -19,6 +19,9 @@
   function translate() {
     const lang = document.documentElement.lang === 'cs' ? 'cs' : 'en';
     document.querySelectorAll('[data-en][data-cs]').forEach(node => { node.textContent = node.dataset[lang]; });
+    const bilingualArticle = document.querySelector('.story-heading h1[data-en][data-cs]')?.closest('article');
+    if (bilingualArticle) bilingualArticle.lang = lang;
+    document.querySelectorAll('.story-card').forEach(card => { if (card.querySelector('h3 [data-en][data-cs]')) card.lang = lang; });
     if(search) search.placeholder = lang==='cs'?'Cla, příjmy…':'Tariffs, revenue…';
     document.documentElement.removeAttribute('data-language-pending');
     filter();

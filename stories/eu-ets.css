@@ -1,0 +1,27 @@
+.story-body #ets-flow{border:1px solid var(--line);padding:24px;background:var(--paper);border-radius:4px}
+.story-body .ets-controls{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}
+.story-body .ets-controls[hidden]{display:none}
+.story-body .ets-controls button,.story-body .ets-node{font:inherit;color:var(--ink);border:1px solid var(--line);background:transparent;cursor:pointer;border-radius:3px}
+.story-body .ets-controls button{padding:10px 16px;font-size:14px;min-height:44px}
+.story-body .ets-controls button[aria-pressed=true]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.story-body .ets-ranks{display:grid;gap:30px;margin:24px 0}
+.story-body .ets-rank{position:relative;display:flex;gap:12px;justify-content:center;align-items:stretch}
+
+.story-body .ets-node{padding:16px 12px;flex:1;max-width:340px;min-width:0;min-height:82px;text-align:left;font-size:14px;line-height:1.45}
+.story-body .ets-node strong{display:block;font-size:13px;margin-top:7px;font-variant-numeric:tabular-nums;font-weight:600;color:var(--olive);overflow-wrap:anywhere}
+.story-body .ets-node[aria-pressed=true]{border-color:var(--olive);background:#68711f0c;box-shadow:inset 3px 0 var(--olive)}
+.story-body .ets-inspection{border-top:1px solid var(--line);padding-top:18px;color:var(--ink);min-height:120px}
+.story-body .ets-inspection strong{font-size:16px}
+.story-body .ets-inspection p{margin:8px 0 12px;max-width:620px}
+.story-body .ets-node:focus-visible,.story-body .ets-controls button:focus-visible{outline:2px solid var(--olive);outline-offset:4px}
+.story-body #ets-receipts tbody tr:first-child{font-weight:700;border-bottom:2px solid var(--ink)}
+.story-body #ets-receipts td{white-space:nowrap}
+.story-body .ets-boundaries{padding-left:20px}
+.story-body .ets-boundaries li{margin-bottom:16px}
+@media(max-width:560px){.story-body #ets-flow{padding:16px}.story-body .ets-rank{flex-direction:column}.story-body .ets-node{max-width:none;width:100%;min-height:68px;padding:12px}.story-body .ets-controls button{flex:1;padding:10px 8px}.story-body .ets-inspection{min-height:140px}}
+@media print{.story-body .ets-controls{display:none}.story-body .ets-node{cursor:default}.story-body #ets-flow{break-inside:auto}}
+
+.story-body .ets-node[data-linked=true]{border-style:dashed;border-color:var(--olive)}
+.story-body .ets-routes{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.story-body .ets-routes button{font:inherit;border:1px solid var(--line);border-radius:3px;color:var(--ink);background:transparent;padding:8px;cursor:pointer;min-height:44px}
+.story-body .ets-routes button:focus-visible{outline:2px solid var(--olive);outline-offset:3px}

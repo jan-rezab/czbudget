@@ -1,6 +1,18 @@
 // Editorial metadata, not a data pipeline. Only published entries enter the site.
 export default [
   {
+    slug:'where-carbon-auction-money-goes',status:'published',format:'story',
+    title:'Europe puts a price on carbon. Where does the money go?',
+    titleCs:'Evropa zpoplatňuje emise. Kam míří peníze?',
+    description:'Follow an allowance from allocation to surrender, and auction revenue from buyers to public budgets and European funds.',
+    descriptionCs:'Sledujte povolenku od přidělení po odevzdání a aukční výnosy od kupujících do veřejných rozpočtů a evropských fondů.',
+    date:'2026-10-05',updated:'2026-10-05',minutes:5,topic:'Carbon markets & public money',author:'Public Spending Data',language:'en',featured:false,
+    takeaway:'One market produces two records: a flow of allowances and a flow of public money.',
+    takeawayCs:'Jeden trh vytváří dvě stopy: tok povolenek a tok veřejných peněz.',
+    edition:'Editorial snapshot · EU ETS1 auction revenue: 2024 · Source coverage checked 5 October 2026 · Not a live tracker.',
+    editionCs:'Redakční snímek · Aukční výnosy EU ETS1: 2024 · Pokrytí zdrojů ověřeno 5. října 2026 · Nejde o živý přehled.',
+  },
+  {
     slug:'trade-surged-around-russia',status:'published',format:'story',
     title:'Trade surged around Russia. Where did the goods go?',
     description:'Follow suppliers, product baskets and onward exports through Kazakhstan and Kyrgyzstan—and test how much the trade statistics can establish.',

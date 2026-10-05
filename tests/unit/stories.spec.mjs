@@ -9,7 +9,7 @@ const read = path => readFile(new URL(`../../${path}`,import.meta.url),'utf8');
 test('published chart adapters have content-derived cache versions',async()=>{
   for (const story of catalog.filter(s=>s.status==='published')) {
     const html=await read(`stories/${story.slug}/index.html`);
-    for (const name of ['tariff-charts.js','chart-rails.js','oil-pivot.js','stories.js','stories.css','oil-pivot.css']) {
+    for (const name of ['tariff-charts.js','chart-rails.js','oil-pivot.js','stories.js','stories.css','oil-pivot.css','eu-ets.js','eu-ets.css']) {
       if (!html.includes(`/stories/${name}`)) continue;
       const digest=createHash('sha256').update(await read(`stories/${name}`)).digest('hex');
       assert.ok(html.includes(`/stories/${name}?v=${digest}"`), `${story.slug}: ${name}`);
@@ -99,4 +99,17 @@ test('annual oil extension keeps units, EU membership and unavailable weights ex
  assert.equal(normalise({...payload,routes:[route('IND',5)]}).china,null);
  assert.throws(()=>normalise({...payload,frequency:'M'}),/Unexpected annual/);
  assert.throws(()=>normalise({...payload,routes:[route('IND',-1)]}),/Invalid annual/);
+});
+
+
+test('EU ETS source ledger preserves independent rounding and a separate allowance graph',async()=>{
+  const html=await read('content/stories/where-carbon-auction-money-goes.fragment');
+  const model=JSON.parse(html.match(/<script id="ets-flow-model" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+  assert.ok(html.includes('2024 auction receipts · EUR billions'));
+  assert.ok(html.includes('They do not add up exactly'));
+  assert.ok(html.includes('until 1 October 2022'));
+  assert.ok(html.includes('ETS2 needs its own evidence'));
+  assert.ok(html.includes('38.8')&&html.includes('24.4')&&html.includes('0.25'));
+  assert.deepEqual(model.allowances.edges.filter(([from])=>from==='reserve'),[['reserve','auction']]);
+  for(const graph of Object.values(model)) for(const [from,to] of graph.edges){assert.ok(graph.nodes[from]);assert.ok(graph.nodes[to]);}
 });

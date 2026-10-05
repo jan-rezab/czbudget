@@ -137,3 +137,39 @@ test('oil story extends annual history from published 2025 routes and preserves 
   await page.locator('#oa-monthly').check();
   await expect(page.locator('[data-country="china"]')).toBeDisabled();
 });
+
+
+test('EU ETS story switches units, follows valid routes, persists inspection and translates',async({page})=>{
+  const errors=[];page.on('pageerror',error=>errors.push(error.message));
+  await page.goto('/stories/where-carbon-auction-money-goes/?lang=en');
+  await expect(page.locator('#ets-flow')).toHaveAttribute('data-ready','true');
+  await expect(page.locator('#ets-receipts')).toContainText('38.8');
+  await page.locator('[data-flow-mode="allowances"]').click();
+  await page.locator('[data-node="reserve"]').click();
+  await expect(page.locator('#ets-routes [data-flow-target]')).toHaveCount(1);
+  await expect(page.locator('#ets-routes')).toContainText('Auctioned allowances');
+  await page.locator('[data-flow-target="auction"]').click();
+  await page.reload();
+  await expect(page.locator('#ets-flow')).toHaveAttribute('data-flow','allowances');
+  await expect(page.locator('[data-node="auction"]')).toHaveAttribute('aria-pressed','true');
+  await page.locator('[data-node="operators"]').focus();await page.keyboard.press('ArrowRight');
+  await expect(page.locator('[data-node="traders"]')).toBeFocused();
+  await page.keyboard.press('Escape');await expect(page.locator('[data-node="operators"]')).toBeFocused();
+  await page.locator('psd-site-header [data-lang="cs"]').click();
+  await expect(page.locator('h1')).toHaveText('Evropa zpoplatňuje emise. Kam míří peníze?');
+  await expect(page.locator('.story-main > article')).toHaveAttribute('lang','cs');
+  await expect(page.locator('[data-flow-mode="money"]')).toHaveText('Peníze · EUR');
+  await expect(page.locator('#ets-inspection-title')).toHaveText('Účty provozovatelů');
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
+  expect(errors).toEqual([]);
+});
+
+test('EU ETS receipts and evidence boundaries remain readable without scripts',async({browser})=>{
+  const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();
+  await page.goto('/stories/where-carbon-auction-money-goes/');
+  await expect(page.locator('#ets-receipts tbody tr')).toHaveCount(6);
+  await expect(page.locator('#evidence-boundary')).toContainText('until 1 October 2022');
+  await expect(page.locator('#public-receipts')).toContainText('They do not add up exactly');
+  await context.close();
+});
