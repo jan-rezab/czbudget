@@ -1,4 +1,6 @@
 import {test,expect} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 
 const report='/deep-dives/industry/diagnostics/?lang=en';
 const ready=async page=>expect(page.locator('#explorer')).toHaveAttribute('aria-busy','false');
@@ -68,7 +70,8 @@ test('English report discovery uses current shared translations',async({page})=>
   await page.goto('/deep-dives/?lang=en');
   await expect(page.locator('#industrial-diagnostics h4')).toHaveText('Inside industry');
   await expect(page.locator('#industrial-diagnostics p')).toContainText('Business earnings and investment');
-  await expect(page.locator('script[src*="deep-dives.js"]')).toHaveAttribute('src',/v=20260927-report-previews/);
+  const digest=createHash('sha256').update(readFileSync(new URL('../../deep-dives.js',import.meta.url))).digest('hex');
+  await expect(page.locator('script[src*="deep-dives.js"]')).toHaveAttribute('src',`../deep-dives.js?v=${digest}`);
   await page.locator('#industrial-diagnostics').click();await ready(page);
   await expect(page.locator('h1')).toContainText('What powers');
 });
