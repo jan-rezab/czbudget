@@ -1,0 +1,25 @@
+import {test,expect} from '@playwright/test';
+const route='/stories/the-world-is-having-fewer-children/';
+test('worldwide story provides bilingual charts, exact tables, filters and persistent comparisons',async({page})=>{
+  const errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(route+'?lang=en');
+  await expect(page.locator('#fertility-story')).toHaveAttribute('data-ready','true');
+  await expect(page.locator('#fertility-story [data-chart-slug]')).toHaveCount(8);
+  await page.locator('#world-fertility [data-action="table"]').click();
+  await expect(page.locator('#world-fertility .psd-chart-panel')).toContainText('2.18831256131236');
+  await page.locator('#fertility-search input').fill('Czech');
+  await expect(page.locator('#fertility-table tbody tr')).toHaveCount(1);
+  await page.locator('#fertility-metric select').selectOption('birth_rate');
+  await expect(page).toHaveURL(/metric=birth_rate/);
+  await page.reload();
+  await expect(page.locator('#fertility-metric select')).toHaveValue('birth_rate');
+  await expect(page.locator('#fertility-search input')).toHaveValue('Czech');
+  await page.locator('psd-site-header [data-lang="cs"]').click();
+  await expect(page.locator('h1')).toContainText('Ve světě se rodí méně dětí');
+  await expect(page.locator('#country-selection-history figcaption')).toHaveText('Vybrané historické řady · 1960–2024');
+  const download=page.waitForEvent('download');await page.locator('#world-fertility [data-action="csv"]').click();expect((await download).suggestedFilename()).toBe('world-fertility.csv');
+  await page.setViewportSize({width:390,height:844});
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
+  expect(errors).toEqual([]);
+});
+test('story remains readable when snapshot is unavailable',async({page})=>{await page.route('**/api/v1/demography/worldwide',r=>r.fulfill({status:503,body:'{}'}));await page.goto(route+'?lang=en');await expect(page.locator('#fertility-status')).toContainText('unavailable');await expect(page.locator('#fertility-evidence')).toContainText('2.18831256131236');});

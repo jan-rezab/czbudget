@@ -32,6 +32,7 @@ import {PrahaReconciliationError,prahaReconciliationStore} from './praha-reconci
 import {PrahaLivingCostError,prahaLivingCostStore} from './praha-living-cost.mjs';
 import {RevenueError, revenueStore} from "./revenue-store.mjs";
 import { JobMarketError, jobMarketStore } from "./job-market-store.mjs";
+import { DemographyError, demographyStore } from "./demography-store.mjs";
 
 const PORT = Number(process.env.API_PORT || 8081);
 const MAX_BODY_BYTES = 32 * 1024;
@@ -218,6 +219,7 @@ async function routeAPI(request, response, url) {
   if (pathname === "/api/v1/revenue/current") return sendJSON(response, 200, await revenueStore.current());
   if (pathname === "/api/v1/praha/living-cost") { const report = await prahaLivingCostStore.current(); return sendJSON(response, 200, report, {"cache-control": report.status === "available" ? "public, max-age=60, s-maxage=60" : "no-store"}); }
   if (pathname === "/api/v1/praha/reconciliation/2025") { const report = await prahaReconciliationStore.current(); return sendJSON(response, 200, report, {"cache-control": report.status === "available" ? "public, max-age=60, s-maxage=60" : "no-store"}); }
+  if (pathname === "/api/v1/demography/worldwide") return sendJSON(response, 200, await demographyStore.current(), {"cache-control":"public, max-age=60"});
   if (pathname === "/api/v1/job-market/2024") return sendJSON(response, 200, await jobMarketStore.current());
   if ((match = pathname.match(/^\/api\/v1\/datasets\/([^/]+)$/))) return sendJSON(response, 200, { data: await datasetInfo(decodeURIComponent(match[1])) });
   if (pathname === "/api/v1/countries") return sendJSON(response, 200, { data: await listCountries() });
@@ -652,7 +654,7 @@ export async function handler(request, response) {
       response.removeHeader('ETag');
       if (error instanceof AssetError) return sendError(response, error.status, error.code, error.message, id);
     }
-    if (error instanceof QueryAdmissionError || error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof RevenueError || error instanceof PrahaContractsError || error instanceof PrahaReconciliationError || error instanceof PrahaLivingCostError) return sendError(response, error.status, error.code, error.message, id);
+    if (error instanceof QueryAdmissionError || error instanceof AuthError || error instanceof DataError || error instanceof SnapshotError || error instanceof CityVizorError || error instanceof FranceLinesError || error instanceof TradeError || error instanceof ProcessLogError || error instanceof JobMarketError || error instanceof DemographyError || error instanceof RevenueError || error instanceof PrahaContractsError || error instanceof PrahaReconciliationError || error instanceof PrahaLivingCostError) return sendError(response, error.status, error.code, error.message, id);
     console.error(JSON.stringify({ severity: "ERROR", request_id: id, path: url.pathname, message: error?.message, stack: error?.stack }));
     return sendError(response, 500, "internal_error", "The request could not be completed.", id);
   }

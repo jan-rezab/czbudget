@@ -8,7 +8,7 @@ import catalog from '../content/stories/catalog.mjs';
 const root = resolve(import.meta.dirname, '..');
 // CDN browser TTLs can override origin revalidation. Version adapter references
 // from their actual content so returning readers cannot reuse an older adapter.
-const chartScripts = new Map(await Promise.all(['tariff-charts.js', 'chart-rails.js', 'oil-pivot.js', 'oil-pivot.css', 'stories.js', 'stories.css', 'eu-ets.js', 'eu-ets.css'].map(async name => {
+const chartScripts = new Map(await Promise.all(['tariff-charts.js', 'chart-rails.js', 'oil-pivot.js', 'oil-pivot.css', 'stories.js', 'stories.css', 'eu-ets.js', 'eu-ets.css', 'fertility.js', 'fertility.css'].map(async name => {
   const digest = createHash('sha256').update(await readFile(resolve(root, 'stories', name))).digest('hex');
   return [name, digest];
 })));
@@ -33,9 +33,9 @@ const bilingual = (en,cs) => `<span data-en="${esc(en)}" data-cs="${esc(cs)}">${
 const editorial = (en, cs) => cs ? bilingual(en, cs) : esc(en);
 const outputs = new Map();
 function page({title,description,path,body,article=false,schema}) {
-  body = body.replace(/src="\/stories\/(tariff-charts\.js|chart-rails\.js|oil-pivot\.js|eu-ets\.js)(?:\?[^"]*)?"/g,
+  body = body.replace(/src="\/stories\/(tariff-charts\.js|chart-rails\.js|oil-pivot\.js|eu-ets\.js|fertility\.js)(?:\?[^"]*)?"/g,
     (_, name) => `src="/stories/${name}?v=${chartScripts.get(name)}"`);
-  for (const name of ['oil-pivot.css', 'eu-ets.css']) body = body.replace(`href="/stories/${name}"`, `href="/stories/${name}?v=${chartScripts.get(name)}"`);
+  for (const name of ['oil-pivot.css', 'eu-ets.css', 'fertility.css']) body = body.replace(`href="/stories/${name}"`, `href="/stories/${name}?v=${chartScripts.get(name)}"`);
   return `<!doctype html>
 <html lang="en"><head>
 <script src="/language-bootstrap.js?v=20260920-stories"></script>

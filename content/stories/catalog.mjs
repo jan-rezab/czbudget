@@ -1,6 +1,18 @@
 // Editorial metadata, not a data pipeline. Only published entries enter the site.
 export default [
   {
+    slug:'the-world-is-having-fewer-children',status:'published',format:'story',
+    title:'The world is having fewer children. What changes next?',
+    titleCs:'Ve světě se rodí méně dětí. Co se změní dál?',
+    description:'Follow 65 years of fertility and birth rates across 217 countries and territories—and what the transition means for families, schools and public budgets.',
+    descriptionCs:'Sledujte 65 let plodnosti a porodnosti ve 217 zemích a územích a význam demografické proměny pro rodiny, školy a veřejné rozpočty.',
+    date:'2026-10-05',updated:'2026-10-05',minutes:14,topic:'Demography & public budgets',author:'Public Spending Data',language:'en',featured:false,
+    takeaway:'Most countries are below the approximate replacement benchmark. The global aggregate is still above it.',
+    takeawayCs:'Většina zemí je pod přibližnou hranicí prosté reprodukce. Světový agregát zůstává nad ní.',
+    edition:'World Bank WDI snapshot · 1960–2024 · 217 countries / territories · Source vintage: 13 July 2026 · Acquired 5 October 2026.',
+    editionCs:'Snímek WDI Světové banky · 1960–2024 · 217 zemí / území · Verze zdroje: 13. července 2026 · Získáno 5. října 2026.',
+  },
+  {
     slug:'where-carbon-auction-money-goes',status:'published',format:'story',
     title:'Europe puts a price on carbon. Where does the money go?',
     titleCs:'Evropa zpoplatňuje emise. Kam míří peníze?',
