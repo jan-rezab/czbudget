@@ -22,6 +22,10 @@
     const bilingualArticle = document.querySelector('.story-heading h1[data-en][data-cs]')?.closest('article');
     if (bilingualArticle) bilingualArticle.lang = lang;
     document.querySelectorAll('.story-card').forEach(card => { if (card.querySelector('h3 [data-en][data-cs]')) card.lang = lang; });
+    document.querySelectorAll('.story-card h3 a, .story-related a, .story-breadcrumb a, .story-read, #lead-heading a').forEach(link => {
+      const url = new URL(link.href, location.href);
+      if (url.origin === location.origin) { url.searchParams.set('lang', lang); link.href = url.pathname + url.search + url.hash; }
+    });
     if(search) search.placeholder = lang==='cs'?'Cla, příjmy…':'Tariffs, revenue…';
     document.documentElement.removeAttribute('data-language-pending');
     filter();

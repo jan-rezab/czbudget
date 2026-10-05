@@ -3,9 +3,12 @@ import { readFileSync } from "node:fs";
 
 const catalogue = JSON.parse(readFileSync(new URL("../../deep-dives/reports.json", import.meta.url), "utf8"));
 
+const listedReports = catalogue.reports.filter(report => !report.listing || report.listing === "reports");
+const listedClusters = catalogue.shelves.flatMap(s => s.clusters.filter(c => listedReports.some(r => r.shelf === s.id && r.cluster === c.id)));
+
 for (const lang of ["en", "cs"]) test(`${lang} report cards show their own lightweight chart previews`, async ({ page }) => {
   await page.goto(`/deep-dives/?lang=${lang}`, { waitUntil: "networkidle" });
-  for (const report of catalogue.reports) {
+  for (const report of listedReports) {
     const card = page.locator(`#${report.slug}`);
     if (report.preview.unavailable) {
       await expect(card.locator('.preview-unavailable')).toHaveText(catalogue.chrome.previewUnavailable[lang]);
@@ -31,9 +34,9 @@ test("Reports opens generated topic submenus and links to the complete catalogue
   await reports.locator(":scope > summary").click();
   await expect(reports).toHaveAttribute("open", "");
   await expect(page).toHaveURL(/about\.html\?lang=en$/);
-  await expect(reports.locator(".report-menu-group")).toHaveCount(catalogue.shelves.flatMap(s => s.clusters).length);
-  await expect(reports.locator("a[data-report-slug]")).toHaveCount(catalogue.reports.length);
-  for (const report of catalogue.reports) {
+  await expect(reports.locator(".report-menu-group")).toHaveCount(listedClusters.length);
+  await expect(reports.locator("a[data-report-slug]")).toHaveCount(listedReports.length);
+  for (const report of listedReports) {
     const link = reports.locator(`[data-report-slug="${report.slug}"]`);
     await expect(link).toHaveText(report.title.en);
     const expected = new URL(report.navPath, "https://publicspendingdata.org/");
@@ -79,7 +82,7 @@ test("report search filters the catalogue and restores every topic when cleared"
   await page.goto("/deep-dives/?lang=en", { waitUntil: "networkidle" });
   const search = page.getByRole("searchbox", { name: "Find a report" });
   await expect(search).toBeVisible();
-  await expect(page.locator(".deep-card:visible")).toHaveCount(catalogue.reports.length);
+  await expect(page.locator(".deep-card:visible")).toHaveCount(listedReports.length);
   await search.fill("hospital");
   await expect(page.locator(".deep-card:visible")).toHaveCount(1);
   await expect(page.locator("#health")).toBeVisible();
@@ -89,7 +92,7 @@ test("report search filters the catalogue and restores every topic when cleared"
   await expect(page.locator(".reports-empty")).toBeVisible();
   await expect(page.locator(".deep-card:visible")).toHaveCount(0);
   await search.fill("");
-  await expect(page.locator(".deep-card:visible")).toHaveCount(catalogue.reports.length);
+  await expect(page.locator(".deep-card:visible")).toHaveCount(listedReports.length);
   await expect(page.locator(".reports-empty")).toBeHidden();
   await expect(page.locator(".reports-topics")).toBeVisible();
   await page.locator('.reports-topics a[href="#topic-cz"]').click();

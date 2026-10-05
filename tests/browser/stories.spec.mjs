@@ -173,3 +173,18 @@ test('EU ETS receipts and evidence boundaries remain readable without scripts',a
   await expect(page.locator('#public-receipts')).toContainText('They do not add up exactly');
   await context.close();
 });
+
+for(const lang of ['en','cs']) test(`${lang} migrated narratives are stories while Rosling remains a report`,async({page})=>{
+  await page.goto(`/stories/?lang=${lang}`);
+  for(const path of ['/deep-dives/money/cze/','/deep-dives/money/usa/','/deep-dives/digital-spillover/']){
+    const link=page.locator(`.story-card h3 a[href^="${path}"]`);
+    await expect(link).toHaveCount(1);
+    await expect(link).toHaveAttribute('href',`${path}?lang=${lang}`);
+  }
+  await expect(page.locator('.story-card a[href*="plzen-contracts"]')).toHaveCount(0);
+  await page.goto(`/deep-dives/?lang=${lang}`);
+  await expect(page.locator('#rosling')).toBeVisible();
+  await expect(page.locator('#money-cze, #money-usa, #digital-spillover, #plzen-contracts')).toHaveCount(0);
+  await page.goto(`/deep-dives/money/cze/?lang=${lang}`);
+  await expect(page.locator('psd-site-header [data-global-nav="stories"]')).toHaveClass(/active/);
+});

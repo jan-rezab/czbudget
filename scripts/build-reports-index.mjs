@@ -21,6 +21,9 @@ const cap = (value) => value.slice(0, 1).toUpperCase() + value.slice(1);
 const escapeHtml = (value) => String(value).replace(/&(?![a-zA-Z#0-9]+;)/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const escapeJs = (value) => JSON.stringify(String(value));
 const problems = [];
+// Retain page registration and copy while controlling public discovery.
+const listedReports = registry.reports.filter(report => !report.listing || report.listing === "reports");
+const listedShelves = registry.shelves.map(shelf => ({...shelf, clusters: shelf.clusters.filter(cluster => listedReports.some(report => report.shelf === shelf.id && report.cluster === cluster.id))})).filter(shelf => shelf.clusters.length);
 
 // ---------------------------------------------------------------- copy keys
 // One key per string the pages translate at runtime. Report titles and blurbs
@@ -48,6 +51,7 @@ for (const report of registry.reports) {
 // ------------------------------------------------------------- registry sanity
 const seen = new Set();
 for (const report of registry.reports) {
+  if (report.listing && !["reports", "stories", "hidden"].includes(report.listing)) problems.push(`${report.slug}: unknown listing ${report.listing}`);
   if (seen.has(report.slug)) problems.push(`Duplicate report slug: ${report.slug}`);
   seen.add(report.slug);
   const shelf = registry.shelves.find((entry) => entry.id === report.shelf);
@@ -105,7 +109,7 @@ const contractSection = () => {
 
 const shelfSection = (shelf) => {
   const clusters = shelf.clusters.map((cluster) => {
-    const cards = registry.reports.filter((report) => report.shelf === shelf.id && report.cluster === cluster.id);
+    const cards = listedReports.filter((report) => report.shelf === shelf.id && report.cluster === cluster.id);
     if (!cards.length) return "";
     const heading = cluster.title
       ? `<div class="deep-cluster-heading"><h3 data-deep-copy="cluster${cap(cluster.id)}Title">${escapeHtml(cluster.title.cs)}</h3>`
@@ -124,10 +128,10 @@ const shelfSection = (shelf) => {
 // The comparison contract only describes the cross-country shelf, so it sits
 // between the two shelves rather than at the end of the page.
 const catalogueIntro = () => {
-  const featured = registry.reports.find(report => report.slug === registry.featured);
+  const featured = listedReports.find(report => report.slug === registry.featured);
   if (!featured) throw new Error('The featured report must exist in the catalogue');
   const text = key => `<span data-deep-copy="${key}">${escapeHtml(registry.chrome[key].cs)}</span>`;
-  const topics = registry.shelves.flatMap(shelf => shelf.clusters);
+  const topics = listedShelves.flatMap(shelf => shelf.clusters);
   return `<section class="deep-hero reports-hero" aria-labelledby="reports-title"><div class="reports-intro">`
     + `<h1 id="reports-title" data-deep-copy="indexTitle">${escapeHtml(registry.chrome.indexTitle.cs)}</h1>`
     + `<p data-deep-copy="indexIntro">${escapeHtml(registry.chrome.indexIntro.cs)}</p>`
@@ -136,11 +140,11 @@ const catalogueIntro = () => {
     + `<h2 data-deep-copy="${featured.key}">${escapeHtml(featured.title.cs)}</h2>`
     + `<p data-deep-copy="${featured.key}Copy">${escapeHtml(featured.card.cs)}</p>`
     + `<span class="reports-feature-source" data-deep-copy="source${cap(featured.key)}">${escapeHtml(featured.source.cs)}</span></a></section>`
-    + `<div class="reports-discovery" id="report-library"><div class="reports-tools"><p class="reports-total"><b>${registry.reports.length}</b> ${text('reportLibrary')}</p>`
+    + `<div class="reports-discovery" id="report-library"><div class="reports-tools"><p class="reports-total"><b>${listedReports.length}</b> ${text('reportLibrary')}</p>`
     + `<label class="reports-search" hidden><span data-deep-copy="searchReports">${escapeHtml(registry.chrome.searchReports.cs)}</span><input type="search" id="report-search" autocomplete="off" aria-controls="reports-results"></label></div>`
     + `<nav class="reports-topics" aria-label="${escapeHtml(registry.chrome.browseReports.cs)}">${topics.map(cluster => `<a href="#topic-${cluster.id}" data-deep-copy="cluster${cap(cluster.id)}Title">${escapeHtml(cluster.title.cs)}</a>`).join('')}</nav></div>`;
 };
-const indexBlock = catalogueIntro() + `<div id="reports-results">` + registry.shelves
+const indexBlock = catalogueIntro() + `<div id="reports-results">` + listedShelves
   .map((shelf) => shelfSection(shelf) + (shelf.id === "compare" ? contractSection() : ""))
   .join("\n    ") + `</div><p class="reports-empty" hidden data-deep-copy="noReports">${escapeHtml(registry.chrome.noReports.cs)}</p><p class="reports-search-status" role="status" aria-live="polite"></p>`;
 
@@ -151,13 +155,14 @@ const copyBlock = LANGS.map((lang) => {
 }).join("\n");
 
 // ------------------------------------------------------------------- rewriting
-const menuGroups = registry.shelves.flatMap(shelf => shelf.clusters.map(cluster => ({
+const menuGroups = listedShelves.flatMap(shelf => shelf.clusters.map(cluster => ({
   id: cluster.id,
   title: cluster.title,
-  reports: registry.reports.filter(report => report.shelf === shelf.id && report.cluster === cluster.id)
+  reports: listedReports.filter(report => report.shelf === shelf.id && report.cluster === cluster.id)
     .map(report => ({ slug: report.slug, path: report.navPath, title: report.title })),
 })));
-const menuBlock = `  const reportMenuGroups = ${JSON.stringify(menuGroups)};`;
+const storyPaths = registry.reports.filter(report => report.listing === "stories").map(report => "/" + report.navPath.split("?")[0]);
+const menuBlock = `  const reportMenuGroups = ${JSON.stringify(menuGroups)};\n  const storyReportPaths = ${JSON.stringify(storyPaths)};`;
 const targets = [
   { file: "global-nav.js", begin: "/* BEGIN GENERATED REPORT MENU */", end: "/* END GENERATED REPORT MENU */", body: menuBlock },
   { file: "deep-dives/index.html", begin: "<!-- BEGIN GENERATED REPORTS -->", end: "<!-- END GENERATED REPORTS -->", body: indexBlock },

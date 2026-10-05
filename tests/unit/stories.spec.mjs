@@ -8,7 +8,7 @@ const read = path => readFile(new URL(`../../${path}`,import.meta.url),'utf8');
 
 test('published chart adapters have content-derived cache versions',async()=>{
   for (const story of catalog.filter(s=>s.status==='published')) {
-    const html=await read(`stories/${story.slug}/index.html`);
+    const html=await read(`${story.path?.slice(1) || `stories/${story.slug}/`}index.html`);
     for (const name of ['tariff-charts.js','chart-rails.js','oil-pivot.js','stories.js','stories.css','oil-pivot.css','eu-ets.js','eu-ets.css','fertility.js','fertility.css']) {
       if (!html.includes(`/stories/${name}`)) continue;
       const digest=createHash('sha256').update(await read(`stories/${name}`)).digest('hex');
@@ -20,13 +20,13 @@ test('published chart adapters have content-derived cache versions',async()=>{
 test('published articles, index, RSS and sitemap agree; drafts stay private',async()=>{
   const index=await read('stories/index.html'),feed=await read('stories/feed.xml'),map=await read('stories/sitemap.xml');
   for(const s of catalog){
-    const route=`/stories/${s.slug}/`;
+    const route=s.path || `/stories/${s.slug}/`;
     for(const surface of [index,feed,map]) assert.equal(surface.includes(route),s.status==='published');
     if(s.status!=='published')continue;
-    const html=await read(`stories/${s.slug}/index.html`);
+    const html=await read(`${s.path?.slice(1) || `stories/${s.slug}/`}index.html`);
     assert.equal([...html.matchAll(/<h1\b/g)].length,1);
     assert.ok(html.includes(`href="https://publicspendingdata.org${route}"`));
-    assert.ok(html.includes('<article lang="en">'));
+    if (!s.path) assert.ok(html.includes('<article lang="en">'));
     assert.doesNotMatch(html,/file:\/\/|\.codex\/|Local editorial version|psd-trade-war-reference/);
     const slugs=[...html.matchAll(/data-story-table="([^"]+)"/g)].map(m=>m[1]);
     assert.equal(new Set(slugs).size,slugs.length);
@@ -72,7 +72,7 @@ test('published story pages link only to files that ship with the site',async()=
   // The release integrity gate rejects root-relative links without a static file; catch them before a cloud build.
   const {stat}=await import('node:fs/promises');
   const exists=async path=>{for(const candidate of [path,`${path}.html`,`${path.replace(/\/?$/,'/')}index.html`]){try{if((await stat(new URL(`../../${candidate}`,import.meta.url))).isFile())return true;}catch{}}return false;};
-  for(const page of ['stories/index.html',...catalog.filter(s=>s.status==='published').map(s=>`stories/${s.slug}/index.html`)]){
+  for(const page of ['stories/index.html',...catalog.filter(s=>s.status==='published').map(s=>`${s.path?.slice(1) || `stories/${s.slug}/`}index.html`)]){
     const html=await read(page);
     for(const [,reference] of html.matchAll(/<(?:a|link|script|img)\b[^>]*(?:href|src)=["']([^"']+)["']/gi)){
       if(/^(?:https?:|mailto:|tel:|data:|javascript:|#|\/\/)/.test(reference))continue;
@@ -112,4 +112,20 @@ test('EU ETS source ledger preserves independent rounding and a separate allowan
   assert.ok(html.includes('38.8')&&html.includes('24.4')&&html.includes('0.25'));
   assert.deepEqual(model.allowances.edges.filter(([from])=>from==='reserve'),[['reserve','auction']]);
   for(const graph of Object.values(model)) for(const [from,to] of graph.edges){assert.ok(graph.nodes[from]);assert.ok(graph.nodes[to]);}
+});
+
+test('story and hidden reports leave the report catalogue while Rosling remains',async()=>{
+  const registry=JSON.parse(await read('deep-dives/reports.json'));
+  const index=await read('deep-dives/index.html'),nav=await read('global-nav.js');
+  const menu=JSON.parse(nav.match(/const reportMenuGroups = (.*);/)[1]);
+  const links=menu.flatMap(group=>group.reports).map(report=>report.slug);
+  for(const report of registry.reports){
+    const listed=!report.listing || report.listing==='reports';
+    assert.equal(index.includes(`id="${report.slug}"`),listed,report.slug);
+    assert.equal(links.includes(report.slug),listed,report.slug);
+    if(report.listing==='stories') assert.equal(catalog.filter(story=>story.status==='published'&&story.path==='/'+report.navPath).length,1,report.slug);
+    if(report.listing==='hidden') assert.ok(!catalog.some(story=>story.path==='/'+report.navPath),report.slug);
+  }
+  assert.ok(links.includes('rosling'));
+  assert.ok(!index.includes('href="#topic-us"'));
 });

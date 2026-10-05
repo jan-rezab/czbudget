@@ -20,6 +20,10 @@ const seen = new Set();
 for (const story of catalog) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(story.slug) || seen.has(story.slug)) throw new Error(`Invalid/duplicate slug: ${story.slug}`);
   seen.add(story.slug);
+  if (story.path) {
+    if (!/^\/deep-dives\/[a-z0-9/-]+\/$/.test(story.path)) throw new Error(`Invalid existing story path: ${story.slug}`);
+    await readFile(resolve(root, `${story.path.slice(1)}index.html`), 'utf8');
+  }
   if (!['draft','published'].includes(story.status) || !['story','mini','interactive'].includes(story.format)) throw new Error(`Invalid state: ${story.slug}`);
   for (const field of ['title','description','date','updated','author','language','topic','takeaway']) if (!story[field]) throw new Error(`Missing ${field}: ${story.slug}`);
   for (const date of [story.date,story.updated]) if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || Number.isNaN(Date.parse(date))) throw new Error(`Invalid date: ${story.slug}`);
@@ -28,7 +32,7 @@ for (const story of catalog) {
 if (published.filter(s => s.featured).length !== 1) throw new Error('Choose exactly one published lead story');
 const label = s => s.format === 'interactive' ? 'Interactive map' : s.format === 'mini' ? 'Mini story' : 'Data story';
 const dateText = date => new Date(`${date}T00:00:00Z`).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
-const url = s => `/stories/${s.slug}/`;
+const url = s => s.path || `/stories/${s.slug}/`;
 const bilingual = (en,cs) => `<span data-en="${esc(en)}" data-cs="${esc(cs)}">${esc(en)}</span>`;
 const editorial = (en, cs) => cs ? bilingual(en, cs) : esc(en);
 const outputs = new Map();
@@ -60,6 +64,8 @@ const indexBody = `<main id="main" class="stories-index"><header class="stories-
 <aside class="stories-editorial"><h2>${bilingual('Evidence first. Conclusions second.','Nejdřív důkazy. Potom závěry.')}</h2><p>${bilingual('Every story separates observations from interpretation, dates its evidence and explains what the data cannot tell us. Article languages are stated in each story.','Každý příběh odděluje pozorování od interpretace, uvádí datum zdrojů a vysvětluje, co z dat zjistit nelze. Jazyk je uveden u každého příběhu.')}</p><a href="/methodology.html">${bilingual('Explore our coverage and methods →','Prozkoumat pokrytí a metodiku →')}</a></aside></main>`;
 outputs.set('stories/index.html',page({title:'Data stories',description:'Full data stories and short, source-led explainers about public money and real outcomes.',path:'/stories/',body:indexBody,schema:{'@context':'https://schema.org','@type':'CollectionPage',name:'PSD Data Stories',url:`${origin}/stories/`,hasPart:published.map(s=>({'@type':'Article',headline:s.title,url:`${origin}${url(s)}`}))}}));
 for (const s of published) {
+  // Existing interactive articles keep their established route, body and assets.
+  if (s.path) continue;
   const manuscript = await readFile(resolve(root,`content/stories/${s.slug}.fragment`),'utf8');
   if (/<h1\b|file:\/\/|\.codex\/|Local editorial version|psd-trade-war-reference/i.test(manuscript)) throw new Error(`Unpublished/local markup in ${s.slug}`);
   const related = published.filter(other=>other.slug!==s.slug);
