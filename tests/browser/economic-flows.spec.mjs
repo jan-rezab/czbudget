@@ -8,7 +8,13 @@ test('economic atlas preserves accounting boundaries, exact evidence, language a
   await expect(page.locator('#economic-atlas')).toHaveAttribute('data-ready','true');
   await expect(page.locator('#atlas-status')).toContainText('TEST FIXTURE');
   await expect(page.locator('#atlas-year')).toHaveValue('2024');
-  await expect(page.locator('[data-chart-slug]')).toHaveCount(4);
+  await expect(page.locator('[data-chart-slug]')).toHaveCount(6);
+  await expect(page.locator('#atlas-network-chart [data-circuit-kind="node"]')).toHaveCount(7);
+  await page.locator('[data-layer="external"]').click();await expect(page).toHaveURL(/layer=external/);
+  await page.locator('[data-journey="loan"]').click();
+  await expect(page.locator('#atlas-network-inspector h3')).toContainText('Credit & working capital');
+  await page.locator('#atlas-journey-next').click();await expect(page.locator('#atlas-journey-step')).toContainText('2 / 4');
+  await page.locator('#atlas-turns').fill('8');await expect(page.locator('#atlas-sim-payments')).toContainText('800');await expect(page.locator('#atlas-sim-stock')).toContainText('100');
   await page.locator('#atlas-border-flow [data-flow-key="exports_goods"]').click();
   await expect(page.locator('#atlas-inspector')).toContainText('4000000.000');
   await expect(page.locator('#atlas-inspector a')).toHaveAttribute('href','https://example.org/synthetic-economic-test');
@@ -19,7 +25,7 @@ test('economic atlas preserves accounting boundaries, exact evidence, language a
   await page.reload();await expect(page.locator('#atlas-year')).toHaveValue('2023');await expect(page.locator('[data-transaction="D4"]')).toHaveAttribute('aria-pressed','true');
   await page.locator('psd-site-header [data-lang="cs"]').click();await expect(page.locator('h1')).toContainText('v pohybu.');
   await page.locator('#atlas-filter').selectOption('money');await expect(page.locator('#atlas-ledger')).toContainText('M3 · široké peníze');
-  await expect(page.locator('.psd-chart-rail')).toHaveCount(4);
+  await expect(page.locator('.psd-chart-rail')).toHaveCount(6);
   const download=page.waitForEvent('download');await page.locator('#atlas-download').click();expect((await download).suggestedFilename()).toBe('czech-economic-atlas-2023.csv');
   await page.setViewportSize({width:390,height:844});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1)).toBeTruthy();
   expect(errors).toEqual([]);
@@ -27,6 +33,10 @@ test('economic atlas preserves accounting boundaries, exact evidence, language a
 test('unavailable release retains a useful diagram with missing values, never fabricated totals',async({page})=>{
   await page.route('**/api/v1/economy/czech-flows',r=>r.fulfill({status:503,json:{}}));await page.goto(route+'?lang=en');
   await expect(page.locator('#economic-atlas')).toHaveAttribute('data-ready','true');await expect(page.locator('#atlas-status')).toContainText('No verified annual release');
-  await expect(page.locator('#atlas-year')).toBeDisabled();await expect(page.locator('#atlas-headlines')).toContainText('—');await expect(page.locator('#atlas-download')).toBeDisabled();
+  await expect(page.locator('#atlas-network-chart [data-circuit-kind="edge"]')).toHaveCount(22);
+  await expect(page.locator('#atlas-history-empty')).toBeVisible();
+  await page.locator('#atlas-connection-picker').selectOption('inputs');
+  await expect(page.locator('#atlas-network-inspector')).toContainText('Intermediate consumption');
+  await expect(page.locator('#atlas-year')).toBeDisabled();await expect(page.locator('#atlas-headlines')).toContainText('Value created');await expect(page.locator('#atlas-download')).toBeDisabled();
   await page.locator('#atlas-motion').click();await expect(page.locator('#atlas-border-flow')).toHaveAttribute('data-flow-motion','paused');
 });

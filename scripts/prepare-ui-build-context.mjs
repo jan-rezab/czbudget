@@ -18,6 +18,9 @@ await mkdir(destination, { recursive: true });
 const files = [
   "deep-dives/economic-flows/index.html",
   "economic-flows.js",
+  "economic-atlas-overview.js",
+  "lib/economic-circuit-model.mjs",
+  "tests/unit/economic-circuit.spec.mjs",
   "economic-flows.css",
   "lib/economic-flow-model.mjs",
   "tests/browser/economic-flows.spec.mjs",

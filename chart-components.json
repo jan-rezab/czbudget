@@ -16,7 +16,8 @@
       "scatter",
       "pyramid",
       "funding-flow",
-      "treemap"
+      "treemap",
+      "circuit"
     ]
   },
   "consumers": [
@@ -435,8 +436,10 @@
       "id": "czech-economic-flows",
       "adapter": "economic-flows.js",
       "families": [
+        "circuit",
         "funding-flow",
-        "bar"
+        "bar",
+        "line"
       ],
       "tests": [
         "tests/browser/economic-flows.spec.mjs"
@@ -450,7 +453,10 @@
         "lib/economic-flow-model.mjs",
         "deep-dives/economic-flows/index.html",
         "tests/unit/economic-flows.spec.mjs",
-        "tests/fixtures/economic-flows.mjs"
+        "tests/fixtures/economic-flows.mjs",
+        "economic-atlas-overview.js",
+        "lib/economic-circuit-model.mjs",
+        "tests/unit/economic-circuit.spec.mjs"
       ]
     }
   ],
@@ -503,7 +509,8 @@
       "tests/unit/chart-registry.spec.mjs",
       "tests/unit/verification-plan.spec.mjs",
       "tests/unit/revenue-flow.spec.mjs",
-      "tests/unit/economic-flows.spec.mjs"
+      "tests/unit/economic-flows.spec.mjs",
+      "tests/unit/economic-circuit.spec.mjs"
     ],
     "shared_paths": [
       "lib/chart-renderer.js",
@@ -558,7 +565,9 @@
       "economic-flows.js",
       "economic-flows.css",
       "lib/economic-flow-model.mjs",
-      "deep-dives.js"
+      "deep-dives.js",
+      "economic-atlas-overview.js",
+      "lib/economic-circuit-model.mjs"
     ]
   }
 }
