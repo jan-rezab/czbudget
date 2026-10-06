@@ -430,6 +430,28 @@
         "tests/browser/fertility-story.spec.mjs",
         "tests/unit/demography-store.spec.mjs"
       ]
+    },
+    {
+      "id": "czech-economic-flows",
+      "adapter": "economic-flows.js",
+      "families": [
+        "funding-flow",
+        "bar"
+      ],
+      "tests": [
+        "tests/browser/economic-flows.spec.mjs"
+      ],
+      "routes": [
+        "/deep-dives/economic-flows/"
+      ],
+      "change_paths": [
+        "economic-flows.js",
+        "economic-flows.css",
+        "lib/economic-flow-model.mjs",
+        "deep-dives/economic-flows/index.html",
+        "tests/unit/economic-flows.spec.mjs",
+        "tests/fixtures/economic-flows.mjs"
+      ]
     }
   ],
   "legacy": {
@@ -480,7 +502,8 @@
       "tests/unit/chart-renderer.spec.mjs",
       "tests/unit/chart-registry.spec.mjs",
       "tests/unit/verification-plan.spec.mjs",
-      "tests/unit/revenue-flow.spec.mjs"
+      "tests/unit/revenue-flow.spec.mjs",
+      "tests/unit/economic-flows.spec.mjs"
     ],
     "shared_paths": [
       "lib/chart-renderer.js",
@@ -531,7 +554,11 @@
       "lib/praha-magistrate-model.js",
       "lib/praha-company-model.js",
       "stories/fertility.js",
-      "stories/fertility.css"
+      "stories/fertility.css",
+      "economic-flows.js",
+      "economic-flows.css",
+      "lib/economic-flow-model.mjs",
+      "deep-dives.js"
     ]
   }
 }

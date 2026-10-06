@@ -16,6 +16,13 @@ await assertEmpty(destination);
 await mkdir(destination, { recursive: true });
 
 const files = [
+  "deep-dives/economic-flows/index.html",
+  "economic-flows.js",
+  "economic-flows.css",
+  "lib/economic-flow-model.mjs",
+  "tests/browser/economic-flows.spec.mjs",
+  "tests/unit/economic-flows.spec.mjs",
+  "tests/fixtures/economic-flows.mjs",
   "deep-dives/rosling/index.html",
   "rosling-tribute.js",
   "rosling-tribute.css",

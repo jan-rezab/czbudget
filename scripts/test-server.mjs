@@ -27,6 +27,7 @@ process.env.NODE_ENV = "test";
 process.env.SITE_ROOT = root;
 const { handler } = await import("../server/index.mjs");
 (await import("../server/demography-store.mjs")).demographyStore.token = serverAccessToken;
+(await import("../server/economic-flow-store.mjs")).economicFlowStore.token = serverAccessToken;
 if (remoteRelease) (await import("../server/snapshot-store.mjs")).publicSnapshotStore.tokenProvider = serverAccessToken;
 // Datasets that are not in the checkout are served from the published packs: a hydrated
 // DATA_ASSET_LOCK/DATA_ASSET_PACK_ROOT in Cloud Build, else the live lock read with the

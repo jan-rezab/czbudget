@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+  <title>Czechia in circulation — Public Spending Data</title>
+  <meta name="description" content="An annual atlas of the Czech economy: trade, cross-border income, households, businesses, government, finance, money and payments. Every figure keeps its source and accounting boundary.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/economic-flows/">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/economic-flows/?lang=en"><link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/economic-flows/?lang=cs">
+  <meta property="og:image" content="https://publicspendingdata.org/assets/og.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Public Spending Data"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://publicspendingdata.org/assets/og.png">
+  <link rel="icon" href="/assets/favicon.svg"><link rel="stylesheet" href="/styles.css?v=20260822-section-rail"><link rel="stylesheet" href="/site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <link rel="stylesheet" href="/psd-chart.css?v=20261006-economic-atlas"><link rel="stylesheet" href="/economic-flows.css?v=20261006-atlas-1">
+  <script src="/global-nav.js?v=20261006-economic-atlas" defer></script><script src="/chart-runtime.js?v=20260921-shared" defer></script><script src="/psd-chart.js?v=20260919-history-state" defer></script><script type="module" src="/economic-flows.js?v=20261006-atlas-1"></script>
+</head>
+<body class="economic-atlas-page">
+  <a class="atlas-skip" data-copy="skip" href="#border">Skip to the economic flows</a>
+  <psd-site-header></psd-site-header>
+  <main id="economic-atlas">
+    <header class="atlas-hero">
+      <div class="atlas-hero-inner">
+        <div class="atlas-edition"><span data-copy="eyebrow">THE ECONOMIC ATLAS</span><span>CZE <i aria-hidden="true"></i> <span data-copy="country">Czechia</span></span></div>
+        <div class="atlas-title-row"><h1><span data-copy="title">A country,</span><br><em data-copy="titleEm">in circulation.</em></h1><div class="atlas-hero-copy"><p data-copy="intro">Every economy is a web of exchanges. Follow what crosses the border, what circulates at home, and what remains on the balance sheet.</p><label class="atlas-year-label" for="atlas-year"><span data-copy="year">Accounting year</span><select id="atlas-year" disabled><option>—</option></select></label><span class="atlas-basis" data-copy="prices">Annual · current prices · Czech crowns</span></div></div>
+        <div class="atlas-headlines" id="atlas-headlines" aria-live="polite"></div>
+      </div>
+    </header>
+    <nav class="atlas-nav" aria-label="Atlas sections"><a href="#border"><span>01</span> <b data-copy="borderNav">Across the border</b></a><a href="#domestic"><span>02</span> <b data-copy="domesticNav">Inside the economy</b></a><a href="#finance"><span>03</span> <b data-copy="financeNav">Finance & money</b></a><a href="#evidence"><span>04</span> <b data-copy="evidenceNav">Every measure</b></a></nav>
+    <div class="atlas-status" id="atlas-status" role="status" aria-live="polite"></div>
+    <section class="atlas-section" id="border">
+      <div class="atlas-section-heading"><div><span class="atlas-kicker" data-copy="borderKicker">01 / THE COUNTRY BOUNDARY</span><h2 data-copy="borderTitle">Connected to the world.</h2></div><p data-copy="borderIntro">Goods and services are only the beginning. Wages, investment income and transfers also cross the border. These are the four parts of the current account.</p></div>
+      <div class="atlas-flow-tools"><span class="atlas-unit" data-copy="flowUnit">CZK billion per year</span><button id="atlas-motion" type="button" aria-pressed="false" data-copy="pause">Pause motion</button></div>
+      <figure id="atlas-border-figure"><div id="atlas-border-flow" class="atlas-border-flow"></div><figcaption data-copy="flowCaption">Arrows show direction, not payment speed or proportional width. Select an amount to inspect its source.</figcaption></figure>
+      <div class="atlas-inspector" id="atlas-inspector" aria-live="polite"></div>
+      <div class="atlas-current-account" id="atlas-current-account"></div>
+      <div class="atlas-production-heading"><h3 data-copy="crossFinanceTitle">Capital has two directions.</h3><p data-copy="crossFinanceIntro">Foreign investors acquire Czech assets; Czech residents acquire assets abroad. These financial-account entries measure net transactions in each instrument, not gross cash payments.</p></div>
+      <figure id="atlas-investment-figure"><div id="atlas-investment-flow"></div><figcaption data-copy="investmentCaption">Liabilities to nonresidents on the left; assets abroad on the right. Negative values mean net reductions. The diagram does not match one investment to another.</figcaption></figure>
+      <div class="atlas-bop-identity" id="atlas-bop-identity"></div>
+      <details class="atlas-external-detail" open><summary data-copy="externalMore">Beyond the current account: capital, investment and reserves</summary><div id="atlas-external-finance"></div></details>
+    </section>
+    <section class="atlas-section atlas-domestic" id="domestic">
+      <div class="atlas-section-heading"><div><span class="atlas-kicker" data-copy="domesticKicker">02 / DOMESTIC CIRCULATION</span><h2 data-copy="domesticTitle">One transaction. Two sides.</h2></div><p data-copy="domesticIntro">A wage is an employer’s expense and a household’s income. Choose a transaction to see who records the payment and who records the receipt, including foreign counterparties.</p></div>
+      <div class="atlas-transactions" id="atlas-transactions" role="group" aria-label="Transaction type"></div>
+      <figure id="atlas-domestic-figure"><div id="atlas-domestic-flow"></div><figcaption id="atlas-domestic-caption"></figcaption></figure>
+      <div class="atlas-production-heading"><h3 data-copy="productionTitle">Production is a different measure.</h3><p data-copy="productionIntro">Businesses buy inputs from other businesses. GDP removes that repeated production value; it does not add up every payment.</p></div>
+      <div class="atlas-production-equation" id="atlas-production-equation"></div>
+      <figure id="atlas-gdp-figure"><div id="atlas-gdp-chart"></div><figcaption data-copy="gdpCaption">GDP expenditure components · CZK billion · imports subtract foreign production.</figcaption></figure>
+    </section>
+    <section class="atlas-section" id="finance">
+      <div class="atlas-section-heading"><div><span class="atlas-kicker" data-copy="financeKicker">03 / MONEY, FINANCE & PAYMENTS</span><h2 data-copy="financeTitle">What moves. What is held.</h2></div><p data-copy="financeIntro">Money stocks, financing transactions and payment turnover answer different questions. Their totals overlap and must remain separate.</p></div>
+      <div class="atlas-lenses">
+        <article><span class="atlas-kicker" data-copy="stockLabel">AT YEAR END</span><h3 data-copy="moneyTitle">The money stock</h3><p data-copy="moneyIntro">M1 sits inside M2, which sits inside M3. Each is a broader definition of money held.</p><div class="atlas-money-nest" id="atlas-money"></div></article>
+        <article><span class="atlas-kicker" data-copy="netLabel">DURING THE YEAR · NET</span><h3 data-copy="fundingTitle">Financing the economy</h3><p data-copy="fundingIntro">Acquiring financial assets and taking on liabilities are recorded separately. Net flows do not reveal every drawdown and repayment.</p><div id="atlas-financing"></div></article>
+        <article><span class="atlas-kicker" data-copy="paymentLabel">DURING THE YEAR · GROSS</span><h3 data-copy="paymentsTitle">The payment system</h3><p data-copy="paymentsIntro">Transfers and cards include business payments. Settlement turnover overlaps with client payments; cash withdrawals do not measure cash purchases.</p><div id="atlas-payments"></div></article>
+      </div>
+    </section>
+    <section class="atlas-section atlas-evidence" id="evidence">
+      <div class="atlas-section-heading"><div><span class="atlas-kicker" data-copy="evidenceKicker">04 / OPEN THE ACCOUNTS</span><h2 data-copy="evidenceTitle">Every number has a boundary.</h2></div><p data-copy="evidenceIntro">The full inventory includes missing observations. Open any measure for its exact source value, unit, period and definition.</p></div>
+      <div class="atlas-evidence-tools"><label for="atlas-filter"><span data-copy="metricGroup">Metric family</span><select id="atlas-filter"></select></label><button id="atlas-download" type="button" data-copy="download">Download annual ledger ↓</button><span id="atlas-coverage"></span></div>
+      <div id="atlas-ledger"></div>
+      <div class="atlas-method"><div><h3 data-copy="methodTitle">An atlas, with the boundaries intact.</h3><p data-copy="methodCopy">National accounts and the balance of payments use accrual accounting. Financial flows are generally net; payment statistics are gross; stocks refer to a date. Missing values stay missing. No inferred bilateral payments, no synthetic balancing flow, and no sum across these layers.</p></div><div><h3 data-copy="sourcesTitle">Primary sources</h3><ul><li><a href="https://csu.gov.cz/annual-national-accounts" target="_blank" rel="noopener" data-copy="sourcesAccounts">ČSÚ · national & sector accounts ↗</a></li><li><a href="https://www.cnb.cz/en/statistics/bop_stat/index.html" target="_blank" rel="noopener" data-copy="sourcesCNB">ČNB · balance of payments ↗</a></li><li><a href="https://ec.europa.eu/eurostat/web/sector-accounts" target="_blank" rel="noopener" data-copy="sourcesEuro">Eurostat · harmonised Czech accounts ↗</a></li></ul><p id="atlas-release"></p></div></div>
+    </section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small data-copy="footer">Czech economic atlas · Source values preserved</small></div><a href="#economic-atlas">↑</a></footer>
+  <noscript>This atlas needs JavaScript for interactive flows. <a href="https://csu.gov.cz/annual-national-accounts">Read the Czech national accounts.</a></noscript>
+</body>
+</html>
