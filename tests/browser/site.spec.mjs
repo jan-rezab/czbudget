@@ -472,7 +472,7 @@ test("deep dives expose dedicated topic hierarchies for countries and capital ci
   // A regional report is single-jurisdiction and carries no country switch, so it
   // must never be filed under the comparison shelf.
   const regionalTopics = await page.locator("#regional .deep-card").evaluateAll(topicOf);
-  expect(regionalTopics).toEqual(["budget-planner", "public-employment"]);
+  expect(regionalTopics).toEqual(["budget-planner", "public-employment", "economic-flows"]);
   const compareTopics = await page.locator("#compare .deep-card").evaluateAll(topicOf);
   expect(compareTopics.filter((topic) => regionalTopics.includes(topic))).toEqual([]);
   // The header menu and this index share the report registry.
