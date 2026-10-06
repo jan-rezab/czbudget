@@ -131,7 +131,7 @@ window.PSDEconomicAtlasReady = (async () => {
     document.querySelectorAll('[data-copy]').forEach(el=>{el.textContent=lang()==='cs'?(cs[el.dataset.copy]||originals.get(el.dataset.copy)):originals.get(el.dataset.copy);});
     document.querySelector('.atlas-nav').setAttribute('aria-label',tr('Atlas sections','Oddíly atlasu'));
     $('atlas-transactions').setAttribute('aria-label',tr('Transaction type','Druh transakce'));
-    document.title=tr('Czechia in circulation — Public Spending Data','Česko v pohybu — Public Spending Data');
+    document.title=tr('Czech annual money flows — Public Spending Data','Roční peněžní toky Česka — Public Spending Data');
     $('atlas-status').textContent=loadFailed?tr('No verified annual release is available yet. This view shows the accounting structure; dashes mean missing observations, never zero.','Ověřená roční datová verze zatím není dostupná. Zobrazení ukazuje účetní strukturu; pomlčky znamenají chybějící pozorování, nikdy nulu.'):data?.synthetic?tr('TEST FIXTURE · invented numbers for interface verification. Not Czech economic observations.','TESTOVACÍ DATA · smyšlená čísla pro ověření rozhraní. Nejde o údaje české ekonomiky.'):tr(`Verified release · ${year} · ${data.release_id}`,`Ověřená verze · ${year} · ${data.release_id}`);
     $('atlas-year').innerHTML=years.length?years.map(y=>`<option value="${y}"${y===year?' selected':''}>${y}</option>`).join(''):'<option>—</option>';
     $('atlas-year').disabled=!years.length;
