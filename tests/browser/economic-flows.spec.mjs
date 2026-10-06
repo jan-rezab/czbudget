@@ -23,7 +23,7 @@ test('economic atlas preserves accounting boundaries, exact evidence, language a
   await page.locator('[data-transaction="D4"]').click();await expect(page).toHaveURL(/transaction=D4/);
   await page.locator('#atlas-year').selectOption('2023');await expect(page).toHaveURL(/year=2023/);
   await page.reload();await expect(page.locator('#atlas-year')).toHaveValue('2023');await expect(page.locator('[data-transaction="D4"]')).toHaveAttribute('aria-pressed','true');
-  await page.locator('psd-site-header [data-lang="cs"]').click();await expect(page.locator('h1')).toContainText('v pohybu.');
+  await page.locator('psd-site-header [data-lang="cs"]').click();await expect(page.locator('h1')).toContainText('Roční peněžní toky Česka');
   await page.locator('#atlas-filter').selectOption('money');await expect(page.locator('#atlas-ledger')).toContainText('M3 · široké peníze');
   await expect(page.locator('.psd-chart-rail')).toHaveCount(6);
   const download=page.waitForEvent('download');await page.locator('#atlas-download').click();expect((await download).suggestedFilename()).toBe('czech-economic-atlas-2023.csv');
@@ -37,6 +37,6 @@ test('unavailable release retains a useful diagram with missing values, never fa
   await expect(page.locator('#atlas-history-empty')).toBeVisible();
   await page.locator('#atlas-connection-picker').selectOption('inputs');
   await expect(page.locator('#atlas-network-inspector')).toContainText('Intermediate consumption');
-  await expect(page.locator('#atlas-year')).toBeDisabled();await expect(page.locator('#atlas-headlines')).toContainText('Value created');await expect(page.locator('#atlas-download')).toBeDisabled();
+  await expect(page.locator('#atlas-year')).toBeDisabled();await expect(page.locator('#atlas-headlines')).toContainText('—');await expect(page.locator('#atlas-download')).toBeDisabled();
   await page.locator('#atlas-motion').click();await expect(page.locator('#atlas-border-flow')).toHaveAttribute('data-flow-motion','paused');
 });
