@@ -18,8 +18,10 @@ test('economic atlas preserves accounting boundaries, exact evidence, language a
   await page.locator('#atlas-border-flow [data-flow-key="exports_goods"]').click();
   await expect(page.locator('#atlas-inspector')).toContainText('4000000.000');
   await expect(page.locator('#atlas-inspector a')).toHaveAttribute('href','https://example.org/synthetic-economic-test');
+  const inspectionHeight=await page.locator('#atlas-border-flow .psd-funding-inspection').evaluate(el=>el.getBoundingClientRect().height);
   await page.locator('#atlas-border-figure [data-action="table"]').click();
   await expect(page.locator('#atlas-border-figure .psd-chart-panel')).toContainText('4000000.000');
+  expect(await page.locator('#atlas-border-flow .psd-funding-inspection').evaluate(el=>el.getBoundingClientRect().height)).toBe(inspectionHeight);
   await expect(page.locator('#atlas-border-flow')).toHaveAttribute('data-flow-scale','proportional');
   const widths=await page.locator('#atlas-border-flow [data-band-value]').evaluateAll(nodes=>nodes.map(n=>Number(n.dataset.bandWidth)/Number(n.dataset.bandValue)));
   expect(widths.every(w=>Math.abs(w-widths[0])<1e-9)).toBeTruthy();
