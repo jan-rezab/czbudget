@@ -10,6 +10,7 @@ const required=[
   'scripts/chart-registry.mjs','scripts/build-chart-coverage.mjs','scripts/validate-chart-ownership.mjs',
   'scripts/validate-ui-environment.mjs','scripts/validate-release-contract.mjs',
   'scripts/release-verification.mjs','scripts/prepare-production-verification.mjs','scripts/run-component-gate.mjs',
+  'scripts/build-admission.py','tests/test_build_admission.py',
   'tests/unit/chart-registry.spec.mjs','tests/unit/release-contract.spec.mjs','tests/browser/shared-charts.spec.mjs'
 ];
 const triggerPath=process.argv[2];

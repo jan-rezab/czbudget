@@ -1,0 +1,15 @@
+steps:
+  - id: verify-controller
+    name: python:3.12-slim@sha256:f77ac9e44ae96ef2c90b8053ea08c31f8be030f824196b0ae4db6d462c84e51f
+    entrypoint: python3
+    args: [-m, unittest, discover, -s, ., -p, 'test_*.py']
+  - id: build-controller
+    name: gcr.io/cloud-builders/docker@sha256:2e8d40d8e48dc14fab4213d5e532d74f63fd403d9e8d7f6463096a75820286c3
+    args: [build, -t, 'europe-west1-docker.pkg.dev/$PROJECT_ID/web/psd-cost-monitor:${_CODE_SHA}', .]
+images: ['europe-west1-docker.pkg.dev/$PROJECT_ID/web/psd-cost-monitor:${_CODE_SHA}']
+timeout: 300s
+queueTtl: 120s
+tags: [plane-control, cost-monitor-image]
+options:
+  machineType: E2_MEDIUM
+  logging: CLOUD_LOGGING_ONLY

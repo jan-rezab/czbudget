@@ -55,7 +55,7 @@ node scripts/validate-release-contract.mjs
 )
 node scripts/publish-stories.mjs --check
 node --test tests/unit/chart-renderer.spec.mjs tests/unit/chart-registry.spec.mjs tests/unit/release-contract.spec.mjs tests/unit/verification-plan.spec.mjs tests/unit/verification-plan-sparse.spec.mjs tests/unit/ui-build-context.spec.mjs tests/unit/stories.spec.mjs tests/unit/bounded-command.spec.mjs
-python3 -m unittest tests.test_cloud_verification
+python3 -m unittest tests.test_cloud_verification tests.test_build_admission
 node scripts/validate-build-planes.mjs
 node pipeline/create-source-manifest.mjs --self-check
 
@@ -90,4 +90,9 @@ if [ "$push_to_main" = 1 ]; then
 else
   node scripts/local-browser-gate.mjs
   echo "pre-push: source contracts passed"
+fi
+
+# Mandatory cloud admission receipt is published only after the source gates pass.
+if [ "$push_to_main" = 1 ]; then
+  python3 scripts/build-admission.py register
 fi

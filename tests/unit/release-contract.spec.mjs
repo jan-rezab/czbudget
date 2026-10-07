@@ -31,9 +31,10 @@ test('a forged component lane cannot hide unknown files, missing provenance or i
 test('production cannot promote before focused or exhaustive verification and candidate-image browser checks',()=>{
   const yaml=readFileSync(new URL('../../cloudbuild.yaml',import.meta.url),'utf8');
   const block=id=>yaml.split(`  - id: ${id}\n`)[1]?.split('\n  - id: ')[0];
+  assert.match(block('build-admission'),/scripts\/build-admission\.py, admit/);
   assert.match(block('component-verification'),/scripts\/run-component-gate\.mjs \.verification-plan\.json/);
   assert.match(block('component-verification'),/waitFor: \[source-contracts, warm-browser-worker\]/);
-  assert.match(block('warm-browser-worker'),/waitFor: \["-"\]/);
+  assert.match(block('warm-browser-worker'),/waitFor: \[build-admission\]/);
   assert.match(block('image-browser-contract'),/waitFor: \[start-image-browser-candidate, component-verification\]/);
   // The exhaustive suite uses the pinned published releases and never shares the worker
   // with the candidate-image browser pool.

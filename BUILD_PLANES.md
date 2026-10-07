@@ -182,3 +182,38 @@ rollout and data rollback are independent.
   alert as a final retry-storm backstop.
 - Record Git SHA, build ID, image digest and active data release IDs in every web
   deployment receipt.
+
+## Production build admission
+
+Every production build starts with scripts/build-admission.py before package
+installation, image pulls, source verification, image creation or browser tests.
+It rejects a SHA that is no longer main. The existing final main check and every
+release gate remain mandatory. Rejected builds fail visibly; they never cancel
+other work. Cloud Build still incurs a small worker/source startup cost.
+
+The pre-push hook registers the exact committed SHA/tree after passing source
+contracts. Set PSD_BUILD_TASK to one stable task ID for all its commits/retries;
+Codex's CODEX_THREAD_ID or a PSD-Task commit trailer is accepted as fallback.
+Never change the task ID to evade limits. The owner creates an immutable policy:
+150 CZK conservative compute allowance, six maximum attempts, reserving 60 CZK
+per 30-minute 32-CPU attempt at 2 CZK/minute. Completed durations settle that
+reservation; unavailable duration keeps it reserved. This is a compute guard,
+not a guarantee covering invoices, storage, rejected starts or other projects.
+
+A global generation-precondition claim rejects duplicate SHAs across tasks.
+The per-task CAS ledger allows one in-flight build. After two failed/cancelled
+attempts, pre-push also requires PSD_CORRECTION_COMMAND and
+PSD_CORRECTION_DIAGNOSIS. It executes that focused command, records a passing
+exit status/output hash and binds the evidence to the candidate and all previous
+failed build IDs. Changing the commit cannot reset the task history. A spent
+allowance requires an explicitly approved owner policy adjustment, not a new ID.
+Missing registration, unavailable API/state and concurrent claims fail closed.
+
+Receipts/policies are under private build-admission/ in the snapshots bucket.
+The deployer can read the prefix and write only claims and task ledgers; it
+cannot forge owner-created requests or policies. This enforcement covers the
+canonical production trigger. Independent data workers keep their own submission
+and scan guards; this change does not retroactively cancel or govern them.
+
+The cost monitor runs independently as the bounded Cloud Run job documented in
+ops/cost_monitor/README.md. It retains the same Scheduler and serving cutoff.
