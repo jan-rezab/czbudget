@@ -1,5 +1,5 @@
-import {CIRCUIT_LAYERS,CIRCUIT_NODES,CIRCUIT_FLOWS,CIRCUIT_JOURNEYS,circuitView,paymentIllustration} from '/lib/economic-circuit-model.mjs?v=20261006-circuit-1';
-import {METRICS,observation} from '/lib/economic-flow-model.mjs?v=107f9c218784e9c3d559c749b5aa584a8913b8f2b969066e2e870919a410861d';
+import {CIRCUIT_LAYERS,CIRCUIT_NODES,CIRCUIT_FLOWS,CIRCUIT_JOURNEYS,circuitView,paymentIllustration} from '/lib/economic-circuit-model.mjs?v=bbc890849f79fb28c0671a78d869cbd20a5ede6932e3f058ae4a42861c7412ff';
+import {METRICS,observation} from '/lib/economic-flow-model.mjs?v=229b6094272a86ed77eed36d4fce09eec2e24055ab9bf8454374c83a43c5a62b';
 
 export function createEconomicOverview({data,year,chart,detail,onMetric}){
   const $=id=>document.getElementById(id),lang=()=>document.documentElement.lang==='cs'?'cs':'en';

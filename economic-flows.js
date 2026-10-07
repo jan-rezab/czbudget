@@ -1,5 +1,5 @@
-import {createEconomicOverview} from '/economic-atlas-overview.js?v=6e6e789fbbe7ad253ce6af100f80922a591532875cfeccbc7157bb791e7c563c';
-import {METRICS, TRANSACTIONS, BALANCE_VIEWS, balanceBridge, validateRelease, observation, borderModel, sectorModel, availableYears, preferredYear, ledgerRows, bopReconciliation, annualLedgerRows, serializeLedgerCSV} from '/lib/economic-flow-model.mjs?v=107f9c218784e9c3d559c749b5aa584a8913b8f2b969066e2e870919a410861d';
+import {createEconomicOverview} from '/economic-atlas-overview.js?v=d1b95de4d7107c48d23c862449e94f91e8eb2a7c780f8ea8bb0b95e8c7cae878';
+import {METRICS, TRANSACTIONS, BALANCE_VIEWS, balanceBridge, validateRelease, observation, borderModel, sectorModel, availableYears, preferredYear, ledgerRows, bopReconciliation, annualLedgerRows, serializeLedgerCSV} from '/lib/economic-flow-model.mjs?v=229b6094272a86ed77eed36d4fce09eec2e24055ab9bf8454374c83a43c5a62b';
 
 // This adapter owns accounting labels and observations. PSDPlot owns geometry.
 window.PSDEconomicAtlasReady = (async () => {
@@ -43,11 +43,12 @@ window.PSDEconomicAtlasReady = (async () => {
     {key:'label',label:tr('Measure / sector','Ukazatel / sektor')}, {key:'direction',label:tr('Direction','Směr')},
     {key:'year',label:tr('Year','Rok')}, {key:'value',label:tr('Normalised · CZK million','Přepočet · mil. Kč')},
     {key:'source_value',label:tr('Exact source value','Přesná hodnota zdroje')}, {key:'source_unit',label:tr('Source unit','Jednotka zdroje')},
-    {key:'basis',label:tr('Basis','Účetní základ')}, {key:'source_url',label:tr('Source','Zdroj')}
+    {key:'basis',label:tr('Basis','Účetní základ')}, {key:'source_url',label:tr('Source','Zdroj')}, {key:'calculation',label:tr('Calculation / inputs','Výpočet / vstupy')}
   ];
-  function tableRow(name,row,direction='') {return {label:name,direction,year:year??'',value:row?.value??null,source_value:row?.source_value??'',source_unit:row?.source_unit??row?.unit??'',basis:row?.basis??'accrual',source_url:row?.source_url??''};}
+  function tableRow(name,row,direction='') {return {label:name,direction,year:year??'',value:row?.value??null,source_value:row?.source_value??'',source_unit:row?.source_unit??row?.unit??'',basis:row?.basis??'accrual',source_url:row?.source_url??row?.inputs?.map(r=>r.source_url).join(' | ')??'',calculation:row?.calculation??''};}
   function detail(row) {
     if (!row || row.value === null) return `<p>${esc(row?.missing_reason || missing())}</p>`;
+    if(row.calculation)return `<p>${esc(tr('Calculated remainder: services imports minus residents’ travel abroad. The two branches replace total services imports; they are not added to it.','Vypočtený zbytek: dovoz služeb minus cesty rezidentů do zahraničí. Obě větve nahrazují celkový dovoz služeb; nepřičítají se k němu.'))}</p><p>${esc(row.calculation)}</p>${row.inputs.map(input=>`<details><summary>${esc(label(definition(input.id)))}</summary>${detail(input)}</details>`).join('')}`;
     const fields = [
       [tr('Period / geography','Období / území'),`${row.reference_date || row.year} · ${row.geography || 'Czechia (CZE)'}`],
       [tr('Source observation','Pozorování zdroje'),`${row.source_value} ${row.source_unit || row.unit}`],
@@ -78,19 +79,21 @@ window.PSDEconomicAtlasReady = (async () => {
   }
   function mini(ids) {return ids.map(id=>`<div class="atlas-mini-row"><span>${esc(label(definition(id)))}<small>${esc(basis(definition(id).basis))}</small></span><strong>${billion(get(id)?.value)} <small>${unit()}</small></strong></div>`).join('');}
   function inspect(id) {
-    selected=id;
-    $('atlas-inspector').innerHTML=`<strong>${esc(label(definition(id)))}</strong>${detail(get(id))}`;
+    const model=borderModel(data,year),item=[...model.incoming,...model.outgoing].find(row=>row.id===id);
+    selected=item?id:null;
+    $('atlas-inspector').innerHTML=item?`<strong>${esc(label(item))}</strong>${detail(item.observation)}`:'';
     $('atlas-border-flow').querySelectorAll('[data-flow-key]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.flowKey===id)));
   }
   function renderBorder() {
     const model=borderModel(data,year);
-    const node=(row,side)=>({id:row.id,nodeId:side+'-'+row.id,label:label(row),amount:row.observation?.value==null?null:row.observation.value/1000,unit:unit(),meta:tr('Current account · accrued','Běžný účet · akruální'),selected:selected===row.id});
+    const node=(row,side)=>({id:row.id,nodeId:side+'-'+row.id,label:label(row),amount:row.observation?.value==null?null:row.observation.value/1000,unit:unit(),meta:row.id==='imports_travel'?tr('Personal & business trips · services','Soukromé a služební cesty · služby'):row.observation?.calculation?tr('Services less travel · calculated','Služby bez cest · výpočet'):tr('Current account · accrued','Běžný účet · akruální'),selected:selected===row.id});
     const sources=model.incoming.map(r=>node(r,'in')),recipients=model.outgoing.map(r=>node(r,'out'));
     chart('atlas-border-figure','atlas-border-flow',{type:'funding-flow',proportional:true,title:tr('Across the Czech border','Přes české hranice'),sources,recipients,routeNodes:[{nodeId:'czechia',id:'czechia',label:tr('Czechia','Česko'),meta:tr('Resident economy\nHouseholds · businesses · government · finance','Rezidentská ekonomika\nDomácnosti · podniky · vláda · finance')}],
       edges:[...sources.map(n=>({from:n.nodeId,to:'czechia',kind:'contribution'})),...recipients.map(n=>({from:'czechia',to:n.nodeId,kind:'transfer'}))],labels:{source:tr('Receipts from abroad','Příjmy ze zahraničí'),route:tr('Country boundary','Hranice země'),recipient:tr('Payments to abroad','Výdaje do zahraničí'),share:''},onSelect:(_kind,id)=>inspect(id),onClear:()=>{selected=null;$('atlas-inspector').replaceChildren();}},
       [...model.incoming.map(r=>tableRow(label(r),r.observation,'credit')),...model.outgoing.map(r=>tableRow(label(r),r.observation,'debit'))]);
     const stats=[[tr('Current-account receipts','Příjmy běžného účtu'),model.totalIn],[tr('Current-account payments','Výdaje běžného účtu'),model.totalOut],[tr('Reported current-account balance','Vykázané saldo běžného účtu'),model.reported]];
     let note=tr('Receipts less payments = current-account balance. It is not the change in the money supply. Totals above are calculated only when all four components are present.','Příjmy minus výdaje = saldo běžného účtu. Nejde o změnu peněžní zásoby. Součty výše počítáme pouze při dostupnosti všech čtyř složek.');
+    note+=' '+(model.travelSplit?tr('Services imports are split into residents’ travel abroad and other services. Travel includes personal and business visits: accommodation, meals, local transport and shopping. International passenger fares remain in other services. Residence, not citizenship, defines this measure.','Dovoz služeb je rozdělen na cesty rezidentů do zahraničí a ostatní služby. Cesty zahrnují soukromé i služební pobyty: ubytování, stravování, místní dopravu a nákupy. Mezinárodní jízdné zůstává v ostatních službách. Rozhoduje rezidentství, nikoli občanství.'):tr('A verified travel breakdown is not available for this year; services imports remain combined.','Pro tento rok není dostupné ověřené členění cest; dovoz služeb zůstává sloučený.'));
     if(model.computed!==null&&model.reported!==null)note+=' '+tr('Calculated balance: ','Vypočtené saldo: ')+billion(model.computed)+' '+unit()+tr('; difference from reported: ','; rozdíl proti vykázanému: ')+calculated(model.computed-model.reported)+' '+tr('CZK million.','mil. Kč.');
     $('atlas-current-account').innerHTML=stats.map(([name,value])=>`<div><small>${esc(name)}</small><strong>${billion(value)}</strong><small>${unit()}</small></div>`).join('')+`<p>${esc(note)}</p>`;
     $('atlas-external-finance').innerHTML=`<p>${esc(tr('Financial-account values follow BPM6: net acquisition of assets less net incurrence of liabilities. Positive balances mean net lending abroad. Financial transactions are separate from the current account; a negative net figure is not a gross inflow. Reserve transactions exclude valuation changes.','Finanční účet používá BPM6: čisté pořízení aktiv minus čistý vznik závazků. Kladné saldo znamená čisté půjčky do zahraničí. Finanční transakce jsou oddělené od běžného účtu; záporná čistá hodnota není hrubým přílivem. Transakce s rezervami nezahrnují přecenění.'))}</p>`+mini(['capital_received','capital_paid','capital_account','financial_account','direct_investment','portfolio_investment','financial_derivatives','other_investment','reserve_assets','errors_omissions','external_assets','external_liabilities','net_external_position']);

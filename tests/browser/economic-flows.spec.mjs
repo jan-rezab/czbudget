@@ -15,6 +15,13 @@ test('economic atlas preserves accounting boundaries, exact evidence, language a
   await expect(page.locator('#atlas-network-inspector h3')).toContainText('Credit & working capital');
   await page.locator('#atlas-journey-next').click();await expect(page.locator('#atlas-journey-step')).toContainText('2 / 4');
   await page.locator('#atlas-turns').fill('8');await expect(page.locator('#atlas-sim-payments')).toContainText('800');await expect(page.locator('#atlas-sim-stock')).toContainText('100');
+  await expect(page.locator('#atlas-border-flow [data-flow-key]')).toHaveCount(9);
+  await page.locator('#atlas-border-flow [data-flow-key="imports_travel"]').click();
+  await expect(page.locator('#atlas-inspector')).toContainText('200000.000');
+  await expect(page.locator('#atlas-current-account')).toContainText('International passenger fares');
+  await page.locator('#atlas-border-flow [data-flow-key="imports_services_other"]').click();
+  await expect(page.locator('#atlas-inspector')).toContainText('Calculated remainder');
+  await expect(page.locator('#atlas-inspector')).toContainText('950000');
   await page.locator('#atlas-border-flow [data-flow-key="exports_goods"]').click();
   await expect(page.locator('#atlas-inspector')).toContainText('4000000.000');
   await expect(page.locator('#atlas-inspector a')).toHaveAttribute('href','https://example.org/synthetic-economic-test');
@@ -48,4 +55,14 @@ test('unavailable release retains a useful diagram with missing values, never fa
   await expect(page.locator('#atlas-network-inspector')).toContainText('Intermediate consumption');
   await expect(page.locator('#atlas-year')).toBeDisabled();await expect(page.locator('#atlas-headlines')).toContainText('—');await expect(page.locator('#atlas-download')).toBeDisabled();
   await page.locator('#atlas-motion').click();await expect(page.locator('#atlas-border-flow')).toHaveAttribute('data-flow-motion','paused');
+});
+
+test('an older release keeps combined services until verified travel observations arrive',async({page})=>{
+  const data=fixture();data.observations=data.observations.filter(r=>r.id!=='imports_travel');
+  await page.route('**/api/v1/economy/czech-flows',r=>r.fulfill({json:data}));
+  await page.goto(route+'?lang=en');
+  await expect(page.locator('#economic-atlas')).toHaveAttribute('data-ready','true');
+  await expect(page.locator('#atlas-border-flow [data-flow-key="imports_services"]')).toBeVisible();
+  await expect(page.locator('#atlas-border-flow [data-flow-key="imports_travel"]')).toHaveCount(0);
+  await expect(page.locator('#atlas-current-account')).toContainText('travel breakdown is not available');
 });

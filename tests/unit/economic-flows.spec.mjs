@@ -49,3 +49,25 @@ test('stock-flow bridge reconciles successive years and identifies the remainder
   assert.equal(balanceBridge(d,2023).complete,false);
   assert.equal(balanceBridge(d,2024,'liabilities').view.stock,'financial_liabilities');
 });
+
+test('travel and the calculated services remainder partition imports without changing totals',()=>{
+  const d=fixture(),model=borderModel(d,2024),remainder=model.outgoing.find(r=>r.id==='imports_services_other').observation;
+  assert.equal(model.travelSplit,true);assert.equal(model.outgoing.length,5);assert.equal(model.totalOut,5850000);
+  assert.equal(remainder.value,750000);assert.equal(remainder.source_value,undefined);
+  assert.equal(remainder.inputs[0].value-remainder.inputs[1].value,remainder.value);
+  assert.match(remainder.calculation,/950000.*200000.*750000/);
+  assert.equal(model.outgoing.reduce((n,r)=>n+r.observation.value,0),model.totalOut);
+  observation(d,'imports_services',2024).value=.3;observation(d,'imports_travel',2024).value=.1;
+  assert.equal(borderModel(d,2024).outgoing.find(r=>r.id==='imports_services_other').observation.value,.2);
+});
+test('unknown or inconsistent travel retains combined services; an observed zero can be separated',()=>{
+  for(const value of [null,-1,950001]){
+    const d=fixture();observation(d,'imports_travel',2024).value=value;const b=borderModel(d,2024);
+    assert.equal(b.travelSplit,false);assert.equal(b.outgoing.length,4);assert.equal(b.totalOut,5850000);
+  }
+  const d=fixture();d.observations=d.observations.filter(r=>r.id!=='imports_travel');
+  assert.equal(borderModel(validateRelease(d),2024).travelSplit,false);
+  const zero=fixture();observation(zero,'imports_travel',2024).value=0;
+  const b=borderModel(zero,2024);assert.equal(b.travelSplit,true);
+  assert.equal(b.outgoing.find(r=>r.id==='imports_services_other').observation.value,950000);
+});
