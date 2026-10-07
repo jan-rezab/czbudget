@@ -45,6 +45,10 @@ class AdmissionTests(unittest.TestCase):
         self.assertEqual(result[0]['charged_czk'],6)
         result=a.reconcile([entry],lambda _:dict(status='CANCELLED'))
         self.assertEqual(result[0]['charged_czk'],60)
+    def test_cloud_nanosecond_timestamps_settle_on_local_python(self):
+        entry=previous('WORKING');entry.pop('charged_czk')
+        result=a.reconcile([entry],lambda _:dict(status='SUCCESS',startTime='2026-10-07T10:00:00.123456789Z',finishTime='2026-10-07T10:03:00.123456789Z'))
+        self.assertEqual(result[0]['charged_czk'],6)
     def test_stale_and_unreachable_main_never_admit(self):
         def opener(*args,**kwargs):return io.BytesIO(json.dumps({'object':{'sha':'f'*40}}).encode())
         with self.assertRaisesRegex(ValueError,'Stale candidate'):a.assert_current_main(COMMIT,opener)

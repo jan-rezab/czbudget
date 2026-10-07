@@ -26,7 +26,10 @@ POLICY = {'schema': 1, 'budget_czk': 150, 'max_attempts': 6,
 # not an invoice cap: startup/rejected submissions/storage are outside the ledger.
 
 def now(): return dt.datetime.now(dt.timezone.utc).isoformat()
-def stamp(value): return dt.datetime.fromisoformat(value.replace('Z', '+00:00'))
+def stamp(value):
+    # Google timestamps may carry nanoseconds; local Python 3.9 accepts only
+    # microsecond precision. Match the cloud runtime without changing the value.
+    return dt.datetime.fromisoformat(re.sub(r'(\.\d{6})\d+', r'\1', value).replace('Z', '+00:00'))
 def git(*args): return subprocess.check_output(['git', *args], text=True).strip()
 def encoded(value): return urllib.parse.quote(value, safe='')
 def valid(value, pattern, label):
