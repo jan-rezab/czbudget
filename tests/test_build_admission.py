@@ -27,6 +27,8 @@ class AdmissionTests(unittest.TestCase):
         entries=[previous(build='failed'),previous('CANCELLED',build='cancelled')]
         with self.assertRaisesRegex(ValueError,'correction'):
             a.decide(a.POLICY,entries,REQUEST,'new',COMMIT,TREE)
+        with self.assertRaisesRegex(ValueError,'correction'):
+            a.decide(a.POLICY,entries,dict(REQUEST,correction=None),'new',COMMIT,TREE)
         receipt=dict(REQUEST,correction={'exit_code':0,'diagnosis':'fixed missing fixture','command':'node --test tests/focused.mjs','failed_builds':['failed','cancelled']})
         a.decide(a.POLICY,entries,receipt,'new',COMMIT,TREE)
         receipt['correction']['failed_builds']=['failed']

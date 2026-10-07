@@ -80,7 +80,7 @@ def decide(policy, entries, request, build_id, commit, tree):
     if len(entries)>=policy['max_attempts']:raise ValueError('Task attempt allowance exhausted; do not rename the task to reset it')
     failures=[e['build_id'] for e in entries if e['status'] in FAILED]
     if len(failures)>=2:
-        correction=request.get('correction',{})
+        correction=request.get('correction') or {}
         if (correction.get('exit_code')!=0 or not correction.get('diagnosis') or
             not correction.get('command') or set(correction.get('failed_builds',[]))!=set(failures)):
             raise ValueError('Two failures: fresh passing focused correction and diagnosis required')
