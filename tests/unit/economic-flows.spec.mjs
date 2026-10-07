@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateRelease,borderModel,sectorModel,preferredYear,observation,completeSum,bopReconciliation,annualLedgerRows,serializeLedgerCSV} from '../../lib/economic-flow-model.mjs';
+import {validateRelease,borderModel,sectorModel,preferredYear,observation,completeSum,bopReconciliation,annualLedgerRows,serializeLedgerCSV,balanceBridge} from '../../lib/economic-flow-model.mjs';
 import {fixture} from '../fixtures/economic-flows.mjs';
 
 test('accounting boundaries preserve net negatives, zeros, exact source precision and stock basis',()=>{
@@ -36,4 +36,16 @@ test('annual download includes both metric and sector accounts with exact values
   assert.equal(rows.find(r=>r.id==='emoney').value,null);assert.equal(rows.find(r=>r.id==='m3').reference_date,'2024-12-31');
   const csv=serializeLedgerCSV(rows);assert.ok(csv.includes('"D1:S11:uses"'));assert.ok(csv.includes('"-1234.560"'));
   assert.equal(serializeLedgerCSV([{label:'a,"b"',value:null}]),'\ufeff"label","value"\r\n"a,""b""",""');
+});
+
+
+test('stock-flow bridge reconciles successive years and identifies the remainder as calculated',()=>{
+  const d=fixture(),set=(id,year,value)=>{d.observations.find(r=>r.id===id&&r.year===year).value=value;};
+  set('financial_assets',2023,100);set('financial_assets',2024,115);set('asset_transactions',2024,-5);
+  const b=balanceBridge(d,2024);assert.equal(b.complete,true);assert.equal(b.residual,20);assert.equal(b.opening.year,2023);
+  assert.equal(b.opening.value+b.transactions.value+b.residual,b.closing.value);
+  set('asset_transactions',2024,0);assert.equal(balanceBridge(d,2024).residual,15);
+  set('financial_assets',2023,null);assert.equal(balanceBridge(d,2024).residual,null);
+  assert.equal(balanceBridge(d,2023).complete,false);
+  assert.equal(balanceBridge(d,2024,'liabilities').view.stock,'financial_liabilities');
 });

@@ -171,3 +171,17 @@ test('treemap keeps compact tile labels separate from exact tooltip and accessib
     chart.destroy();
   } finally {globalThis.document=originalDocument;globalThis.ResizeObserver=originalResize;}
 });
+
+
+test('measured flow bands share an absolute scale across unequal sides and retain gaps',()=>{
+  const layout=charts.flowBandLayout([{amount:100},{amount:0},{amount:null},{amount:-2}],[{amount:50},{amount:200}]);
+  assert.equal(layout.sources[0].thickness*2,layout.recipients[1].thickness);
+  assert.equal(layout.sources[0].thickness/2,layout.recipients[0].thickness);
+  assert.equal(layout.sources[1].thickness,0);assert.equal(layout.sources[2].thickness,null);assert.equal(layout.sources[3].thickness,null);
+  assert.equal(charts.flowBandLayout([{amount:0}],[{amount:null}]).scale,0);
+});
+test('floating column domains include opening levels and signed changes without substituting absent bases',()=>{
+  const spec=charts.model({type:'column',baseKey:'start',rows:[{start:100,value:20},{start:120,value:-150},{start:null,value:9999}],fields:[{key:'value'}]});
+  assert.ok(spec.axis.min<=-30&&spec.axis.max>=120);assert.ok(spec.axis.max<9999);
+  assert.deepEqual(spec.rows.map(r=>r.values[0]),[20,-150,9999]);
+});
