@@ -47,9 +47,14 @@ test('municipal profile adapter uses the shared renderer without losing original
   await page.goto('/tests/fixtures/charts/profile.html?lang=en');
   const plot=page.locator('#profile-history-chart');
   await expect(plot).toHaveAttribute('data-chart-component','line');
-  await expect(plot.locator('.psd-plot-line')).toHaveCount(3);
+  await expect(plot.locator('.psd-plot-line')).toHaveCount(2);
   await plot.locator('[data-point]').last().focus();
   await expect(plot.locator('.psd-plot-tooltip')).toContainText('150');
+  const position=page.locator('#profile-position-chart');
+  await expect(position).toHaveAttribute('data-chart-component','line');
+  await expect(position.locator('.psd-plot-line')).toHaveCount(1);
+  await position.locator('[data-point]').last().focus();
+  await expect(position.locator('.psd-plot-tooltip')).toContainText('30');
   await expect(page.locator('h1')).toHaveText('Fixture municipality');
 });
 
