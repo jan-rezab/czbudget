@@ -15,7 +15,7 @@ const scriptValue = (source, start, end, name) => {
 };
 const translated = (html, attribute, dictionary, htmlValues = false) => {
   const missing = new Set();
-  const pattern = new RegExp(`(<([a-z][\\w-]*)\\b[^>]*\\b${attribute}="([^"]+)"[^>]*>)([\\s\\S]*?)(<\\/\\2>)`, 'gi');
+  const pattern = new RegExp(`(<([a-z][\\w-]*)\\b[^>]*\\b${attribute}="([^"]+)"[^>]*>)([\\s\\S]*?)(<\\/\\2\\s*>)`, 'gi');
   const result = html.replace(pattern, (whole, opening, tag, key, old, closing) => {
     if (dictionary[key] === undefined) { missing.add(key); return whole; }
     return opening + (htmlValues ? String(dictionary[key]) : escape(dictionary[key])) + closing;
@@ -49,6 +49,7 @@ const countries = scriptValue(await read('country-names.js'), 'const countries =
 const slugs = scriptValue(await read('country-routes.js'), 'const slugs =', 'const codes =', 'slugs');
 
 let home = translated(await read('index.html'), 'data-i18n', homeCopy.en);
+home = home.replace('Načítám srovnání…', 'Loading comparison…').replace('Načítám zdravotní ukazatele…', 'Loading health indicators…');
 home = metadata(home, { lang: 'en', title: 'Public Spending Data — public budgets in context', description: 'Compare national finances, inspect municipal budgets and open the original sources.' });
 await write('index.en.html', home);
 

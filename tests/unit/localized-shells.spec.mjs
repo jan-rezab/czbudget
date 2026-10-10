@@ -28,9 +28,16 @@ test('first-response shells carry the requested country and language', () => {
     assert.match(home, /<html lang="en">/);
     assert.match(home, /Follow public money/);
     assert.match(home, /Itemized municipal budgets are published for only some countries/);
+    assert.match(home, /Loading comparison…/);
+    assert.match(home, /Loading health indicators…/);
+    assert.doesNotMatch(home, /Načítám/);
     const about = readFileSync(path.join(output, 'about.en.html'), 'utf8');
     assert.match(about, /<h1 data-page-copy="aboutTitle">About Public Spending Data<\/h1>/);
     assert.match(about, /We bring together official budget data/);
+    assert.match(about, /Official website ↗/);
+    assert.match(about, /Results and impact ↗/);
+    assert.match(about, /Support Hlidac statu, z\.u\. ↗/);
+    assert.doesNotMatch(about, /Oficiální web|Výsledky a dopad|Podpořit/);
     const coverage = readFileSync(path.join(output, 'methodology.en.html'), 'utf8');
     assert.match(coverage, /<h1 data-status-copy="pageTitle">Coverage<\/h1>/);
     assert.match(coverage, /Data freshness by layer/);
