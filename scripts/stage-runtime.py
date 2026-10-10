@@ -123,9 +123,14 @@ def stage(root, output, lock=None):
     renderer = root / 'scripts/render-localized-shells.mjs'
     if renderer.is_file():
         subprocess.run(['node', str(renderer), str(root), str(output / 'public')], check=True)
+        country_shells = list((output / 'public/country-shells').glob('*.html'))
+        if len(country_shells) != 390:
+            raise ValueError(f'Expected 390 localized country shells, got {len(country_shells)}')
         for target in [output / 'public/index.en.html', output / 'public/about.en.html',
                        output / 'public/methodology.en.html', output / 'public/deep-dives/index.en.html',
-                       *(output / 'public/country-shells').glob('*.html')]:
+                       *country_shells]:
+            if not target.is_file():
+                raise ValueError('Missing localized shell: ' + str(target))
             inventory[target.relative_to(output).as_posix()] = target.stat().st_size
     version_runtime_references(root, output, inventory)
     total = sum(inventory.values())
