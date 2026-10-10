@@ -286,7 +286,7 @@ test("international profiles remain useful without JavaScript", async ({ browser
 test("section navigation follows the data available for each country", async ({ page }) => {
   await page.goto("/municipalities/denmark/aabenraa-580/?lang=en");
   await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Trend", "Budget", "Detail", "Method"]);
-  await expect(page.locator(".detail-kpis article").first()).toContainText("€");
+  await expect(page.locator(".detail-kpis article").first()).toContainText("DKK");
 
   await page.goto("/municipalities/norway/oslo-oslove-0301/?lang=en");
   await expect(page.locator(".international-context-rail a")).toHaveText(["Overview", "Trend", "Accounts", "Detail", "Method"]);
