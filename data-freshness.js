@@ -38,6 +38,8 @@
   };
   copy.cs.unavailable = "Některé živé vrstvy se nepodařilo ověřit. Neúplný přehled neznamená nulové pokrytí.";
   copy.en.unavailable = "Some live layers could not be checked. This incomplete inventory does not mean zero coverage.";
+  copy.cs.referenceLimit = "Základní registr je referenční snímek z {date}; {sources} záznamů nemá přímý odkaz na zdroj a {releases} nemá ID datového vydání. Živé vrstvy se načítají zvlášť.";
+  copy.en.referenceLimit = "The base registry is a reference snapshot from {date}; {sources} records lack a direct source link and {releases} lack a data release ID. Live layers load separately.";
   const t = (key) => copy[lang][key] || key;
   const esc = (value) => String(value ?? "").replace(/[&<>"']/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[character]);
   const number = (value) => new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB").format(Number(value) || 0);
@@ -131,7 +133,13 @@
   }
   function render() {
     const warning = document.querySelector("#freshness-warning");
-    if (warning) { warning.hidden = !state.data.unavailable?.length; warning.textContent = t("unavailable"); }
+    if (warning) {
+      const base = state.data.records.filter(record => !['trade_annual', 'trade_monthly', 'education', 'job_market'].includes(record.module));
+      const snapshot = date(state.data.generated_at);
+      const note = t('referenceLimit').replace('{date}', snapshot).replace('{sources}', number(base.filter(record => !record.source_url).length)).replace('{releases}', number(base.filter(record => !record.release_id).length));
+      warning.hidden = false;
+      warning.textContent = state.data.unavailable?.length ? `${note} ${t('unavailable')}` : note;
+    }
     const records = filteredRecords();
     renderMatrix(records);
     renderSelection();

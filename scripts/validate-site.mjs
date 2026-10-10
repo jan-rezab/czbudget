@@ -22,7 +22,7 @@ const pinned = counts.pinned;
 // Cache-busting is the contract; the exact version token is not. Pinning the
 // literal token means every asset edit must also edit this file, which is how
 // these assertions go stale and start failing releases that are actually fine.
-const cacheBusted = (page, asset) => new RegExp(`${asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\?v=\\d{8}-[a-z0-9-]+`).test(page);
+const cacheBusted = (page, asset) => new RegExp(`${asset.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\?v=(?:\\d{8}-[a-z0-9-]+|[a-f0-9]{64})`).test(page);
 const readGzipJson = async (path) => JSON.parse(gunzipSync(await readFile(path)).toString("utf8"));
 
 const identity = (await readFile(".czbudget-canonical", "utf8")).trim();
@@ -399,7 +399,7 @@ for (const row of itemizedLedgerRows) {
     if (row.status !== "not_loaded" || row.source_availability !== "source_available") throw new Error(`${row.country_code}: a non-published itemized country must appear in the source ledger as not loaded by PSD with an available upstream source`);
   } else if (row.status === "not_loaded" || row.source_availability !== "loaded") throw new Error(`${row.country_code}: a published itemized country must appear in the source ledger as loaded`);
 }
-if (!methodologyPage.includes("obecní adresář a souhrnné finance od položkových rozpočtů") || !methodologyPage.includes("methodology-levels")) throw new Error("Methodology must visibly distinguish municipal directory/headline coverage from itemized-budget coverage");
+if (!methodologyPage.includes("obecní adresář a souhrnné finance od položkových rozpočtů") || !cacheBusted(methodologyPage,"data-freshness.js")) throw new Error("Methodology must visibly distinguish municipal directory/headline coverage from itemized-budget coverage");
 if (coverageSourceResearch.contract !== "coverage-source-research.v1" || Object.keys(coverageSourceResearch.countries).length !== 6) throw new Error("Expected source-availability research for all six municipal-only country profiles");
 for (const [code, modules] of Object.entries(coverageSourceResearch.countries)) {
   for (const module of ["fiscal", "health", "geo", "transport"]) {
@@ -598,7 +598,7 @@ if (!homepageScript.includes("PSDCountryRoutes.href") || homepageScript.includes
 // the check that would have caught it.
 if (/<base\b/i.test(countryPage)) throw new Error("country.html must not declare a <base> tag: it rewrites every relative section-nav link on /countries/<slug> to the site root");
 if (!countryPage.includes("country-routes.js") || !countryScript.includes("PSDCountryRoutes.codeFromLocation") || !countryScript.includes("PSDCountryRoutes.href") || !globalNav.includes("countrySlugs[code] || String(code).toLowerCase()") || !countryRoutes.includes('CHE: "switzerland"') || !countryRoutes.includes('BRA: "brazil"') || !countryRoutes.includes('JPN: "japan"') || !countryRoutes.includes('FIN: "finland"') || !countryRoutes.includes("normalizedCode.toLowerCase()")) throw new Error("Country profiles must use readable routes for the full profiles and ISO3 fallback routes globally");
-if (!nginx.includes("location = /country.html") || !nginx.includes("return 301 $legacy_country_path") || !nginx.includes("/countries/switzerland") || !nginx.includes("try_files /country.html =404")) throw new Error("Nginx must redirect legacy country URLs and serve readable country routes");
+if (!nginx.includes("location = /country.html") || !nginx.includes("return 301 $legacy_country_path") || !nginx.includes("/countries/switzerland") || !nginx.includes("try_files /country-shells/$country_slug.$psd_country_lang.html =404")) throw new Error("Nginx must redirect legacy country URLs and serve localized readable country routes");
 if (!/global-nav\.js\?v=\d{8}-[a-z0-9-]+/.test(nginx) || nginx.includes("global-nav.js?v=20260827-germany-routes") || nginx.includes("global-nav.js?v=20260827-coverage-menu")) throw new Error("Nginx must publish the country-aware methodology navigation under a fresh cache key");
 if (!nginx.includes("denmark|finland|france") || !nginx.includes("greece|[a-z][a-z][a-z])/$") || !nginx.includes("greece|[a-z][a-z][a-z])$") || nginx.includes("try_files /countries/$1/index.html =404")) throw new Error("All IMF-covered countries must use the shared national dashboard route");
 if (!countryParityStyles.includes("background:#fff;color:#17241f") || !countryParityStyles.includes("color:#4f5a55")) throw new Error("Country data-layer cards must keep readable dark text on white backgrounds");

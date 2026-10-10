@@ -76,7 +76,7 @@
     "build:regional-finance:regofi": "python3 pipeline/transforms/prepare_oecd_regofi.py",
     "validate:accountability": "python3 pipeline/transforms/build_government_accountability.py --check && python3 -m unittest pipeline.tests.test_government_accountability",
     "validate:regional-finance": "python3 -m unittest pipeline.tests.test_international_regional_data",
-    "validate": "npm run validate:european-politics && npm run validate:accountability && npm run validate:regional-finance && npm run validate:invariants && npm run validate:glossary && npm run validate:reports-index && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
+    "validate": "npm run validate:european-politics && npm run validate:accountability && npm run validate:regional-finance && npm run validate:invariants && npm run validate:glossary && npm run validate:reports-index && npm run validate:localized-shells && node scripts/validate-site.mjs && node scripts/validate-integrity.mjs",
     "validate:data": "node scripts/validate-integrity.mjs --data-only",
     "audit:links": "node scripts/check-external-links.mjs --write-report",
     "backfill:social-previews": "node scripts/backfill-social-previews.mjs",
@@ -112,7 +112,8 @@
     "report:economic-observations": "python3 scripts/load-economic-observations.py --report",
     "build:warehouse-bundles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --slim --bundle --out .warehouse-bundle",
     "build:reports-index": "node scripts/build-reports-index.mjs",
-    "validate:reports-index": "node scripts/build-reports-index.mjs --check"
+    "validate:reports-index": "node scripts/build-reports-index.mjs --check",
+    "validate:localized-shells": "node --test tests/unit/localized-shells.spec.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

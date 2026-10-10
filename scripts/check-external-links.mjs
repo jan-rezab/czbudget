@@ -2,7 +2,8 @@ import { readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const writeReport = process.argv.includes("--write-report");
+const reportPath = process.argv.find((argument) => argument.startsWith('--report='))?.slice('--report='.length)
+  || (process.argv.includes('--write-report') ? 'pipeline/external-link-audit.json' : null);
 const urls = new Set();
 
 async function filesBelow(directory) {
@@ -30,9 +31,13 @@ for (const name of (await readdir(root)).filter((item) => item.endsWith(".html")
   for (const match of content.matchAll(/<a\b[^>]*href=["'](https?:\/\/[^"']+)/gi)) urls.add(match[1].replaceAll("&amp;", "&"));
 }
 for (const url of [...urls]) if (/^(?:https:\/\/schema\.org|https:\/\/czbudget-public-)/.test(url)) urls.delete(url);
+if (process.argv.includes('--inventory-only')) {
+  console.log(`External link inventory: ${urls.size} unique URLs`);
+  process.exit(0);
+}
 
 async function check(url) {
-  const options = { redirect: "follow", signal: AbortSignal.timeout(20_000), headers: { "user-agent": "CZBudget-Link-Integrity/1.0" } };
+  const options = { redirect: "follow", signal: AbortSignal.timeout(4_000), headers: { "user-agent": "CZBudget-Link-Integrity/1.0" } };
   try {
     let response = await fetch(url, { ...options, method: "HEAD" });
     if ([400, 405, 501].includes(response.status)) response = await fetch(url, { ...options, headers: { ...options.headers, range: "bytes=0-0" } });
@@ -45,14 +50,17 @@ async function check(url) {
 
 const queue = [...urls].sort();
 const results = [];
-const workers = Array.from({ length: 8 }, async () => {
-  while (queue.length) results.push(await check(queue.shift()));
+const workers = Array.from({ length: 16 }, async () => {
+  while (queue.length) {
+    results.push(await check(queue.shift()));
+    if (results.length % 250 === 0) console.log(`External links checked: ${results.length}/${urls.size}`);
+  }
 });
 await Promise.all(workers);
 results.sort((a, b) => a.url.localeCompare(b.url));
 const counts = Object.fromEntries(["ok", "protected", "warning", "broken", "unverified"].map((outcome) => [outcome, results.filter((item) => item.outcome === outcome).length]));
 const report = { schema_version: "1.0.0", checked_at: new Date().toISOString(), url_count: results.length, counts, results };
-if (writeReport) await writeFile("pipeline/external-link-audit.json", `${JSON.stringify(report, null, 2)}\n`);
+if (reportPath) await writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
 console.log(`External link audit: ${JSON.stringify(counts)}`);
-for (const item of results.filter((result) => !["ok", "protected"].includes(result.outcome))) console.log(`${item.outcome}\t${item.status ?? "-"}\t${item.url}`);
+for (const item of results.filter((result) => result.outcome === "broken" || (process.argv.includes('--verbose') && !["ok", "protected"].includes(result.outcome)))) console.log(`${item.outcome}\t${item.status ?? "-"}\t${item.url}`);
 if (counts.broken) process.exit(1);

@@ -60,6 +60,22 @@ map $request_uri $country_canonical_path {
   ~^(?<country_path>/countries/(?:czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece|[a-z][a-z][a-z]))(?:\?|$) $country_path;
 }
 
+# The first HTML response must match the requested language. The homepage is
+# English by default; other routes retain their Czech default.
+map "$uri:$arg_lang" $psd_route_file {
+  default $uri;
+  "/:" /index.en.html;
+  "/:en" /index.en.html;
+  "/:cs" /index.html;
+  "/about.html:en" /about.en.html;
+  "/methodology.html:en" /methodology.en.html;
+  "/deep-dives/:en" /deep-dives/index.en.html;
+}
+map $arg_lang $psd_country_lang {
+  default cs;
+  en en;
+}
+
 proxy_cache_path /tmp/psd-report-cache levels=1:2 keys_zone=psd_reports:2m max_size=64m inactive=24h;
 map "$http_authorization:$http_cookie" $psd_private_request {
   default 1;
@@ -302,7 +318,7 @@ server {
     return 301 /countries/$1$is_args$args;
   }
 
-  location ~ ^/countries/(czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece|[a-z][a-z][a-z])$ {
+  location ~ ^/countries/(?<country_slug>czechia|germany|denmark|finland|france|united-kingdom|poland|sweden|switzerland|ukraine|united-states|brazil|spain|japan|netherlands|norway|greece|[a-z][a-z][a-z])$ {
     sub_filter_once off;
     sub_filter '<head>' $psd_head_inject;
     sub_filter 'https://publicspendingdata.org/countries/czechia' 'https://publicspendingdata.org$country_canonical_path';
@@ -317,7 +333,7 @@ server {
     sub_filter 'country-health.js?v=20260822-czech-flow' 'country-health.js?v=20260824-readable-country-routes';
     sub_filter 'country-health-performance.js?v=20260824-performance' 'country-health-performance.js?v=20260824-readable-country-routes';
     sub_filter 'country-providers.js?v=20260822-network' 'country-providers.js?v=20260824-readable-country-routes';
-    try_files /country.html =404;
+    try_files /country-shells/$country_slug.$psd_country_lang.html =404;
   }
 
   # The slug group must not match "index.html". When nginx resolves a hub
@@ -400,7 +416,7 @@ server {
     sub_filter 'assets/favicon.svg"' 'assets/favicon.svg?v=20260824-archivo-lockup"';
     sub_filter 'site-header.css?v=20260824-header-lockup"' 'site-header.css?v=20260902-municipal-depth"';
     sub_filter 'site-header.css?v=20260822-component"' 'site-header.css?v=20260902-municipal-depth"';
-    try_files $uri $uri/ $uri/index.html =404;
+    try_files $psd_route_file $uri/ $uri/index.html =404;
   }
 
   # Per-profile JSON payloads are no longer in the image — the

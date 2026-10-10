@@ -73,6 +73,8 @@
   });
   Object.assign(statusCopy.cs,{releaseTitle:"Referenční datový snapshot",releaseNote:"Obecní a starší referenční vrstvy",snapshot:"Sestavení referenčních souborů",act1Lead:"Mapa a tabulka aktuálnosti zahrnují i živě publikované vrstvy obchodu a trhu práce. Přehled pod mapou podrobně rozepisuje starší obecní a sektorové zdroje; neobsahuje všechny novější reporty."});
   Object.assign(statusCopy.en,{releaseTitle:"Reference data snapshot",releaseNote:"Municipal and earlier reference layers",snapshot:"Reference files assembled",act1Lead:"The map and freshness table also include live published trade and job-market layers. The overview below the map details earlier municipal and sector sources; it does not cover every newer report."});
+  Object.assign(statusCopy.cs,{historicalCheck:"Historická lokální kontrola · datum a ID datového vydání chybí",verifiedRelease:"Ověřené datové vydání"});
+  Object.assign(statusCopy.en,{historicalCheck:"Historical local check · verification date and data release ID unavailable",verifiedRelease:"Verified data release"});
   const coverageCategories=[
     {id:"fiscal",cs:"Fiskální historie země",en:"Country fiscal history",modules:["sovereign"]},
     {id:"health",cs:"Zdravotnictví",en:"Health",modules:["health"]},
@@ -272,17 +274,19 @@
     const publishedItemizedCountries=itemizedCountries.filter(country=>(Number(country.profile_count)||0)>0);
     const warehouseOnlyCountries=itemizedCountries.filter(country=>country.publication_status==="warehouse_only");
     const warehouseOnlyProfiles=warehouseOnlyCountries.reduce((sum,country)=>sum+(Number(country.warehouse_profile_count)||Number(country.warehouse?.profile_count)||0),0);
+    const metricsDate=coverageMetricsData?.generated_at?new Intl.DateTimeFormat(current==="cs"?"cs-CZ":"en-GB",{dateStyle:"medium"}).format(new Date(coverageMetricsData.generated_at)):"—";
     const cards=[
-      [sc.validatedFacts,coverageMetricsData?.metrics?.current_validated_financial_facts||0,sc.validatedFactsNote],
-      [sc.servingProfiles,coverageMetricsData?.metrics?.current_public_profiles||0,sc.servingProfilesNote],
+      [sc.validatedFacts,coverageMetricsData?.metrics?.current_validated_financial_facts||0,`${sc.validatedFactsNote} · ${metricsDate}`],
+      [sc.servingProfiles,coverageMetricsData?.metrics?.current_public_profiles||0,`${sc.servingProfilesNote} · ${metricsDate}`],
       [sc.municipalCountries,countries.length,`${integer(scope)} ${sc.entities}`],
       [sc.itemizedCountries,publishedItemizedCountries.length,`${integer(itemizedProfiles)} ${sc.profiles}${warehouseOnlyCountries.length?` · ${integer(warehouseOnlyProfiles)} ${sc.warehouseShort}`:""}`],
       [sc.entityRows,entityRows,aggregateRows?`${integer(aggregateRows)} ${sc.aggregateRows}`:sc.entityLevel],
       [sc.municipalCountryYears,countryYears,municipalYears.label],
       [sc.coverageRows,methodologyData.row_count,sc.coverageRowNote]
     ];
-    const passed=qualityData.status==="passed";
-    root.innerHTML=`<div class="data-health-status"><span class="${passed?"data-health-pass":"data-health-fail"}">● ${esc(passed?sc.checksPassed:sc.checksFailed)}</span><span>${esc(sc.snapshot)}: <b>${esc(generatedLabel)}</b></span></div><div class="data-health-kpis">${cards.map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${integer(value)}</strong><small>${esc(note)}</small></article>`).join("")}</div><div class="data-health-downloads"><a href="data/international-municipalities.v1.json" download>${current === "en" ? "Municipal" : "Obecní"} JSON ↓</a><a href="data/municipal-itemized-coverage.v1.json" download>${current === "en" ? "Itemized budgets" : "Položkové rozpočty"} JSON ↓</a><a href="data/methodology-sources.v1.json" download>${esc(sc.ledgerJson)}</a><a href="data/coverage-source-research.v1.json" download>${current === "en" ? "Availability research" : "Průzkum dostupnosti"} JSON ↓</a><a href="data/municipal-itemized-acquisition-audit.v1.json" download>${current === "en" ? "Acquisition audit" : "Audit importů"} JSON ↓</a><a href="data/data-quality-report.v1.json" download>QA JSON ↓</a></div>`;
+    const verified=qualityData.status==="passed"&&qualityData.release_id&&qualityData.verified_at&&qualityData.build_mode!=="local";
+    const checkLabel=verified?`${sc.verifiedRelease}: ${qualityData.release_id}`:sc.historicalCheck;
+    root.innerHTML=`<div class="data-health-status"><span class="${verified?"data-health-pass":""}">● ${esc(checkLabel)}</span><span>${esc(sc.snapshot)}: <b>${esc(generatedLabel)}</b></span></div><div class="data-health-kpis">${cards.map(([label,value,note])=>`<article><span>${esc(label)}</span><strong>${integer(value)}</strong><small>${esc(note)}</small></article>`).join("")}</div><div class="data-health-downloads"><a href="data/international-municipalities.v1.json" download>${current === "en" ? "Municipal" : "Obecní"} JSON ↓</a><a href="data/municipal-itemized-coverage.v1.json" download>${current === "en" ? "Itemized budgets" : "Položkové rozpočty"} JSON ↓</a><a href="data/methodology-sources.v1.json" download>${esc(sc.ledgerJson)}</a><a href="data/coverage-source-research.v1.json" download>${current === "en" ? "Availability research" : "Průzkum dostupnosti"} JSON ↓</a><a href="data/municipal-itemized-acquisition-audit.v1.json" download>${current === "en" ? "Acquisition audit" : "Audit importů"} JSON ↓</a><a href="data/data-quality-report.v1.json" download>QA JSON ↓</a></div>`;
     const processedRows=Number(coverageMetricsData?.metrics?.cumulative_structured_rows_processed)||0;
     const total=document.querySelector("#status-data-total");if(total){total.textContent=processedRows>=100000000?"100M+":processedRows?integer(processedRows):"—";if(processedRows)total.title=integer(processedRows);}
   }
