@@ -47,6 +47,10 @@ test("Brno keeps the full Czech budget template while sharing the municipal hier
     for (const selector of sharedStructure) await expect(page.locator(selector)).toBeVisible();
     await expect(page.locator(".detail-kpis article")).toHaveCount(4);
   }
+  await expect(page.locator("#cityvizor")).toHaveCount(0);
+  await page.goto("/municipalities/norway/oslo-oslove-0301/?lang=en");
+  await expect(page.locator(".method-warning")).toBeVisible();
+  await expect(page.locator(".method-warning")).not.toContainText("2012");
 });
 
 test("Czech profiles surface warehouse purpose and economic detail without changing reconciled totals", async ({ page }) => {
@@ -122,6 +126,22 @@ test("Czech profiles surface warehouse purpose and economic detail without chang
   await expect(page.locator("#cityvizor")).toContainText("Městská organizace");
   await expect(page.locator('#cityvizor a[href*="/public-data/municipality-cityvizor?ico=44992785"]')).toBeVisible();
   await expect(page.locator('.international-context-rail a[href="#cityvizor"]')).toBeVisible();
+  await page.locator("#cityvizor-search").fill("does-not-match");
+  await expect(page.locator("#cityvizor-organization-grid .municipal-cityvizor-profile")).toHaveCount(0);
+  await page.locator("#cityvizor-search").fill("12345678");
+  await expect(page.locator("#cityvizor-organization-grid .municipal-cityvizor-profile")).toHaveCount(1);
+  await expect(page.locator("#cityvizor-organization-grid")).toContainText("Městská organizace");
+  await expect(page.locator("#cityvizor")).not.toContainText("cityvizor-test");
+
+  await page.goto("/about.html?lang=en");
+  await page.setContent(`<!doctype html><html lang="en"><head><meta name="description" content=""></head><body data-profile-url="/fixture/cze-profile.json" data-warehouse-country="CZE" data-warehouse-code="44992785"><main><p class="municipal-profile-loading">Loading</p></main><footer></footer><script src="/municipal-expanded-profile.js"></script></body></html>`);
+  await expect(page.locator('[data-profile-currency="native"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".detail-kpis article").first()).toContainText("CZK");
+  await expect(page.locator("#profile-detail-visual .native-visual-row").first()).toContainText("Primary schools");
+  await expect(page.locator("#profile-detail-visual .native-visual-row").first()).toContainText("Základní školy");
+  await page.locator('[data-detail-dimension="economic"]').click();
+  await expect(page.locator("#profile-detail-visual .native-visual-row").first()).toContainText("Employee salaries");
+  await expect(page.locator("#profile-detail-visual .native-visual-row").first()).toContainText("Platy zaměstnanců");
 });
 
 test("Polish budget codes show English labels with the official Polish label beneath", async ({ page }) => {
@@ -181,6 +201,9 @@ test("municipal profiles always offer auditable EUR, USD and native currency vie
   await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
 
   const revenue = page.locator(".detail-kpis article").first().locator("strong");
+  await expect(page.locator('[data-profile-currency="native"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(revenue).toContainText("R$");
+  await page.locator('[data-profile-currency="EUR"]').click();
   await expect(page.locator('[data-profile-currency="EUR"]')).toHaveAttribute("aria-pressed", "true");
   await expect(revenue).toContainText("€");
   await expect(page.locator(".profile-currency-converter")).toContainText("ECB annual reference rate 2025");
@@ -216,6 +239,7 @@ test("municipal conversion discloses a missing-year fallback without mixing annu
     await route.fulfill({ response, json: fx });
   });
   await page.goto("/municipalities/brazil/sao-paulo-3550308/?lang=en");
+  await page.locator('[data-profile-currency="EUR"]').click();
   await expect(page.locator('.profile-currency-converter')).toContainText('ECB annual reference rate 2024');
   await expect(page.locator('.profile-currency-converter')).toContainText('nearest available year');
   const eur = await page.locator('.detail-kpis article').first().locator('strong').textContent();

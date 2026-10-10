@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <script src="/language-bootstrap.js?v=20260822-no-language-flash"></script>
+  <link rel="stylesheet" href="../../site-header.css?v=20260824-header-lockup" data-psd-site-header>
+  <script src="../../global-nav.js?v=20260919-reports-regional" defer></script>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Voda v krajině — Public Spending Data</title>
+  <meta name="description" content="České veřejné peníze, dokončené projekty a měřené výsledky obnovy vodních toků a mokřadů v evropském kontextu.">
+  <link rel="canonical" href="https://publicspendingdata.org/deep-dives/water-resilience/">
+  <link rel="alternate" hreflang="cs" href="https://publicspendingdata.org/deep-dives/water-resilience/?lang=cs">
+  <link rel="alternate" hreflang="en" href="https://publicspendingdata.org/deep-dives/water-resilience/?lang=en">
+  <link rel="icon" href="../../assets/favicon.svg">
+  <link rel="stylesheet" href="../../styles.css?v=20260822-section-rail">
+  <link rel="stylesheet" href="../../styles-v2.css?v=20260822-brand">
+  <link rel="stylesheet" href="../../deep-dives.css?v=20260919-reports-regional">
+  <style>
+    html[lang="cs"] .wr-en, html[lang="en"] .wr-cs { display:none !important; }
+    .water-page { background:#f5f4ed; color:#17322e; }
+    .water-page main { max-width:1440px; margin:auto; padding:0 28px 110px; }
+    .water-page a { color:inherit; }
+    .wr-hero { position:relative; overflow:hidden; margin:20px 0 0; padding:clamp(36px,6vw,88px); border-radius:28px; background:#123b39; color:#f4f5e7; isolation:isolate; }
+    .wr-hero:after { content:""; position:absolute; z-index:-1; width:620px; height:620px; right:-140px; top:-255px; border:95px solid rgba(126,192,172,.17); border-radius:50%; box-shadow:0 0 0 100px rgba(126,192,172,.07),0 0 0 200px rgba(126,192,172,.04); }
+    .wr-hero h1 { max-width:850px; margin:0 0 22px; color:inherit; font-size:clamp(3.1rem,6.5vw,6.7rem); line-height:.98; letter-spacing:-.065em; font-weight:720; }
+    .wr-hero p { max-width:730px; margin:0; color:#d5e7df; font-size:clamp(1.05rem,1.7vw,1.35rem); line-height:1.55; }
+    .wr-hero .wr-scope { margin-top:32px; padding-top:22px; border-top:1px solid rgba(235,247,236,.2); max-width:900px; color:#bbd8c9; font-size:.9rem; }
+    .wr-rail { display:flex; flex-wrap:wrap; gap:8px; padding:18px 0 28px; }
+    .wr-rail a { text-decoration:none; border:1px solid #cbd9cf; border-radius:999px; padding:9px 15px; background:#fffefa; font-size:.9rem; font-weight:650; }
+    .wr-rail a:hover,.wr-rail a:focus-visible { background:#dbeee5; outline-offset:3px; }
+    .wr-snapshot { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; margin-bottom:58px; }
+    .wr-snapshot article { padding:24px; border:1px solid #d9e2d8; border-radius:20px; background:#fffefa; min-height:185px; }
+    .wr-snapshot article > span,.wr-label { display:block; color:#436a5d; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; font-weight:760; }
+    .wr-snapshot strong { display:block; margin:12px 0 7px; font-size:clamp(1.6rem,2.7vw,2.65rem); line-height:1.1; letter-spacing:-.045em; }
+    .wr-snapshot p { margin:0; font-size:.9rem; line-height:1.5; color:#52645c; }
+    .wr-section { margin:0 0 72px; scroll-margin-top:90px; }
+    .wr-heading { display:grid; grid-template-columns:minmax(0,1.1fr) minmax(270px,.9fr); gap:38px; align-items:end; margin:0 0 20px; }
+    .wr-heading h2 { margin:5px 0 0; font-size:clamp(2.1rem,4vw,4rem); line-height:1.05; letter-spacing:-.055em; }
+    .wr-heading p { margin:0 0 4px; color:#52645c; line-height:1.6; }
+    .wr-number { font-variant-numeric:tabular-nums; }
+    .wr-stage-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .wr-stage { padding:24px; background:#fffefa; border:1px solid #d9e2d8; border-radius:20px; }
+    .wr-stage .wr-tag { display:inline-block; margin-bottom:20px; padding:6px 10px; border-radius:999px; background:#dcece4; color:#205946; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; }
+    .wr-stage strong { display:block; font-size:clamp(1.7rem,3vw,3.1rem); letter-spacing:-.055em; line-height:1.1; }
+    .wr-stage h3 { margin:10px 0 6px; font-size:1.05rem; }
+    .wr-stage p { margin:0 0 12px; color:#51645b; line-height:1.5; font-size:.91rem; }
+    .wr-stage a,.wr-source { color:#176854; text-underline-offset:3px; font-size:.84rem; font-weight:700; }
+    .wr-warning { margin:16px 0 0; padding:17px 21px; border-left:4px solid #bd8152; border-radius:0 12px 12px 0; background:#f6ebdb; line-height:1.5; }
+    .wr-projects { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+    .wr-project { display:grid; grid-template-columns:1fr auto; gap:8px 24px; align-content:start; padding:25px; border:1px solid #d9e2d8; border-radius:20px; background:#fffefa; }
+    .wr-project .wr-type { grid-column:1/-1; color:#35715e; font-size:.76rem; font-weight:790; letter-spacing:.07em; text-transform:uppercase; }
+    .wr-project h3 { margin:0; font-size:1.45rem; letter-spacing:-.025em; }
+    .wr-project .wr-place { text-align:right; color:#687970; font-size:.87rem; }
+    .wr-project .wr-output { grid-column:1/-1; margin:6px 0 0; font-size:1.04rem; line-height:1.45; }
+    .wr-project .wr-cost { grid-column:1/-1; margin:0; color:#53665d; font-size:.9rem; line-height:1.45; }
+    .wr-project .wr-source { grid-column:1/-1; margin-top:8px; }
+    .wr-results { display:grid; grid-template-columns:1.1fr .9fr; gap:12px; }
+    .wr-result-lead { padding:clamp(25px,4vw,45px); border-radius:22px; color:#f4f5e7; background:#173b39; }
+    .wr-result-lead strong { display:block; margin:14px 0; font-size:clamp(2.3rem,4vw,4.7rem); letter-spacing:-.06em; line-height:1; }
+    .wr-result-lead p { max-width:580px; color:#d1e2da; line-height:1.6; }
+    .wr-result-lead a { color:#b9ead6; }
+    .wr-result-stack { display:grid; gap:12px; }
+    .wr-result-stack article { padding:23px; border:1px solid #d9e2d8; border-radius:20px; background:#fffefa; }
+    .wr-result-stack strong { display:block; margin:8px 0; font-size:1.45rem; line-height:1.15; }
+    .wr-result-stack p { margin:0; color:#52645c; line-height:1.5; font-size:.9rem; }
+    .wr-baseline { display:grid; grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr); gap:20px; align-items:center; margin-bottom:12px; padding:24px 28px; border-radius:20px; background:#254e48; color:#f3f4e9; }
+    .wr-baseline strong { display:block; margin:7px 0 2px; font-size:clamp(2rem,3.7vw,3.4rem); line-height:1; letter-spacing:-.055em; }
+    .wr-baseline p { margin:0; max-width:700px; color:#d3e5d9; line-height:1.55; }
+    .wr-baseline a { color:#b9ead6; font-weight:700; }
+    .wr-comparison { padding:clamp(22px,3.5vw,42px); border-radius:24px; background:#e3ebe1; }
+    .wr-comparison h3 { margin:0 0 14px; font-size:1.4rem; }
+    .wr-comparison .wr-intro { max-width:950px; margin:0 0 22px; color:#4d6458; line-height:1.55; }
+    .wr-country-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+    .wr-country { padding:20px; min-height:160px; border-radius:17px; background:#fffefa; }
+    .wr-country b { display:block; font-size:.78rem; color:#48745f; text-transform:uppercase; letter-spacing:.07em; }
+    .wr-country strong { display:block; margin:13px 0 3px; font-size:clamp(1.6rem,2.5vw,2.5rem); letter-spacing:-.05em; line-height:1.08; }
+    .wr-country small { display:block; color:#60736a; line-height:1.45; }
+    .wr-country a { display:inline-block; margin-top:10px; color:#176854; font-size:.78rem; font-weight:700; }
+    .wr-country.missing { background:#254e48; color:#f3f4e9; }
+    .wr-country.missing b,.wr-country.missing small { color:#cbe0d4; }
+    .wr-finance-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .wr-finance { padding:22px; border-radius:17px; background:#fffefa; border:1px solid #c8d8c9; }
+    .wr-finance strong { display:block; margin:10px 0 2px; font-size:1.75rem; letter-spacing:-.045em; line-height:1.1; }
+    .wr-finance b { display:block; color:#2e6855; font-size:1rem; }
+    .wr-finance p { margin:10px 0; color:#53675c; font-size:.86rem; line-height:1.5; }
+    .wr-finance a { color:#176854; font-size:.8rem; font-weight:700; }
+    .wr-finance.missing { background:#254e48; color:#f3f4e9; border-color:#254e48; }
+    .wr-finance.missing .wr-label,.wr-finance.missing b,.wr-finance.missing p,.wr-finance.missing a { color:#cbe0d4; }
+    .wr-programmes { margin-top:12px; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; }
+    .wr-programmes article { padding:22px; border:1px solid #c8d8c9; border-radius:17px; background:#f8f9f2; }
+    .wr-programmes strong { display:block; margin:7px 0 2px; font-size:1.8rem; letter-spacing:-.04em; }
+    .wr-programmes p { margin:0 0 8px; color:#53675c; font-size:.85rem; line-height:1.45; }
+    .wr-programmes a { font-size:.8rem; color:#176854; font-weight:700; }
+    .wr-table-wrap { overflow-x:auto; border:1px solid #d9e2d8; border-radius:18px; background:#fffefa; }
+    .wr-table { width:100%; min-width:780px; border-collapse:collapse; font-size:.9rem; }
+    .wr-table th,.wr-table td { padding:15px 18px; border-bottom:1px solid #e3e8e1; vertical-align:top; text-align:left; line-height:1.45; }
+    .wr-table th { color:#436a5d; font-size:.75rem; text-transform:uppercase; letter-spacing:.07em; }
+    .wr-table tr:last-child td { border-bottom:0; }
+    .wr-method { padding:26px; border:1px solid #d9e2d8; border-radius:20px; background:#fffefa; line-height:1.6; }
+    .wr-method p { margin:0 0 12px; }
+    .wr-method p:last-child { margin-bottom:0; }
+    @media (max-width:850px) { .wr-heading,.wr-results,.wr-baseline { grid-template-columns:1fr; gap:15px; } .wr-stage-grid,.wr-country-grid,.wr-finance-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media (max-width:640px) { .water-page main { padding:0 14px 80px; } .wr-hero { border-radius:18px; padding:36px 26px; } .wr-snapshot,.wr-stage-grid,.wr-projects,.wr-country-grid,.wr-finance-grid,.wr-programmes { grid-template-columns:1fr; } .wr-snapshot article { min-height:0; } .wr-project { grid-template-columns:1fr; } .wr-project .wr-place { text-align:left; } .wr-section { margin-bottom:55px; } }
+  </style>
+</head>
+<body class="deep-dives-page water-page">
+  <psd-site-header></psd-site-header>
+  <main id="top">
+    <header class="wr-hero">
+      <h1><span class="wr-cs">Voda v krajině</span><span class="wr-en">Water in the landscape</span></h1>
+      <p class="wr-cs">Kam jdou veřejné peníze na obnovu řek, mokřadů a přirozeného zadržování vody? Tři pohledy oddělují výdaje, dokončenou práci a skutečně měřený výsledek.</p>
+      <p class="wr-en">Where does public money go to restore rivers, wetlands and natural water retention? Three views separate spending, completed work and measured results.</p>
+      <p class="wr-scope"><span class="wr-cs">Zahrnuto: meandry a stará ramena, nivy, tůně, rašeliniště, rušení odvodnění a průchodnost toků. Mimo rozsah: pitná voda, kanalizace a samotná protipovodňová ochrana.</span><span class="wr-en">Included: meanders and old channels, floodplains, pools, peatlands, drainage reversal and river connectivity. Excluded: drinking water, sewage and flood protection alone.</span></p>
+    </header>
+    <nav class="wr-rail" aria-label="Water report sections">
+      <a href="#money"><span class="wr-cs">01 Peníze</span><span class="wr-en">01 Money</span></a>
+      <a href="#projects"><span class="wr-cs">02 Projekty</span><span class="wr-en">02 Projects</span></a>
+      <a href="#results"><span class="wr-cs">03 Výsledky</span><span class="wr-en">03 Results</span></a>
+      <a href="#wetlands"><span class="wr-cs">Mokřady v Evropě</span><span class="wr-en">Wetlands in Europe</span></a>
+      <a href="#method"><span class="wr-cs">Metodika</span><span class="wr-en">Method</span></a>
+    </nav>
+    <div class="wr-snapshot" aria-label="Czech evidence at a glance">
+      <article><span><span class="wr-cs">Veřejné peníze</span><span class="wr-en">Public money</span></span><strong><span class="wr-cs">Součet chybí</span><span class="wr-en">No complete total</span></strong><p><span class="wr-cs">Rozpočtové kódy i dotace mísí ekologické zásahy s jinými účely; stejné peníze se objevují ve více systémech.</span><span class="wr-en">Budget codes and grants mix ecological work with other purposes; the same transfer appears in several systems.</span></p></article>
+      <article><span><span class="wr-cs">Obnovené mokřady za rok</span><span class="wr-en">Wetlands restored per year</span></span><strong><span class="wr-cs">Národní řada chybí</span><span class="wr-en">No national series</span></strong><p><span class="wr-cs">Existují hotové projekty i dotační rozhodnutí, ale ověřený český roční součet dokončených hektarů jsme nenašli.</span><span class="wr-en">Completed projects and grant decisions exist, but no verified Czech annual total of completed hectares was found.</span></p></article>
+      <article><span><span class="wr-cs">Dopad na retenci</span><span class="wr-en">Retention outcome</span></span><strong><span class="wr-cs">Nepotvrzen</span><span class="wr-en">Unconfirmed</span></strong><p><span class="wr-cs">MŽP v roce 2025 uvedlo, že dostupná data neumožňují objektivně potvrdit růst retence vody v krajině.</span><span class="wr-en">In 2025 the environment ministry said available data could not objectively confirm increased landscape retention.</span></p></article>
+    </div>
+
+    <section class="wr-section" id="money">
+      <div class="wr-heading"><div><span class="wr-label">01</span><h2><span class="wr-cs">Kam jdou peníze</span><span class="wr-en">Where the money goes</span></h2></div><p><span class="wr-cs">Tři zveřejněné částky ukazují různé stupně financování a různý rozsah. Nejsou sčitatelné.</span><span class="wr-en">Three published figures represent different funding stages and different scopes. They cannot be added.</span></p></div>
+      <div class="wr-stage-grid">
+        <article class="wr-stage"><span class="wr-tag"><span class="wr-cs">Skutečný výdaj · 2025</span><span class="wr-en">Actual expenditure · 2025</span></span><strong class="wr-number">89,299,676.85 Kč</strong><h3><span class="wr-cs">Obce, §2334</span><span class="wr-en">Municipalities, §2334</span></h3><p><span class="wr-cs">Výpočet PSD: součet skutečných výdajů pod §2334 ve výkazech FINM 2025 za 67 obcí. Kód zahrnuje širší práce na říčních systémech; tůně a mokřady bývají pod §2341.</span><span class="wr-en">PSD calculation: sum of actual §2334 expenditure in 2025 FINM returns for 67 municipalities. The code includes wider river-system work; pools and wetlands commonly sit under §2341.</span></p><a href="https://monitor.statnipokladna.gov.cz/data/extrakty/csv/FinM/2025_12_Data_CSUIS_FINM.zip" target="_blank" rel="noopener noreferrer">MONITOR FINM 2025 ↗</a></article>
+        <article class="wr-stage"><span class="wr-tag"><span class="wr-cs">Přiznaná dotace · 2024</span><span class="wr-en">Grant decisions · 2024</span></span><strong class="wr-number">20.9 mil. Kč</strong><h3><span class="wr-cs">AOPK: mokřady, tůně i nádrže</span><span class="wr-en">AOPK: wetlands, pools and reservoirs</span></h3><p><span class="wr-cs">162 žádostí v programu NPO–POPFK 165. Částka je přidělená podpora, nikoli hotovostní výdaj nebo doložená plocha dokončených mokřadů.</span><span class="wr-en">162 applications in NPO–POPFK 165. This is assigned support, not cash paid or verified completed wetland area.</span></p><a href="https://aopk.gov.cz/documents/20121/1095571/Rocenka%2BAOPK%2B2024_web.pdf/04c3e2a6-039d-58b3-5c20-bf7b1bd78246?t=1756800537466" target="_blank" rel="noopener noreferrer">AOPK 2024, table 12 ↗</a></article>
+        <article class="wr-stage"><span class="wr-tag"><span class="wr-cs">Rozpočet projektu · 2018–24</span><span class="wr-en">Project budget · 2018–24</span></span><strong class="wr-number">€5.845m</strong><h3>LIFE for MIRES · Šumava</h3><p><span class="wr-cs">Rozpočet přeshraničního projektu, který zahrnul obnovu 2 183 ha na české straně. Není to český roční výdaj ani čistá česká část nákladů.</span><span class="wr-en">Budget of a cross-border project that restored 2,183 ha on the Czech side. This is neither annual Czech spending nor a Czech-only cost.</span></p><a href="https://life.npsumava.cz/en/about/general-information/" target="_blank" rel="noopener noreferrer">LIFE for MIRES ↗</a></article>
+      </div>
+      <p class="wr-warning"><strong><span class="wr-cs">Co chybí v účtu:</span><span class="wr-en">What the ledger lacks:</span></strong> <span class="wr-cs">MF řadí tůně, mokřady a další retenci do §2341; přirozená koryta drobných toků se mohou skrývat v §2333 a lesní zásahy v §1037. Každý projekt potřebuje vlastní klasifikaci a propojení dotace s konečným výdajem. <a href="#projects">Náklady jmenovitých dokončených akcí jsou níže.</a></span><span class="wr-en">MF assigns pools, wetlands and other retention to §2341; natural small-stream work can sit under §2333 and forest work under §1037. Each project needs screening and a link from grant to final expenditure. <a href="#projects">Costs of named completed works appear below.</a></span> <a class="wr-source" href="https://www.mfcr.cz/assets/attachments/2024-02-05_Pokyn-k-vyhlasce-c-412-2021-Sb-o-rozpoctove-skladbe-od-05-02-2024-s-vyznacenim-zmen.pdf" target="_blank" rel="noopener noreferrer">MF, pp. 129, 137 ↗</a></p>
+    </section>
+
+    <section class="wr-section" id="projects">
+      <div class="wr-heading"><div><span class="wr-label">02</span><h2><span class="wr-cs">Co se skutečně postavilo</span><span class="wr-en">What was actually built</span></h2></div><p><span class="wr-cs">Jmenovité dokončené akce spojují místo, náklad a fyzický výstup. Jde o ověřené příklady, nikoli soupis všech českých projektů.</span><span class="wr-en">Named completed works connect place, cost and physical output. These are verified examples, not a census of Czech projects.</span></p></div>
+      <div class="wr-projects">
+        <article class="wr-project"><span class="wr-type"><span class="wr-cs">Odvodnění · mokřad</span><span class="wr-en">Drainage reversal · wetland</span></span><h3>Černíny</h3><span class="wr-place">2024 · <span class="wr-cs">Lesy ČR</span><span class="wr-en">Czech state forests</span></span><p class="wr-output"><strong>~10 ha</strong> <span class="wr-cs">dříve odvodněného území, 1.4 km příkopů, 54 hrázek a 7 tůní (1 122 m²).</span><span class="wr-en">formerly drained land, 1.4 km of ditches, 54 blocks and 7 pools (1,122 m²).</span></p><p class="wr-cost"><span class="wr-cs">Celý projekt:</span><span class="wr-en">Whole project:</span> 982,508.60 Kč <span class="wr-cs">bez DPH; z toho dotace 911 993 Kč.</span><span class="wr-en">ex VAT; grant CZK 911,993.</span></p><a class="wr-source" href="https://stlabe.lesycr.cz/realizovane-stavby/meliorace-cerniny-revitalizacni-opatreni/" target="_blank" rel="noopener noreferrer">Lesy ČR ↗</a></article>
+        <article class="wr-project"><span class="wr-type"><span class="wr-cs">Tůně · koryto</span><span class="wr-en">Pools · channel</span></span><h3>Drahotický potok</h3><span class="wr-place">2025 · <span class="wr-cs">Lesy ČR</span><span class="wr-en">Czech state forests</span></span><p class="wr-output"><strong>4,188 m²</strong> <span class="wr-cs">plochy 22 tůní a mokřadů, plus 241 m nového koryta.</span><span class="wr-en">across 22 pools and wetlands, plus 241 m of new channel.</span></p><p class="wr-cost"><span class="wr-cs">Celý projekt:</span><span class="wr-en">Whole project:</span> 2.3 mil. Kč <span class="wr-cs">bez DPH; nelze celé označit za cenu mokřadů.</span><span class="wr-en">ex VAT; not all of it is a wetland-only cost.</span></p><a class="wr-source" href="https://stlabe.lesycr.cz/realizovane-stavby/revitalizace-drahotickeho-potoka-liban/" target="_blank" rel="noopener noreferrer">Lesy ČR ↗</a></article>
+        <article class="wr-project"><span class="wr-type"><span class="wr-cs">Meandry · tůně</span><span class="wr-en">Meanders · pools</span></span><h3>Mikulečský potok</h3><span class="wr-place">2024 · <span class="wr-cs">Lesy ČR</span><span class="wr-en">Czech state forests</span></span><p class="wr-output"><strong>2,064 m</strong> <span class="wr-cs">obnoveného toku a 9 tůní o celkové ploše 3 108 m².</span><span class="wr-en">of restored channel and 9 pools covering 3,108 m².</span></p><p class="wr-cost"><span class="wr-cs">Celý projekt:</span><span class="wr-en">Whole project:</span> 2.967 mil. Kč <span class="wr-cs">bez DPH; součástí jsou různé zásahy.</span><span class="wr-en">ex VAT; includes several interventions.</span></p><a class="wr-source" href="https://stlabe.lesycr.cz/realizovane-stavby/revitalizace-mikulecskeho-potoka/" target="_blank" rel="noopener noreferrer">Lesy ČR ↗</a></article>
+        <article class="wr-project"><span class="wr-type"><span class="wr-cs">Nový meandr</span><span class="wr-en">New meander</span></span><h3>Jihlávka · Prostředkovice</h3><span class="wr-place">2024 · <span class="wr-cs">Povodí Moravy</span><span class="wr-en">Morava basin authority</span></span><p class="wr-output"><strong>156 → 212 m</strong> <span class="wr-cs">délka koryta po obnově; vzniklo i paralelní rameno.</span><span class="wr-en">channel length after restoration, plus a parallel side channel.</span></p><p class="wr-cost"><span class="wr-cs">Stavební náklad:</span><span class="wr-en">Construction cost:</span> 1.6 mil. Kč <span class="wr-cs">dle dokončovací zprávy; obsahuje i pobytové prvky, není cenou meandru samotného.</span><span class="wr-en">per the completion release; includes recreation elements, not only the meander.</span></p><a class="wr-source" href="https://www.pmo.cz/cz/media/tiskove-zpravy/zpomaleni-odtoku-i-novy-prostor-pro-odpocinek-prinesla-revitalizace-jihlavky/" target="_blank" rel="noopener noreferrer">Povodí Moravy ↗</a></article>
+      </div>
+    </section>
+
+    <section class="wr-section" id="results">
+      <div class="wr-heading"><div><span class="wr-label">03</span><h2><span class="wr-cs">Co se změnilo</span><span class="wr-en">What changed</span></h2></div><p><span class="wr-cs">Hotové stavby a ekologický účinek jsou různé důkazy. Veřejný scorecard musí oba ukázat, včetně chybějícího měření.</span><span class="wr-en">Completed construction and ecological effect are different evidence. A public scorecard should show both, including missing measurement.</span></p></div>
+      <div class="wr-results">
+        <article class="wr-result-lead"><span class="wr-label" style="color:#a9d8c5"><span class="wr-cs">Národní výsledek</span><span class="wr-en">National outcome</span></span><strong><span class="wr-cs">Neověřeno</span><span class="wr-en">Not verified</span></strong><p><span class="wr-cs">Střednědobé vyhodnocení MŽP z roku 2025 výslovně říká, že zvýšení retence vody v krajině nelze z dostupných dat objektivně potvrdit. Zemědělská odvodnění se systematicky nevyhodnocují.</span><span class="wr-en">The environment ministry's 2025 review explicitly says available data cannot objectively confirm increased landscape water retention. Agricultural drainage is not systematically reviewed.</span></p><a href="https://mzp.gov.cz/system/files/2025-07/OPZPUR-Strednedobe_vyhodnoceni_SPZP2030-20250710.pdf" target="_blank" rel="noopener noreferrer">MŽP 2025, pp. 73–74 ↗</a></article>
+        <div class="wr-result-stack">
+          <article><span class="wr-label"><span class="wr-cs">Dokončený širší výstup</span><span class="wr-en">Completed wider output</span></span><strong>&gt;263 km · 2012–20</strong><p><span class="wr-cs">Revitalizované vodní toky v ČR podle MŽP. Kategorie je širší než samotné remeandrování; dalších 25 km bylo teprve v realizaci.</span><span class="wr-en">Czech watercourses revitalized, per MŽP. This category is wider than remeandering; another 25 km was only in implementation.</span> <a class="wr-source" href="https://mzp.gov.cz/system/files/2025-07/OPZPUR-Strednedobe_vyhodnoceni_SPZP2030-20250710.pdf" target="_blank" rel="noopener noreferrer">MŽP 2025, p. 74 ↗</a></p></article>
+          <article><span class="wr-label"><span class="wr-cs">Místní pozorování</span><span class="wr-en">Local observation</span></span><strong>Sedmihorský mokřad</strong><p><span class="wr-cs">AOPK uvádí přerušení odvodnění, zvýšení hladiny podzemní vody a návrat obojživelníků i hnízdících ptáků. Není zveřejněna srovnatelná číselná změna retence.</span><span class="wr-en">AOPK reports blocked drainage, a higher groundwater table and returning amphibians and nesting birds. No comparable numerical retention change is published.</span> <a class="wr-source" href="https://dotace.aopk.gov.cz/-/sedmihorsky-mokrad" target="_blank" rel="noopener noreferrer">AOPK ↗</a></p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="wr-section" id="wetlands">
+      <div class="wr-heading"><div><span class="wr-label"><span class="wr-cs">Evropský kontext</span><span class="wr-en">European context</span></span><h2><span class="wr-cs">Mokřady: Česko a ostatní</span><span class="wr-en">Wetlands: Czechia and peers</span></h2></div><p><span class="wr-cs">Čísla níže jsou vykázané hektary dokončené obnovy. Liší se rok, instituce i typ mokřadu; nejde o pořadí států ani o odhad celkových národních investic.</span><span class="wr-en">These are reported hectares of completed restoration. Year, institution and habitat differ; this is neither a country ranking nor a national investment estimate.</span></p></div>
+      <div class="wr-baseline"><div><span class="wr-label" style="color:#b9d8c7"><span class="wr-cs">Český stav · rok podkladu neuveden</span><span class="wr-en">Czech baseline · underlying year unstated</span></span><strong>~31,200 ha</strong><span><span class="wr-cs">0,4 % rozlohy ČR</span><span class="wr-en">0.4% of Czech land</span></span></div><p><span class="wr-cs">MŽP v hodnocení z roku 2025 uvádí rozlohu mokřadních ekosystémů, bez roku základního měření. Dalších 57 400 ha je plocha vymezených ramsarských lokalit, nikoli další mokřadní plocha k přičtení.</span><span class="wr-en">The environment ministry's 2025 review cites wetland ecosystem area without the underlying measurement year. Its separate 57,400 ha of Ramsar sites is designated-site area, not extra wetland area to add.</span> <a href="https://mzp.gov.cz/system/files/2025-07/OPZPUR-Strednedobe_vyhodnoceni_SPZP2030-20250710.pdf" target="_blank" rel="noopener noreferrer">MŽP 2025, p. 72 ↗</a></p></div>
+      <div class="wr-comparison">
+        <h3><span class="wr-cs">Jednoroční veřejná realizace</span><span class="wr-en">Single-year public delivery</span></h3>
+        <p class="wr-intro"><span class="wr-cs">U Česka chybí srovnatelný národní součet. Ostatní řádky ukazují rozsah vykazování jednotlivých veřejných programů.</span><span class="wr-en">Czechia lacks a comparable national total. The other rows show the reporting scope of particular public programmes.</span></p>
+        <div class="wr-country-grid">
+          <article class="wr-country missing"><b><span class="wr-cs">Česko · ročně</span><span class="wr-en">Czechia · annual</span></b><strong>—</strong><small><span class="wr-cs">Ověřený národní součet dokončených ha nenalezen.</span><span class="wr-en">No verified national completed-ha total found.</span></small></article>
+          <article class="wr-country"><b><span class="wr-cs">Finsko · 2025</span><span class="wr-en">Finland · 2025</span></b><strong>2,798 ha*</strong><small><span class="wr-cs">Metsähallitus: 1 395 ha v chráněných územích + 1 403 ha v hospodářských lesích; obnova rašelinišť.</span><span class="wr-en">Metsähallitus: 1,395 ha in protected areas + 1,403 ha in multiple-use forests; mire restoration.</span></small><a href="https://www.metsa.fi/tiedotteet/ennallistaminen-metsahallitus-tukkinut-suo-ojia-20-luvulla-jo-yli-30-000-hehtaaria/" target="_blank" rel="noopener noreferrer"><span class="wr-cs">*Výpočet PSD ↗</span><span class="wr-en">*PSD calculation ↗</span></a></article>
+          <article class="wr-country"><b><span class="wr-cs">Švédsko · 2025</span><span class="wr-en">Sweden · 2025</span></b><strong>4,850 ha</strong><small><span class="wr-cs">Mokřady obnovené nebo vytvořené z veřejných grantových programů; širší typ zásahu než samotné zavodnění rašelinišť.</span><span class="wr-en">Wetlands restored or created through state grants; a wider intervention than peatland rewetting alone.</span></small><a href="https://www.naturvardsverket.se/amnesomraden/vatmark/resultat-vatmarksarbete/vatmarkssatsningen-2025/" target="_blank" rel="noopener noreferrer">Naturvårdsverket ↗</a></article>
+          <article class="wr-country"><b><span class="wr-cs">Estonsko · 2025</span><span class="wr-en">Estonia · 2025</span></b><strong>8,503 ha</strong><small><span class="wr-cs">Mokřady obnovené státním správcem lesů RMK; není to součet všech estonských realizátorů.</span><span class="wr-en">Wetlands restored by state forest manager RMK; not a total for every Estonian delivery body.</span></small><a href="https://rmk.ee/uudised/blogi/suur-aastakokkuvote-milline-oli-2025-aasta-rmk-looduskaitsetoodes/" target="_blank" rel="noopener noreferrer">RMK ↗</a></article>
+          <article class="wr-country"><b><span class="wr-cs">Skotsko · 2024–25</span><span class="wr-en">Scotland · 2024–25</span></b><strong>~14,860 ha</strong><small><span class="wr-cs">Obnovená rašeliniště v národním programu; finanční rok, nikoli kalendářní 2025.</span><span class="wr-en">Peatland restored in the national programme; fiscal year, not calendar 2025.</span></small><a href="https://www.gov.scot/news/record-levels-of-peatland-restored/" target="_blank" rel="noopener noreferrer">Scottish Government ↗</a></article>
+        </div>
+        <h3 style="margin-top:30px"><span class="wr-cs">Investice a dodaná práce ve stejném období</span><span class="wr-en">Spending and delivery in the same period</span></h3>
+        <p class="wr-intro"><span class="wr-cs">Tohle je benchmark vykazování, ne žebříček ceny hektaru: účel, období i rozsah programů se liší.</span><span class="wr-en">This benchmarks reporting, not the price of a hectare: purpose, period and programme scope differ.</span></p>
+        <div class="wr-finance-grid">
+          <article class="wr-finance missing"><span class="wr-label"><span class="wr-cs">Česko · AOPK · 2024</span><span class="wr-en">Czechia · AOPK · 2024</span></span><strong>20.9 mil. Kč</strong><b><span class="wr-cs">Dokončené ha: nezveřejněny</span><span class="wr-en">Completed ha: not reported</span></b><p><span class="wr-cs">Přiznané dotace na mokřady, tůně a malé nádrže; není to skutečný roční výdaj státu.</span><span class="wr-en">Assigned grants for wetlands, pools and small reservoirs; not actual annual state expenditure.</span></p><a href="https://aopk.gov.cz/documents/20121/1095571/Rocenka%2BAOPK%2B2024_web.pdf/04c3e2a6-039d-58b3-5c20-bf7b1bd78246?t=1756800537466" target="_blank" rel="noopener noreferrer">AOPK 2024, table 12 ↗</a></article>
+          <article class="wr-finance"><span class="wr-label"><span class="wr-cs">Švédsko · 2025</span><span class="wr-en">Sweden · 2025</span></span><strong>SEK 394.647m</strong><b>&gt;4,300 ha</b><p><span class="wr-cs">Skutečné výdaje programu mokřadů Naturvårdsverket; dokončená nebo založená plocha z jeho grantů. Roční zpráva uvádí 4 850 ha jako jeho výstup, novější výsledková stránka tuto hodnotu přiřazuje všem státním grantům; zde používáme užší rozsah.</span><span class="wr-en">Actual wetland programme spending; wetlands restored or created through the agency's grants. Its annual report calls 4,850 ha an agency output, while a later results page assigns that figure to all state grants; this card uses the narrower scope.</span></p><a href="https://www.naturvardsverket.se/491dca/globalassets/media/publikationer-pdf/8900/978-91-620-8952-8.pdf" target="_blank" rel="noopener noreferrer"><span class="wr-cs">Výroční zpráva, tab. 8 ↗</span><span class="wr-en">Annual report, table 8 ↗</span></a> · <a href="https://www.naturvardsverket.se/amnesomraden/vatmark/resultat-vatmarksarbete/vatmarkssatsningen-2025/" target="_blank" rel="noopener noreferrer"><span class="wr-cs">Výsledky ↗</span><span class="wr-en">Results ↗</span></a></article>
+          <article class="wr-finance"><span class="wr-label"><span class="wr-cs">Skotsko · Peatland ACTION · 2022–23</span><span class="wr-en">Scotland · Peatland ACTION · 2022–23</span></span><strong>£17.203m</strong><b>7,547.33 ha</b><p><span class="wr-cs">Skutečné výdaje a obnovená rašeliniště v jednom finančním roce napříč partnery programu. Jiný rok a biotop než švédský řádek.</span><span class="wr-en">Actual spend and peatland restored in one fiscal year across the programme's partners. Different year and habitat from Sweden.</span></p><a href="https://www.gov.scot/publications/eir-202400405764/" target="_blank" rel="noopener noreferrer">Scottish Government, table ↗</a></article>
+        </div>
+        <h3 style="margin-top:30px"><span class="wr-cs">Dokončené víceleté projekty</span><span class="wr-en">Completed multi-year projects</span></h3>
+        <div class="wr-programmes">
+          <article><span class="wr-label"><span class="wr-cs">Česko · Šumava LIFE · 2018–24</span><span class="wr-en">Czechia · Šumava LIFE · 2018–24</span></span><strong>2,183 ha</strong><p><span class="wr-cs">Obnova na české straně přeshraničního projektu; rozpočet €5.845m je za celý projekt včetně Bavorska.</span><span class="wr-en">Restoration on the Czech side of a cross-border project; the €5.845m budget covers the whole project including Bavaria.</span></p><a href="https://www.nationalpark-bayerischer-wald.bayern.de/aktuelles/pressemitteilung/detailansicht.htm?ID=A%2Bs3RgSTi2RhdBcbHWXSAQ%3D%3D" target="_blank" rel="noopener noreferrer">Bavarian National Park ↗</a></article>
+          <article><span class="wr-label"><span class="wr-cs">Finsko · Hydrology LIFE · 2017–23</span><span class="wr-en">Finland · Hydrology LIFE · 2017–23</span></span><strong>5,800 ha</strong><p><span class="wr-cs">Obnovená rašeliniště; rozpočet celého projektu téměř €9m zahrnoval i další jezera, potoky a monitoring. Nejde o cenu samotné obnovy rašelinišť.</span><span class="wr-en">Mires restored; the nearly €9m whole-project budget also covered lakes, streams and monitoring. It is not the cost of mire work alone.</span></p><a href="https://www.metsa.fi/en/project/hydrology-life/" target="_blank" rel="noopener noreferrer">Metsähallitus ↗</a></article>
+          <article><span class="wr-label"><span class="wr-cs">Estonsko · LIFE Mires · 2015–21</span><span class="wr-en">Estonia · LIFE Mires · 2015–21</span></span><strong>~8,000 ha</strong><p><span class="wr-cs">Obnovená rašeliniště v šesti lokalitách; původní rozpočet projektu €2,815,576 a cíl 5 800 ha. Později vykázaný výsledek není účetní uzávěrkou nákladů.</span><span class="wr-en">Mires restored at six sites; original project budget €2,815,576 and target 5,800 ha. The later result is not a final cost statement.</span></p><a href="https://soo.elfond.ee/en/projektist/" target="_blank" rel="noopener noreferrer"><span class="wr-cs">Rozpočet ↗</span><span class="wr-en">Budget ↗</span></a> · <a href="https://environment.ec.europa.eu/news/conserving-and-restoring-mire-habitats-estonia-2024-03-14_en" target="_blank" rel="noopener noreferrer"><span class="wr-cs">Výsledek ↗</span><span class="wr-en">Delivery ↗</span></a></article>
+        </div>
+        <p class="wr-intro" style="margin:18px 0 0"><span class="wr-cs">Další odlišná řada: irský státní podnik Bord na Móna vykázal <strong>19 065 ha kumulativně obnovených rašelinišť k lednu 2025</strong>. Jde o stav od začátku programu, nikoli o výsledek jediného roku nebo srovnání se šumavským projektem.</span><span class="wr-en">Another distinct series: Ireland's state operator Bord na Móna reported <strong>19,065 ha of peatland restored cumulatively by January 2025</strong>. This is a programme-to-date stock, not a single year's delivery or a like-for-like comparison with Šumava.</span> <a class="wr-source" href="https://www.gov.ie/en/department-of-climate-energy-and-the-environment/press-releases/government-approves-climate-action-plan-2025/" target="_blank" rel="noopener noreferrer">Government of Ireland ↗</a></p>
+      </div>
+    </section>
+
+    <section class="wr-section" id="method">
+      <div class="wr-heading"><div><span class="wr-label"><span class="wr-cs">Jak číst scorecard</span><span class="wr-en">How to read this scorecard</span></span><h2><span class="wr-cs">Peníze ≠ hektary ≠ účinek</span><span class="wr-en">Money ≠ hectares ≠ effect</span></h2></div><p><span class="wr-cs">Zásah může být veřejně financován, dokončen a přesto nemít zveřejněné následné měření. Nuly zde neodvozujeme z chybějících dat.</span><span class="wr-en">A project can be publicly financed and completed without published follow-up measurement. Missing data are never turned into zeroes.</span></p></div>
+      <div class="wr-table-wrap"><table class="wr-table"><thead><tr><th><span class="wr-cs">Pohled</span><span class="wr-en">View</span></th><th><span class="wr-cs">Jednotka a stav</span><span class="wr-en">Unit and stage</span></th><th><span class="wr-cs">Co ještě chybí pro úplný český součet</span><span class="wr-en">What is still needed for a Czech total</span></th></tr></thead><tbody>
+        <tr><td><strong><span class="wr-cs">Peníze</span><span class="wr-en">Money</span></strong></td><td><span class="wr-cs">Kč/€, rok; rozpočet, rozhodnutí, smlouva nebo skutečná platba</span><span class="wr-en">CZK/EUR, year; budget, decision, contract or actual payment</span></td><td><span class="wr-cs">Propojit projektové ID mezi MONITOR, IS ReD, DotaceEU, SFŽP a smlouvami; vyloučit převody a smíšené účely.</span><span class="wr-en">Link project IDs across MONITOR, IS ReD, DotaceEU, SFŽP and contracts; remove duplicate transfers and mixed-purpose costs.</span></td></tr>
+        <tr><td><strong><span class="wr-cs">Realizace</span><span class="wr-en">Delivery</span></strong></td><td><span class="wr-cs">Dokončené km koryta, ha mokřadu/nivy, km odvodnění, odstraněné překážky</span><span class="wr-en">Completed channel km, wetland/floodplain ha, drainage km, removed barriers</span></td><td><span class="wr-cs">Závěrečná projektová měření a geometrie; návrhy z mapy AOPK nejsou dokončené zásahy.</span><span class="wr-en">Final project measurements and geometry; AOPK's mapped proposals are not completed work.</span></td></tr>
+        <tr><td><strong><span class="wr-cs">Výsledek</span><span class="wr-en">Outcome</span></strong></td><td><span class="wr-cs">Podzemní voda, vodní režim, stav biotopů a druhů po dokončení</span><span class="wr-en">Groundwater, hydrology, habitat and species status after completion</span></td><td><span class="wr-cs">Výchozí a následné měření se zohledněním počasí a dalších změn v povodí.</span><span class="wr-en">Before-and-after monitoring accounting for weather and other basin changes.</span></td></tr>
+      </tbody></table></div>
+      <div class="wr-method" style="margin-top:12px"><p><span class="wr-cs">Zdroje pro další vrstvu: <a href="https://tokyamokrady.aopk.gov.cz/datove-sady" target="_blank" rel="noopener noreferrer">AOPK mapování toků a mokřadů</a> určuje potřebu zásahů; <a href="https://data.mf.gov.cz/api/monitor-opendata.html" target="_blank" rel="noopener noreferrer">MONITOR</a> a <a href="https://www.dotaceeu.cz/cs/statistiky-a-analyzy/seznam-operaci-%28prijemcu%29" target="_blank" rel="noopener noreferrer">DotaceEU</a> obsahují veřejné finance a projekty. Evropské porovnání odděluje roční institucionální výkony od víceletých projektů. Stav výzkumu: 10. října 2026.</span><span class="wr-en">Sources for the next layer: <a href="https://tokyamokrady.aopk.gov.cz/datove-sady" target="_blank" rel="noopener noreferrer">AOPK stream and wetland mapping</a> describes need; <a href="https://data.mf.gov.cz/api/monitor-opendata.html" target="_blank" rel="noopener noreferrer">MONITOR</a> and <a href="https://www.dotaceeu.cz/cs/statistiky-a-analyzy/seznam-operaci-%28prijemcu%29" target="_blank" rel="noopener noreferrer">DotaceEU</a> hold public finance and projects. The European comparison separates annual institutional delivery from multi-year projects. Research status: 10 October 2026.</span></p></div>
+    </section>
+  </main>
+  <footer><div><span>Public Spending Data</span><small><span class="wr-cs">Voda v krajině · původní zdroje u každé hodnoty</span><span class="wr-en">Water in the landscape · original sources beside each value</span></small></div><a href="#top">↑</a></footer>
+  <script>
+    (() => {
+      const sync = () => {
+        const en = document.documentElement.lang === 'en';
+        document.title = en ? 'Water in the landscape — Public Spending Data' : 'Voda v krajině — Public Spending Data';
+        document.querySelector('meta[name="description"]').content = en
+          ? 'Czech public money, completed projects and measured outcomes for river and wetland restoration in European context.'
+          : 'České veřejné peníze, dokončené projekty a měřené výsledky obnovy vodních toků a mokřadů v evropském kontextu.';
+        window.psdLanguageReady?.();
+      };
+      addEventListener('DOMContentLoaded', sync, {once:true});
+      addEventListener('psdlanguagechange', sync);
+    })();
+  </script>
+</body>
+</html>

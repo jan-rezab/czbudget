@@ -14,6 +14,9 @@
     const match = /\/municipal-expansion\/([a-z]{3})\/([^/]+)\.json(?:\?|$)/.exec(document.body.dataset.profileUrl || "");
     return match ? { country: match[1].toUpperCase(), code: decodeURIComponent(match[2]) } : null;
   })();
+  const czechBudgetLabels = warehouseTarget?.country === "CZE"
+    ? await import(new URL("lib/cz-budget-labels.js", assetRoot).href).then(() => window.CzBudgetLabels).catch(() => null)
+    : null;
   const profileUrl = document.body.dataset.profileRoot
     ? `${document.body.dataset.profileRoot}${franceDepartment(requestedProfileCode)}.v1.json`
     : document.body.dataset.profileUrl;
@@ -29,8 +32,11 @@
   let fxData = null;
   let cityvizorProfiles = [];
   let cityvizorIntegration = null;
+  let cityvizorQuery = "";
+  let cityvizorSort = "payments";
+  let cityvizorShown = 8;
   let sourceReconciliation = null;
-  let displayCurrency = "EUR";
+  let displayCurrency = "native";
   try {
     const storedCurrency = localStorage.getItem("psd-international-municipal-currency");
     if (["native", "EUR", "USD"].includes(storedCurrency)) displayCurrency = storedCurrency;
@@ -40,7 +46,7 @@
     cs: {
       municipalities: "Obce", official: "oficiální obecní finance", code: "Národní kód", latest: "Poslední období",
       revenue: "Příjmy", expenditure: "Výdaje", balance: "Saldo", debt: "Dluh", cashBalance: "Stav účtů", executionRate: "Plnění výdajů", execution: "Čerpání",
-      trend: "Vývoj", historyTitle: "Rozpočet v čase", historyCopy: "Nominální hodnoty v místní měně. Jednotlivé fáze rozpočtu zůstávají oddělené.",
+      trend: "Vývoj", historyTitle: "Rozpočet v čase", historyCopy: "Jednotlivé fáze rozpočtu zůstávají oddělené.",
       onePeriod: "Jeden dostupný rok", onePeriodCopy: "Zdroj zatím poskytuje jeden srovnatelný roční profil. Další roky se zde objeví bez změny rozvržení stránky.",
       budgetKicker: "Rozpočet", budgetTitle: "Plán a skutečnost.", stage: "Fáze", enacted: "Schválený", revised: "Upravený",
       actual: "Skutečnost", cash: "Zaplaceno", paid: "Zaplaceno", committed: "Závazky",
@@ -58,7 +64,7 @@
     en: {
       municipalities: "Municipalities", official: "official municipal finance", code: "National code", latest: "Latest period",
       revenue: "Revenue", expenditure: "Expenditure", balance: "Balance", debt: "Debt", cashBalance: "Cash balance", executionRate: "Expenditure execution", execution: "Execution",
-      trend: "Trend", historyTitle: "Budget over time", historyCopy: "Nominal values in local currency. Budget stages remain separate.",
+      trend: "Trend", historyTitle: "Budget over time", historyCopy: "Budget stages remain separate.",
       onePeriod: "One year available", onePeriodCopy: "The source currently provides one comparable annual profile. Additional years can appear here without changing the page layout.",
       budgetKicker: "Budget", budgetTitle: "Plan and actual.", stage: "Budget stage", enacted: "Approved", revised: "Amended",
       actual: "Actual", cash: "Paid", paid: "Paid", committed: "Committed",
@@ -143,7 +149,11 @@
         ? itemLabels?.localized?.POL?.[row.side]?.[String(row.code || "").slice(0, 3)]
         : null;
       const nativeName = row.name_native || polishLabel?.pl || labels[row.code] || row.code;
-      const englishName = row.name_en || polishLabel?.en || null;
+      const czechEnglishName = warehouseLines.country === "CZE"
+        ? (row.dimension === "functional" ? czechBudgetLabels?.purpose?.[String(row.code || "")]
+          : row.dimension === "economic" ? czechBudgetLabels?.economic?.[String(row.code || "")] : null)
+        : null;
+      const englishName = row.name_en || polishLabel?.en || czechEnglishName || null;
       return {
         year: row.year,
         stage: row.stage,
@@ -333,6 +343,17 @@
     }));
   }
 
+  function currencyContextCopy() {
+    const unit = conversion(profile.latest?.year ?? profile.years?.at(-1)).currency;
+    const converted = unit !== profile.currency;
+    if (lang === "cs") return converted
+      ? "Zobrazené hodnoty jsou přepočtené z " + profile.currency + " na " + unit + " ročním kurzem pro každý rok. " + copy.cs.historyCopy
+      : "Nominální hodnoty v původní měně " + unit + ". " + copy.cs.historyCopy;
+    return converted
+      ? "Displayed values are converted from " + profile.currency + " to " + unit + " at each year's annual rate. " + copy.en.historyCopy
+      : "Nominal values in the source currency " + unit + ". " + copy.en.historyCopy;
+  }
+
   function itemLabelMarkup(row, fallback) {
     const primary = row.name || row.column || row.code || fallback;
     const native = row.name_native && row.name_native !== primary ? row.name_native : null;
@@ -410,40 +431,62 @@
     return `<section class="profile-currency-converter" aria-label="${escapeHtml(t.displayCurrency)}"><div><span>${t.displayCurrency}</span><strong>${escapeHtml(method)}</strong><small>${t.fxCopy}</small></div><div class="profile-currency-options" role="group" aria-label="${escapeHtml(t.displayCurrency)}">${[["native", `${t.nativeCurrency} · ${profile.currency}`], ["EUR", "EUR"], ["USD", "USD"]].map(([currency, label]) => `<button type="button" data-profile-currency="${currency}" class="${displayCurrency === currency ? "active" : ""}" aria-pressed="${displayCurrency === currency}">${escapeHtml(label)}</button>`).join("")}</div>${sourceUrl ? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(applied.provider)} ↗</a>` : ""}</section>`;
   }
 
-  const historyChartFields = (history, fourthLabel, fourthValue) => [
+  const historyChartFields = (history) => [
     { key: "revenue", label: copy[lang].revenue, color: "#47735c", value: (row) => numeric(row.revenue) },
     { key: "expenditure", label: copy[lang].expenditure, color: "#d2674d", value: (row) => numeric(row.expenditure) },
-    { key: "position", label: fourthLabel, color: "#315ba6", value: fourthValue },
   ].filter((field) => history.some((row) => field.value(row) !== null));
+  const historyPositionField = (history, fourthLabel, fourthValue) =>
+    history.some((row) => numeric(fourthValue(row)) !== null)
+      ? { key: "position", label: fourthLabel, color: "#315ba6", value: (row) => numeric(fourthValue(row)) }
+      : null;
 
   function historyChartMarkup(history, fourthLabel, fourthValue) {
-    const t = copy[lang], fields = historyChartFields(history, fourthLabel, fourthValue);
+    const t = copy[lang], fields = historyChartFields(history);
+    const position = historyPositionField(history, fourthLabel, fourthValue);
     const legend = fields.map(field => `<span><i style="background:${field.color}"></i>${escapeHtml(field.label)}</span>`).join("");
     const unit = conversion(history.at(-1)?.year).currency;
     const sourceLabel = profile.country === "CZE" ? (lang === "en" ? "Ministry of Finance FIN 2-12 M municipal returns" : "Výkazy FIN 2-12 M Ministerstva financí") : t.officialSource;
-    return `<figure class="profile-history-figure"><div class="profile-history-legend">${legend}<small>${escapeHtml(unit)}</small></div><div class="profile-history-chart" id="profile-history-chart"></div><figcaption>${lang === "en" ? "Source" : "Zdroj"}: ${profile.source_url ? `<a href="${escapeHtml(profile.source_url)}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)}</a>` : escapeHtml(sourceLabel)}. ${escapeHtml(t.sourceCopy)}</figcaption></figure>`;
+    const peak2023 = profile.country === "CZE" && position && history.find((row) =>
+      Number(row.year) === 2023 && numeric(row.cash) !== null
+      && history.every((other) => numeric(other.cash) === null || Number(other.cash) <= Number(row.cash)));
+    const peakNote = peak2023
+      ? (lang === "en" ? "In the available series, the cash balance peaks in 2023 at " : "V dostupné řadě stav účtů vrcholí v roce 2023 na ")
+        + money(peak2023.cash, true, 2023) + ". "
+        + (lang === "en" ? "The source data here do not explain the cause." : "Zde uvedená zdrojová data příčinu nevysvětlují.")
+      : "";
+    const positionFigure = position ? `<figure class="profile-history-figure profile-position-figure"><h3>${escapeHtml(position.label)} · ${lang === "en" ? "year-end position" : "stav na konci roku"}</h3><p>${lang === "en" ? "A balance is a position, separate from annual revenue and expenditure." : "Stav je veličina k určitému okamžiku, oddělená od ročních příjmů a výdajů."}</p><div class="profile-history-legend"><span><i style="background:${position.color}"></i>${escapeHtml(position.label)}</span><small>${escapeHtml(unit)}</small></div><div class="profile-history-chart" id="profile-position-chart"></div>${peakNote ? `<figcaption>${escapeHtml(peakNote)}</figcaption>` : ""}</figure>` : "";
+    return `<figure class="profile-history-figure"><h3>${lang === "en" ? "Annual revenue and expenditure" : "Roční příjmy a výdaje"}</h3><div class="profile-history-legend">${legend}<small>${escapeHtml(unit)}</small></div><div class="profile-history-chart" id="profile-history-chart"></div><figcaption>${lang === "en" ? "Source" : "Zdroj"}: ${profile.source_url ? `<a href="${escapeHtml(profile.source_url)}" target="_blank" rel="noopener">${escapeHtml(sourceLabel)}</a>` : escapeHtml(sourceLabel)}. ${escapeHtml(t.sourceCopy)}</figcaption></figure>${positionFigure}`;
   }
 
   function bindHistoryChart(history, fourthLabel, fourthValue) {
     const chart = document.querySelector("#profile-history-chart");
-    const fields = historyChartFields(history, fourthLabel, fourthValue);
-    window.PSDPlot.render(chart, {
-      type: "line", rows: history, title: copy[lang].historyTitle,
-      unit: conversion(history.at(-1)?.year).currency, locale: lang === "cs" ? "cs-CZ" : "en-GB",
-      fields: fields.map(field => ({ ...field,
-        value: row => { const raw = field.value(row); return raw === null ? null : raw * conversion(row.year).factor; },
-        format: (_value, row) => money(field.value(row), false, row.year),
-      })),
-    });
+    const fields = historyChartFields(history);
+    const positionChart = document.querySelector("#profile-position-chart");
+    const position = historyPositionField(history, fourthLabel, fourthValue);
+    const renderPlot = (node, series, title) => {
+      if (!node || !series.length) return;
+      window.PSDPlot.render(node, {
+        type: "line", rows: history, title,
+        unit: conversion(history.at(-1)?.year).currency, locale: lang === "cs" ? "cs-CZ" : "en-GB",
+        fields: series.map(field => ({ ...field,
+          value: row => { const raw = field.value(row); return raw === null ? null : raw * conversion(row.year).factor; },
+          format: (_value, row) => money(field.value(row), false, row.year),
+        })),
+      });
+    };
+    renderPlot(chart, fields, lang === "en" ? "Annual revenue and expenditure" : "Roční příjmy a výdaje");
+    if (position) renderPlot(positionChart, [position], fourthLabel);
   }
 
   function historyMarkup(history) {
     const t = copy[lang];
     const methodWarning = profile.country === "FRA"
       ? (lang === "en" ? "These are OFGL main-budget executed-account aggregates. The 2025 accounts are provisional; a missing year is not zero." : "Jde o souhrny OFGL ze skutečných účtů hlavního rozpočtu. Účty za rok 2025 jsou předběžné; chybějící rok není nula.")
-      : t.methodWarning;
-    const fourthLabel = history.some((row) => numeric(row.cash) !== null) ? t.cashBalance : t.debt;
-    const fourthValue = (row) => numeric(row.cash) !== null ? row.cash : row.debt;
+      : profile.country === "CZE" ? t.methodWarning
+        : (lang === "en" ? "Coverage follows the official source. A missing year is not zero, and missing cash or debt is not estimated." : "Rozsah odpovídá oficiálnímu zdroji. Chybějící rok není nula a chybějící stav účtů ani dluh se nedopočítává.");
+    const hasCash = history.some((row) => numeric(row.cash) !== null);
+    const fourthLabel = hasCash ? t.cashBalance : t.debt;
+    const fourthValue = hasCash ? (row) => row.cash : (row) => row.debt;
     if (history.length <= 1) {
       const row = history[0] || {};
       return `<section class="history-explorer single-period-history" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.onePeriod}</span><h2>${t.historyTitle}</h2></div><p>${t.onePeriodCopy}</p></div><div class="history-kpis">${[[t.revenue, row.revenue], [t.expenditure, row.expenditure], [t.balance, row.balance], [fourthLabel, fourthValue(row)]].map(([label, value]) => `<article><span>${label}</span><strong>${money(value, true, row.year)}</strong><small>${row.year || "—"}</small></article>`).join("")}</div></section>`;
@@ -454,7 +497,7 @@
       return sum + amount * conversion(entry.year).factor;
     }, 0);
     const totalCurrency = conversion(history.at(-1)?.year).currency;
-    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${t.historyCopy}</p><p class="method-warning">${methodWarning}</p></div><div class="history-kpis" id="history-kpis"><article class="history-total"><span>${fillTemplate(t.sumOfResults, { years: history.length })}</span><strong>${formatMoney(convertedTotal, totalCurrency)}</strong><small>${history.at(0)?.year}–${history.at(-1)?.year}</small></article></div>${historyChartMarkup(history, fourthLabel, fourthValue)}<details class="history-table" open><summary>${t.historyTitle}</summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.historyTitle)}"><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody id="history-table-body">${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false, row.year)}</td><td>${money(row.expenditure, false, row.year)}</td><td>${money(row.balance, false, row.year)}</td><td>${money(fourthValue(row), false, row.year)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
+    return `<section class="history-explorer" id="history-explorer"><div class="directory-title"><div><span class="kicker">${t.trend} · ${history.at(0)?.year || ""}–${history.at(-1)?.year || ""}</span><h2>${t.historyTitle}</h2></div><p>${currencyContextCopy()}</p><p class="method-warning">${methodWarning}</p></div><div class="history-kpis" id="history-kpis"><article class="history-total"><span>${fillTemplate(t.sumOfResults, { years: history.length })}</span><strong>${formatMoney(convertedTotal, totalCurrency)}</strong><small>${history.at(0)?.year}–${history.at(-1)?.year}</small></article></div>${historyChartMarkup(history, fourthLabel, fourthValue)}<details class="history-table" open><summary>${t.historyTitle}</summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.historyTitle)}"><table><thead><tr><th>${t.year}</th><th>${t.revenue}</th><th>${t.expenditure}</th><th>${t.balance}</th><th>${fourthLabel}</th></tr></thead><tbody id="history-table-body">${[...history].reverse().map((row) => `<tr><th>${row.year}</th><td>${money(row.revenue, false, row.year)}</td><td>${money(row.expenditure, false, row.year)}</td><td>${money(row.balance, false, row.year)}</td><td>${money(fourthValue(row), false, row.year)}</td></tr>`).join("")}</tbody></table></div></details></section>`;
   }
 
   function stageTableMarkup(rows, latestYear) {
@@ -545,7 +588,7 @@
     if (hasHistory) links.push(["history-explorer", t.trend]);
     if (hasFinance) links.push(["rozpocet", hasPlan ? t.budget : t.accounts]);
     if (hasDetail) links.push(["native-detail", profile.summaryOnly ? t.coverage : t.detail]);
-    if (cityvizorIntegration?.matched) links.push(["cityvizor", "CityVizor"]);
+    if (cityvizorIntegration?.matched && cityvizorProfiles.length) links.push(["cityvizor", "CityVizor"]);
     links.push(["metodika", t.method]);
     const rail = document.createElement("nav");
     rail.className = "context-rail municipal-context-rail international-context-rail";
@@ -650,8 +693,56 @@
       const category = lang === "en" ? item.pbo_category_en : item.pbo_category_cs;
       return `<article class="municipal-cityvizor-profile"><header><span>${organization ? (lang === "en" ? "Organization" : "Organizace") : (lang === "en" ? "Municipality profile" : "Profil samosprávy")}</span><small>${category ? `${escapeHtml(category)} · ` : ""}IČO ${escapeHtml(item.ico || "—")}</small></header><h3>${escapeHtml(item.name)}</h3><dl><div><dt>${lang === "en" ? "Invoice-view rows" : "Řádky fakturačního pohledu"}</dt><dd>${number.format(counts.payments || 0)}</dd></div><div><dt>${lang === "en" ? "Accounting rows" : "Účetní řádky"}</dt><dd>${number.format(counts.accounting || 0)}</dd></div><div><dt>${lang === "en" ? "Plans" : "Plány"}</dt><dd>${number.format(counts.plans || 0)}</dd></div></dl><a href="${escapeHtml(profileLink(item))}">${lang === "en" ? "Open records" : "Otevřít záznamy"} →</a></article>`;
     };
-    const shownOrganizations = organizations.slice(0, 8);
-    return `<section class="municipal-cityvizor" id="cityvizor" data-cityvizor-integration="${escapeHtml(cityvizorIntegration.release_id || "")}"><div class="detail-section-title"><div><span class="kicker">CityVizor · ${lang === "en" ? "voluntary transparency layer" : "dobrovolná vrstva transparentnosti"}</span><h2>${lang === "en" ? "Invoices, counterparties and organizations" : "Faktury, protistrany a organizace"}</h2></div><p>${lang === "en" ? "This municipality publishes additional CityVizor detail. These records overlap the national municipal accounts above and are never added to them." : "Tato obec zveřejňuje další detail v CityVizoru. Záznamy se překrývají s národními účty výše a nikdy se k nim nepřičítají."}</p></div><div class="municipal-cityvizor-summary"><article><span>${lang === "en" ? "Published years" : "Publikované roky"}</span><strong>${years.length ? `${years[0]}–${years.at(-1)}` : "—"}</strong><small>${number.format(years.length)} ${lang === "en" ? "years" : "roků"}</small></article><article><span>${lang === "en" ? "Invoice-view rows" : "Řádky fakturačního pohledu"}</span><strong>${number.format(main?.record_counts?.payments || 0)}</strong><small>${lang === "en" ? "not receipts or bank settlements" : "nejde o účtenky ani bankovní úhrady"}</small></article><article><span>${lang === "en" ? "Linked organizations" : "Navázané organizace"}</span><strong>${number.format(organizations.length)}</strong><small>${lang === "en" ? "explicit CityVizor parent links" : "explicitní vazby CityVizoru"}</small></article><article><span>${lang === "en" ? "Latest publication year" : "Poslední publikovaný rok"}</span><strong>${Number.isFinite(latestYear) ? latestYear : "—"}</strong><small>${escapeHtml(cityvizorIntegration.release_id || "")}</small></article></div><div class="municipal-cityvizor-grid">${municipalityProfiles.map((item) => card(item)).join("")}${shownOrganizations.map((item) => card(item, true)).join("")}</div>${organizations.length > shownOrganizations.length ? `<p class="municipal-cityvizor-more">${lang === "en" ? `${number.format(organizations.length - shownOrganizations.length)} more linked organizations are available in the explorer.` : `Dalších ${number.format(organizations.length - shownOrganizations.length)} navázaných organizací je dostupných v průzkumníku.`}</p>` : ""}<div class="detail-actions"><a class="primary-button" href="${assetRoot}cityvizor/?lang=${lang}&ico=${encodeURIComponent(profile.code)}">${lang === "en" ? "Open the complete CityVizor explorer" : "Otevřít celý průzkumník CityVizor"} →</a><a href="/public-data/municipality-cityvizor?ico=${encodeURIComponent(profile.code)}">${lang === "en" ? "Municipality integration JSON" : "Integrační JSON obce"} →</a></div></section>`;
+    return `<section class="municipal-cityvizor" id="cityvizor" data-cityvizor-integration="${escapeHtml(cityvizorIntegration.release_id || "")}"><div class="detail-section-title"><div><span class="kicker">CityVizor · ${lang === "en" ? "voluntary transparency layer" : "dobrovolná vrstva transparentnosti"}</span><h2>${lang === "en" ? "Invoices, counterparties and organizations" : "Faktury, protistrany a organizace"}</h2></div><p>${lang === "en" ? "This municipality publishes additional CityVizor detail. These records overlap the national municipal accounts above and are never added to them." : "Tato obec zveřejňuje další detail v CityVizoru. Záznamy se překrývají s národními účty výše a nikdy se k nim nepřičítají."}</p></div><div class="municipal-cityvizor-summary"><article><span>${lang === "en" ? "Published years" : "Publikované roky"}</span><strong>${years.length ? `${years[0]}–${years.at(-1)}` : "—"}</strong><small>${number.format(years.length)} ${lang === "en" ? "years" : "roků"}</small></article><article><span>${lang === "en" ? "Invoice-view rows" : "Řádky fakturačního pohledu"}</span><strong>${number.format(main?.record_counts?.payments || 0)}</strong><small>${lang === "en" ? "not receipts or bank settlements" : "nejde o účtenky ani bankovní úhrady"}</small></article><article><span>${lang === "en" ? "Linked organizations" : "Navázané organizace"}</span><strong>${number.format(organizations.length)}</strong><small>${lang === "en" ? "explicit CityVizor parent links" : "explicitní vazby CityVizoru"}</small></article><article><span>${lang === "en" ? "Latest year in records" : "Poslední rok v záznamech"}</span><strong>${Number.isFinite(latestYear) ? latestYear : "—"}</strong><small>${lang === "en" ? "Record year, not publication date" : "Rok záznamů, nikoli datum zveřejnění"}</small></article></div><div class="municipal-cityvizor-grid">${municipalityProfiles.map((item) => card(item)).join("")}</div>${cityvizorExplorerMarkup()}<div class="detail-actions"><a class="primary-button" href="${assetRoot}cityvizor/?lang=${lang}&ico=${encodeURIComponent(profile.code)}">${lang === "en" ? "Open the complete CityVizor explorer" : "Otevřít celý průzkumník CityVizor"} →</a><a href="/public-data/municipality-cityvizor?ico=${encodeURIComponent(profile.code)}">${lang === "en" ? "Municipality integration JSON" : "Integrační JSON obce"} →</a></div></section>`;
+  }
+
+  function filteredCityvizorOrganizations() {
+    const query = cityvizorQuery.trim().toLocaleLowerCase();
+    const rows = (cityvizorIntegration?.organizations || []).filter((item) =>
+      !query || [item.name, item.ico, item.pbo_category_en, item.pbo_category_cs]
+        .some((value) => String(value || "").toLocaleLowerCase().includes(query)));
+    return rows.sort((a, b) => {
+      if (cityvizorSort === "name") return String(a.name || "").localeCompare(String(b.name || ""), lang === "cs" ? "cs" : "en");
+      const key = cityvizorSort === "plans" ? "plans" : "payments";
+      return Number(b.record_counts?.[key] || 0) - Number(a.record_counts?.[key] || 0)
+        || String(a.name || "").localeCompare(String(b.name || ""), lang === "cs" ? "cs" : "en");
+    });
+  }
+
+  function cityvizorResultsMarkup() {
+    const number = new Intl.NumberFormat(lang === "cs" ? "cs-CZ" : "en-GB");
+    const rows = filteredCityvizorOrganizations();
+    const visible = rows.slice(0, cityvizorShown);
+    const cards = visible.map((item) => {
+      const category = lang === "en" ? item.pbo_category_en : item.pbo_category_cs;
+      const counts = item.record_counts || {};
+      const available = (item.available_years || []).map(Number).filter(Number.isFinite);
+      const year = available.length ? `&year=${Math.max(...available)}` : "";
+      const url = `${assetRoot}cityvizor/?lang=${lang}&profile=${encodeURIComponent(item.key)}${year}`;
+      return `<article class="municipal-cityvizor-profile"><header><span>${escapeHtml(category || (lang === "en" ? "Organization" : "Organizace"))}</span><small>IČO ${escapeHtml(item.ico || "—")}</small></header><h3>${escapeHtml(item.name)}</h3><dl><div><dt>${lang === "en" ? "Invoice-view rows" : "Řádky fakturačního pohledu"}</dt><dd>${number.format(counts.payments || 0)}</dd></div><div><dt>${lang === "en" ? "Plans" : "Plány"}</dt><dd>${number.format(counts.plans || 0)}</dd></div></dl><a href="${escapeHtml(url)}">${lang === "en" ? "Open records" : "Otevřít záznamy"} →</a></article>`;
+    }).join("");
+    return {
+      cards: cards || `<p class="profile-empty-note">${lang === "en" ? "No linked organizations match this search." : "Vyhledávání neodpovídá žádné navázané organizaci."}</p>`,
+      count: lang === "en"
+        ? `Showing ${number.format(visible.length)} of ${number.format(rows.length)} matching organizations`
+        : `Zobrazeno ${number.format(visible.length)} z ${number.format(rows.length)} odpovídajících organizací`,
+      more: visible.length < rows.length,
+    };
+  }
+
+  function cityvizorExplorerMarkup() {
+    if (!(cityvizorIntegration?.organizations || []).length) return "";
+    const result = cityvizorResultsMarkup();
+    return `<div class="cityvizor-explorer"><h3>${lang === "en" ? "Explore linked organizations" : "Procházet navázané organizace"}</h3><p>${lang === "en" ? "Search by name or registration number. Sorting uses record counts, not spending amounts." : "Hledejte podle názvu nebo IČO. Řazení používá počty záznamů, nikoli částky výdajů."}</p><div class="cityvizor-explorer-controls"><label><span>${lang === "en" ? "Search organizations" : "Hledat organizace"}</span><input id="cityvizor-search" type="search" placeholder="${lang === "en" ? "Name or IČO" : "Název nebo IČO"}" value="${escapeHtml(cityvizorQuery)}"></label><label><span>${lang === "en" ? "Sort by" : "Seřadit podle"}</span><select id="cityvizor-sort"><option value="payments"${cityvizorSort === "payments" ? " selected" : ""}>${lang === "en" ? "Invoice-view rows" : "Řádky fakturačního pohledu"}</option><option value="plans"${cityvizorSort === "plans" ? " selected" : ""}>${lang === "en" ? "Plan rows" : "Řádky plánů"}</option><option value="name"${cityvizorSort === "name" ? " selected" : ""}>${lang === "en" ? "Name" : "Název"}</option></select></label></div><div class="municipal-cityvizor-grid" id="cityvizor-organization-grid">${result.cards}</div><p class="municipal-cityvizor-more" id="cityvizor-organization-count" aria-live="polite">${result.count}</p><button id="cityvizor-organization-more" class="load-more" type="button"${result.more ? "" : " hidden"}>${lang === "en" ? "Show more organizations" : "Zobrazit další organizace"}</button></div>`;
+  }
+
+  function refreshCityvizorExplorer() {
+    const grid = document.querySelector("#cityvizor-organization-grid");
+    if (!grid) return;
+    const result = cityvizorResultsMarkup();
+    grid.innerHTML = result.cards;
+    document.querySelector("#cityvizor-organization-count").textContent = result.count;
+    document.querySelector("#cityvizor-organization-more").hidden = !result.more;
   }
 
   function bindControls() {
@@ -661,6 +752,20 @@
       try { localStorage.setItem("psd-international-municipal-currency", displayCurrency); } catch {}
       render();
     }));
+    document.querySelector("#cityvizor-search")?.addEventListener("input", (event) => {
+      cityvizorQuery = event.target.value;
+      cityvizorShown = 8;
+      refreshCityvizorExplorer();
+    });
+    document.querySelector("#cityvizor-sort")?.addEventListener("change", (event) => {
+      cityvizorSort = event.target.value;
+      cityvizorShown = 8;
+      refreshCityvizorExplorer();
+    });
+    document.querySelector("#cityvizor-organization-more")?.addEventListener("click", () => {
+      cityvizorShown += 8;
+      refreshCityvizorExplorer();
+    });
     document.querySelector("#profile-detail-search")?.addEventListener("input", (event) => { detailQuery = event.target.value; resetAndRefresh(); });
     document.querySelector("#profile-detail-stage")?.addEventListener("change", (event) => { detailStage = event.target.value; resetAndRefresh(); });
     document.querySelector("#profile-detail-year")?.addEventListener("change", (event) => { detailYear = event.target.value; resetAndRefresh(); });
@@ -693,6 +798,7 @@
 
   function render() {
     document.querySelector('#profile-history-chart')?.__psdChartCleanup?.();
+    document.querySelector('#profile-position-chart')?.__psdChartCleanup?.();
     const t = copy[lang];
     const country = countries[profile.country] || { cs: profile.country, en: profile.country, slug: String(profile.country || "").toLocaleLowerCase() };
     const history = [...(profile.history || [])].sort((a, b) => Number(a.year) - Number(b.year));
@@ -756,25 +862,26 @@
     const auditRows=sourceReconciliation?.mismatches?.filter(row=>row.ico===profile.code)||[];
     const auditExpense=auditRows.find(row=>row.measure==='expense_actual');
     const auditNote=auditExpense?`<p class="detail-source-exception">${lang==='en'?`The official 2025 detailed and summary exports differ by CZK ${new Intl.NumberFormat('en-GB').format(Math.abs(Number(auditExpense.difference)))} in expenditure. The published detail is preserved; see the reconciliation.`:`Oficiální podrobný a souhrnný export za rok 2025 se ve výdajích liší o ${new Intl.NumberFormat('cs-CZ').format(Math.abs(Number(auditExpense.difference)))} Kč. Podrobná data zachováváme; viz kontrola součtů.`} <a href="${assetRoot}data/czech-municipal-reconciliation.v1.json">${lang==='en'?'Source check':'Kontrola zdroje'}</a></p>`:'';
-    const cityvizorLink=cityvizorProfiles.length?`<a href="${assetRoot}cityvizor/?lang=${lang}&ico=${encodeURIComponent(profile.code)}">${lang==='en'?'Explore CityVizor records':'Procházet záznamy CityVizor'}</a>`:'';
+    const cityvizorLink=cityvizorIntegration?.matched && cityvizorProfiles.length?`<a href="${assetRoot}cityvizor/?lang=${lang}&ico=${encodeURIComponent(profile.code)}">${lang==='en'?'Explore CityVizor records':'Procházet záznamy CityVizor'}</a>`:'';
     const plzenSpecial = profile.country === "CZE" && profile.code === "00075370"
       ? `<a href="${assetRoot}deep-dives/plzen-contracts/?lang=${lang}">${t.plzenSpecial}</a>`
       : "";
     document.querySelector("main").innerHTML = `<nav class="breadcrumbs"><a href="${assetRoot}municipalities/?lang=${lang}">${t.municipalities}</a><span>›</span><a href="${assetRoot}${country.profileRoot || `municipalities/${country.slug}`}/?lang=${lang}">${escapeHtml(country[lang])}</a><span>›</span><strong>${escapeHtml(profile.name)}</strong></nav>
-      <section class="detail-hero" id="overview"><div><span class="eyebrow"><i class="live-dot"></i>${escapeHtml(country[lang])} · ${t.official}</span><h1>${escapeHtml(profile.name)}</h1><p>${t.code} ${escapeHtml(profile.code)}${profile.region ? ` · ${escapeHtml(profile.region)}` : ""}. ${t.sourceCopy}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">${t.budget} ${latestYear} <b>↓</b></a><a href="#native-detail">${t.nativeKicker}</a>${plzenSpecial}${cityvizorLink}<a href="${escapeHtml(profileUrl)}" download>${t.profileData}</a></div></div><aside class="detail-score"><span>${executionRate !== null ? t.executionRate : t.latest}</span><strong>${executionRate !== null ? percentage(executionRate) : latestYear || "—"}</strong><small>${executionRate !== null ? `${t.actual} / ${t.revised}` : escapeHtml(profile.currency)}</small></aside></section>
+      <section class="detail-hero" id="overview"><div><span class="eyebrow"><i class="live-dot"></i>${escapeHtml(country[lang])} · ${t.official}</span><h1>${escapeHtml(profile.name)}</h1><p>${t.code} ${escapeHtml(profile.code)}${profile.region ? ` · ${escapeHtml(profile.region)}` : ""}. ${t.sourceCopy}</p><div class="detail-actions"><a class="primary-button" href="#rozpocet">${t.budget} ${latestYear} <b>↓</b></a><a href="#native-detail">${t.nativeKicker}</a>${plzenSpecial}${cityvizorLink}<a href="${escapeHtml(profileUrl)}" download>${t.profileData}</a></div></div><aside class="detail-score"><span>${executionRate !== null ? t.executionRate : t.latest}</span><strong>${executionRate !== null ? percentage(executionRate) : latestYear || "—"}</strong><small>${executionRate !== null ? `${t.actual} ${money(actualExpenditure, true)} / ${t.revised} ${money(revisedExpenditure, true)}` : escapeHtml(profile.currency)}</small></aside></section>
       ${auditNote}
       <section class="detail-kpis">${[[t.revenue, latest.revenue, latestYear], [t.expenditure, latest.expenditure, latestYear], [t.balance, latest.balance, latestYear], fourthMetric].map(([label, value, note], index) => `<article><span>${label}</span><strong class="${index === 2 && numeric(value) !== null ? (Number(value) >= 0 ? "positive" : "negative") : ""}">${index === 3 && label === t.executionRate ? percentage(value) : money(value)}</strong><small>${numeric(value) !== null ? note : t.noValue}</small></article>`).join("")}</section>
       ${currencyControlMarkup(latestYear)}
       ${historyMarkup(history)}
-      <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${t.historyCopy}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(financialDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
+      <section class="detail-analysis" id="rozpocet"><div class="detail-section-title"><div><span class="kicker">${t.budgetKicker} ${latestYear}</span><h2>${t.budgetTitle}</h2></div><p>${currencyContextCopy()}</p></div><article class="detail-panel plan-panel">${stageTableMarkup(financialDetail, latestYear)}</article><div class="detail-grid">${mixMarkup(t.revenueMix, revenueMix, ["#a8b63f", "#86b6ff", "#ffb36b"])}${mixMarkup(t.expenditureMix, expenditureMix, ["#171a19", "#47735c", "#d2674d"])}</div>
         <section class="native-detail-explorer" id="native-detail"><div class="breakdown-heading"><div><span class="kicker">${nativeKicker}</span><h2>${nativeTitle}</h2></div><p>${nativeCopy}</p></div>${presentation.controls}<div class="detail-side-tabs" role="group" aria-label="${escapeHtml(t.side)}"><button type="button" data-detail-side="expenditure" class="${detailSide === "expenditure" ? "active" : ""}" aria-pressed="${detailSide === "expenditure"}">${t.spendingTab}</button><button type="button" data-detail-side="revenue" class="${detailSide === "revenue" ? "active" : ""}" aria-pressed="${detailSide === "revenue"}">${t.incomeTab}</button></div><div class="expanded-detail-controls"><label><span>${t.search}</span><input id="profile-detail-search" type="search" placeholder="${t.searchPlaceholder}" value="${escapeHtml(detailQuery)}"></label><label><span>${t.year}</span><select id="profile-detail-year"><option value="all">${t.allYears}</option>${detailYears.map((year) => `<option value="${year}"${String(year) === detailYear ? " selected" : ""}>${year}</option>`).join("")}</select></label><label><span>${t.stage}</span><select id="profile-detail-stage"><option value="all">${t.allStages}</option>${stages.map((stage) => `<option value="${escapeHtml(stage)}"${stage === detailStage ? " selected" : ""}>${escapeHtml(t[stage] || stage)}</option>`).join("")}</select></label></div><div id="profile-detail-visual-wrap">${visualDetailMarkup()}</div><details class="raw-detail-audit"><summary><span>${t.rawRows}</span><strong>${t.rawRowsOpen} · <b id="profile-detail-count"></b></strong></summary><div class="profile-table-scroll" role="region" tabindex="0" aria-label="${escapeHtml(t.nativeTableLabel)}"><table id="profile-detail"></table></div><button id="profile-detail-more" class="load-more" type="button"></button></details></section>
       </section>
       ${cityvizorSectionMarkup()}
       <section class="data-contract" id="metodika"><div><span class="kicker">${t.sourceKicker}</span><h2>${t.sourceTitle}</h2><p>${t.sourceCopy}</p></div><div class="source-list"><a href="${escapeHtml(profile.source_url || document.body.dataset.source)}" target="_blank" rel="noopener"><span>${t.officialSource}</span><strong>${t.open}</strong></a>${detailSourceLinks(t)}${profile.approved_budget_url ? `<a href="${escapeHtml(profile.approved_budget_url)}" target="_blank" rel="noopener"><span>${t.approvedBudget} ${escapeHtml(profile.approved_budget_year)}</span><strong>${t.open}</strong></a>` : ""}${profile.region_source_url ? `<a href="${escapeHtml(profile.region_source_url)}" target="_blank" rel="noopener"><span>${t.regionalAccounts}</span><strong>${t.open}</strong></a>` : ""}<a href="${escapeHtml(profileUrl)}"><span>${t.profileData}</span><strong>${t.json}</strong></a>${document.body.dataset.historyUrl ? `<a href="${escapeHtml(document.body.dataset.historyUrl)}"><span>${t.historyData}</span><strong>${t.json}</strong></a>` : ""}</div></section>`;
     contextRail();
     if (history.length > 1) {
-      const fourthValue = (row) => numeric(row.cash) !== null ? numeric(row.cash) : numeric(row.debt);
-      const fourthLabel = history.some((row) => numeric(row.cash) !== null) ? t.cashBalance : t.debt;
+      const hasCash = history.some((row) => numeric(row.cash) !== null);
+      const fourthValue = hasCash ? (row) => row.cash : (row) => row.debt;
+      const fourthLabel = hasCash ? t.cashBalance : t.debt;
       bindHistoryChart(history, fourthLabel, fourthValue);
     }
     renderDetailTable();

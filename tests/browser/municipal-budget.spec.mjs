@@ -339,6 +339,32 @@ test("overview keeps the cash stock distinct from annual budget flows", async ({
   await expect(page.locator("#evidence-list").getByRole("link", { name: /Hlídač státu/ })).toBeVisible();
 });
 
+test("every Czech budget viewer starts in CZK and converts budget views by year", async ({ page }) => {
+  await fixtureCity(page);
+  await open(page);
+  const rates = await (await page.request.get('/data/municipal-fx-rates.v1.json')).json();
+  const expected = (value, year, currency) => {
+    const localPerUsd = rates.rates.CZE.years[year].local_per_usd;
+    const factor = (currency === 'EUR' ? rates.eur_per_usd[year] : 1) / localPerUsd;
+    return `${new Intl.NumberFormat('en-GB', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value * factor)} ${currency}`;
+  };
+  await expect(page.locator('#budget-currency')).toHaveValue('CZK');
+  await page.locator('#exact-figures summary').click();
+  await expect(page.locator('#exact-figures-body')).toContainText('3,000,000.00 CZK');
+  await page.locator('#budget-currency').selectOption('EUR');
+  await expect(page).toHaveURL(/currency=EUR/);
+  await expect(page.locator('#exact-figures-body')).toContainText(expected(3_000_000, 2025, 'EUR'));
+  await expect(page.locator('#budget-status')).toContainText('EUR');
+  await expect(page.locator('#records-statements')).toContainText('3,100,000.00 CZK');
+  await page.locator('#budget-year').selectOption('2024');
+  await expect(page.locator('#exact-figures-body')).toContainText(expected(2_750_000, 2024, 'EUR'));
+  await page.locator('#budget-currency').selectOption('USD');
+  await page.reload();
+  await expect(page.locator('#budget-app')).toHaveAttribute('data-ready', 'true');
+  await expect(page.locator('#budget-currency')).toHaveValue('USD');
+  await expect(page.locator('#exact-figures-body')).toContainText(expected(2_750_000, 2024, 'USD'));
+});
+
 test("a municipality without published records shows the shared tier only", async ({ page }) => {
   const city = { ico: "00099999", name: "Fixtureville", territory: "999999", profileKey: "cityvizor.cz/999", profileName: "Fixtureville" };
   await fixtureCity(page, { city, records: false });

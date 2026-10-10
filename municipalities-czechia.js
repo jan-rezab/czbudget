@@ -114,16 +114,31 @@
     return `<article class="municipal-ranking-card ${tone}"><header><span>${title}</span><small>${subtitle}</small></header><ol>${entities.map((entity,index)=>{const value=entity.amounts[field],href=municipalityHref(entity);return `<li><a href="${escapeHtml(href)}"><span class="municipal-rank-number">${String(index+1).padStart(2,"0")}</span><span class="municipal-rank-name"><strong>${escapeHtml(entity.short_name)}</strong><small>${escapeHtml(entity.territory.region_name)}</small></span><i><b style="width:${(Math.abs(value)/maximum*100).toFixed(2)}%"></b></i><em>${field==="budget_balance"&&value>0?"+":""}${format(value)}</em></a></li>`;}).join("")}</ol></article>`;
   }
 
+  function rankedBudgets(title,subtitle,entities){
+    const maximum=Math.max(...entities.map((entity)=>entity.amounts.expense_actual),1);
+    const currentLabel=english()?"Opex":"Běžné";
+    const capitalLabel=english()?"Capex":"Kapitálové";
+    const currentLegend=english()?"Opex · current":"Běžné výdaje";
+    const capitalLegend=english()?"Capex · capital":"Kapitálové výdaje";
+    return `<article class="municipal-ranking-card scale"><header><span>${title}</span><small>${subtitle}</small><div class="municipal-budget-legend"><span><i class="current"></i>${currentLegend}</span><span><i class="capital"></i>${capitalLegend}</span></div></header><ol>${entities.map((entity,index)=>{
+      const amounts=entity.amounts,total=amounts.expense_actual,current=amounts.current_expense,capital=amounts.capital_expense;
+      const hasSplit=Number.isFinite(current)&&Number.isFinite(capital)&&current>=0&&capital>=0&&Math.abs(current+capital-total)<1;
+      const bar=`<span class="municipal-budget-bar" aria-hidden="true">${hasSplit?`<b class="current" style="width:${(current/maximum*100).toFixed(2)}%"></b><b class="capital" style="width:${(capital/maximum*100).toFixed(2)}%"></b>`:""}</span>`;
+      const split=hasSplit?`<span class="municipal-budget-parts"><span>${currentLabel} <strong>${format(current)}</strong></span><span>${capitalLabel} <strong>${format(capital)}</strong></span></span>`:`<span class="municipal-budget-parts">${english()?"Expenditure split unavailable":"Členění výdajů není dostupné"}</span>`;
+      return `<li><a href="${escapeHtml(municipalityHref(entity))}"><span class="municipal-rank-number">${String(index+1).padStart(2,"0")}</span><span class="municipal-rank-name"><strong>${escapeHtml(entity.short_name)}</strong><small>${escapeHtml(entity.territory.region_name)}</small></span><em>${format(total)}</em>${bar}${split}</a></li>`;
+    }).join("")}</ol></article>`;
+  }
+
   function renderBudgetRankings(){
     const entities=state.data.municipalities.filter((entity)=>Number.isFinite(entity.amounts?.expense_actual)&&Number.isFinite(entity.amounts?.budget_balance));
-    const largest=[...entities].sort((a,b)=>b.amounts.expense_actual-a.amounts.expense_actual).slice(0,8);
+    const largest=[...entities].sort((a,b)=>b.amounts.expense_actual-a.amounts.expense_actual).slice(0,13);
     const surplus=[...entities].filter((entity)=>entity.amounts.budget_balance>=0).sort((a,b)=>b.amounts.budget_balance-a.amounts.budget_balance).slice(0,8);
     const deficit=[...entities].filter((entity)=>entity.amounts.budget_balance<0).sort((a,b)=>a.amounts.budget_balance-b.amounts.budget_balance).slice(0,8);
     const surplusCount=entities.filter((entity)=>entity.amounts.budget_balance>=0).length,deficitCount=entities.length-surplusCount;
     const share=decimal=>`${decimal.toLocaleString(english()?"en-GB":"cs-CZ",{maximumFractionDigits:1})} %`;
     document.querySelector("#municipal-balance-split").innerHTML=`<article><span>${english()?"Municipalities in surplus":"Obce v přebytku"}</span><strong>${integer(surplusCount)}</strong><small>${share(surplusCount/entities.length*100)}</small></article><article><span>${english()?"Municipalities in deficit":"Obce ve schodku"}</span><strong>${integer(deficitCount)}</strong><small>${share(deficitCount/entities.length*100)}</small></article><p>${english()?"Together, all municipalities finished 2025 at":"Všechny obce dohromady uzavřely rok 2025 výsledkem"} <strong>${state.data.summary.municipalities.budget_balance>=0?"+":""}${format(state.data.summary.municipalities.budget_balance)}</strong>.</p>`;
-    const labels=english()?{largest:"Largest budgets",largestSub:"Actual expenditure · 2025",surplus:"Largest surpluses",surplusSub:"Revenue minus expenditure · 2025",deficit:"Largest deficits",deficitSub:"Revenue minus expenditure · 2025"}:{largest:"Největší rozpočty",largestSub:"Skutečné výdaje · 2025",surplus:"Největší přebytky",surplusSub:"Příjmy minus výdaje · 2025",deficit:"Největší schodky",deficitSub:"Příjmy minus výdaje · 2025"};
-    document.querySelector("#municipal-ranking-grid").innerHTML=rankedRows(labels.largest,labels.largestSub,largest,"expense_actual","scale")+rankedRows(labels.surplus,labels.surplusSub,surplus,"budget_balance","surplus")+rankedRows(labels.deficit,labels.deficitSub,deficit,"budget_balance","deficit");
+    const labels=english()?{largest:"Largest budgets",largestSub:"2025 actual expenditure · opex / capex",surplus:"Largest surpluses",surplusSub:"Revenue minus expenditure · 2025",deficit:"Largest deficits",deficitSub:"Revenue minus expenditure · 2025"}:{largest:"Největší rozpočty",largestSub:"Skutečné výdaje 2025 · běžné / kapitálové",surplus:"Největší přebytky",surplusSub:"Příjmy minus výdaje · 2025",deficit:"Největší schodky",deficitSub:"Příjmy minus výdaje · 2025"};
+    document.querySelector("#municipal-ranking-grid").innerHTML=rankedBudgets(labels.largest,labels.largestSub,largest)+rankedRows(labels.surplus,labels.surplusSub,surplus,"budget_balance","surplus")+rankedRows(labels.deficit,labels.deficitSub,deficit,"budget_balance","deficit");
   }
 
   function searchedMunicipalities(){

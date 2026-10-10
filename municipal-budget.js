@@ -4,7 +4,7 @@
   // or ?ico=). Sections appear only when the municipality publishes their data:
   //   every municipality  -> overview, where the money goes, life in the city, sources
   //   CityVizor profile   -> published records (statements, projects, ledger, IT)
-  //   an extension entry  -> districts, contracts, city companies (lib/municipal-budget-extensions.js)
+  //   an extension entry  -> districts, contracts, city companies (extensions registry)
   const app = document.querySelector('#budget-app');
   const query = new URLSearchParams(location.search);
   const lang = ['en', 'cs'].includes(query.get('lang')) ? query.get('lang') : document.documentElement.lang === 'cs' ? 'cs' : 'en';
@@ -36,26 +36,38 @@
   const client = Data.createClient({ ico });
   const monitor = year => Data.monitorUrl(ico, year);
   const views = ['services', 'cost', 'revenue'], recordTabs = ['statements', 'projects', 'ledger', 'it', 'companies'];
-  const state = { year: Number(query.get('year')) || null, unit: query.get('unit') === 'per-capita' ? 'per-capita' : 'total', trend: query.get('trend') === 'split' ? 'split' : 'balance', stage: 'actual', view: views.includes(query.get('view')) ? query.get('view') : 'services', group: query.get('group') || '', purpose: query.get('purpose') || null, records: recordTabs.includes(query.get('records')) ? query.get('records') : 'statements', ledgerPurpose: null, ledgerKind: 'payments', ledgerPage: 0, projectService: 'all', project: query.get('project') || null, projectTab: 'invoices', projectVendor: null, detail: null, payments: null, context: null, livingCost: null, overview: null, request: 0 };
+  const state = { year: Number(query.get('year')) || null, unit: query.get('unit') === 'per-capita' ? 'per-capita' : 'total', currency: ['EUR', 'USD'].includes(query.get('currency')) ? query.get('currency') : 'CZK', trend: query.get('trend') === 'split' ? 'split' : 'balance', stage: 'actual', view: views.includes(query.get('view')) ? query.get('view') : 'services', group: query.get('group') || '', purpose: query.get('purpose') || null, records: recordTabs.includes(query.get('records')) ? query.get('records') : 'statements', ledgerPurpose: null, ledgerKind: 'payments', ledgerPage: 0, projectService: 'all', project: query.get('project') || null, projectTab: 'invoices', projectVendor: null, detail: null, payments: null, context: null, livingCost: null, overview: null, request: 0 };
   const itState = { profiles: [], key: null, item: 'it', result: null, loaded: false, loading: false, vendor: null, page: 0, request: 0, error: null, started: false };
   const itLabels = { 'it': ['All identified IT · five codes', 'Veškeré doložitelné IT · pět položek'], '5168': ['Data processing & ICT services', 'Zpracování dat a ICT služby'], '5042': ['Software usage fees', 'Odměny za užití programů'], '5172': ['Small software purchases', 'Programové vybavení pod limitem'], '6111': ['Software capital assets', 'Programové vybavení · investice'], '6125': ['Computing equipment', 'Výpočetní technika'], '5162': ['Telecommunications · separate', 'Elektronické komunikace · samostatně'] };
   const chartControllers = new Map();
-  let chartReady = false, statements = null, nodes = [];
+  let chartReady = false, statements = null, nodes = [], fxData = null;
 
   const city = () => state.overview.city, ext = () => state.overview.extension, records = () => state.overview.records;
   const name = row => lang === 'cs' ? row.name_cs || row.name || row.code : row.name_en || (row.dimension === 'economic' && Labels?.economic[row.code]) || (row.dimension === 'functional' && Labels?.purpose[row.code]) || row.name_cs || row.name || row.code;
   const projectName = row => lang === 'en' && ext()?.projectNames?.[row.code] || row.name || T('Project not identified', 'Akce neurčena');
   const yearRow = () => state.overview.history.find(row => row.year === state.year);
-  const shownValue = (value, row = yearRow()) => state.unit === 'per-capita' ? Number.isFinite(value) && row?.population_mid_year > 0 ? value / row.population_mid_year : null : value;
-  const unit = () => state.unit === 'per-capita' ? T('CZK per resident', 'Kč na obyvatele') : T('CZK · nominal', 'Kč · běžné ceny');
-  const shownMoney = value => state.unit === 'per-capita' ? `${number(shownValue(value), 0)} ${T('CZK', 'Kč')}` : money(value);
-  const displayedExact = value => `${exact(value)}${state.unit === 'per-capita' ? T(' / resident', ' / obyv.') : ''}`;
+  const fxFactor = year => {
+    if (state.currency === 'CZK') return 1;
+    const localPerUsd = fxData?.rates?.CZE?.years?.[year]?.local_per_usd;
+    const euroPerUsd = fxData?.eur_per_usd?.[year];
+    return Number.isFinite(localPerUsd) && localPerUsd > 0 && Number.isFinite(euroPerUsd) && euroPerUsd > 0
+      ? (state.currency === 'EUR' ? euroPerUsd : 1) / localPerUsd : null;
+  };
+  const budgetValue = (value, year = state.year) => Number.isFinite(value) && fxFactor(year) !== null ? value * fxFactor(year) : null;
+  const currencyLabel = () => state.currency === 'CZK' && lang === 'cs' ? 'Kč' : state.currency;
+  const budgetMoney = value => `${short(value)} ${currencyLabel()}`;
+  const budgetExact = (value, year = state.year) => Number.isFinite(budgetValue(value, year)) ? `${new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(budgetValue(value, year))} ${currencyLabel()}` : `— ${currencyLabel()}`;
+  const shownValue = (value, row = yearRow()) => state.unit === 'per-capita' ? Number.isFinite(value) && row?.population_mid_year > 0 ? budgetValue(value, row.year) / row.population_mid_year : null : budgetValue(value, row?.year);
+  const unit = () => state.unit === 'per-capita' ? `${currencyLabel()} ${T('per resident', 'na obyvatele')}` : `${currencyLabel()} · ${T('nominal', 'běžné ceny')}`;
+  const shownMoney = value => budgetMoney(shownValue(value));
+  const displayedExact = value => `${Number.isFinite(value) ? new Intl.NumberFormat(locale, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) : '—'} ${currencyLabel()}${state.unit === 'per-capita' ? T(' / resident', ' / obyv.') : ''}`;
+  const budgetSigned = value => `${value > 0 ? '+' : ''}${budgetMoney(value)}`;
   const stageLabel = stage => ({ actual: T('Actual', 'Skutečnost'), approved: T('Approved budget', 'Schválený rozpočet'), adjusted: T('Revised budget', 'Upravený rozpočet') })[stage];
   function writeURL() {
     const url = new URL(location.href);
     const set = (key, value, fallback) => { if (value && value !== fallback) url.searchParams.set(key, value); else url.searchParams.delete(key); };
     url.searchParams.set('year', state.year); url.searchParams.set('lang', lang);
-    set('unit', state.unit, 'total'); set('trend', state.trend, 'balance'); set('view', state.view, 'services'); set('group', state.group); set('purpose', state.purpose); set('records', records() ? state.records : '', 'statements'); set('project', state.records === 'projects' ? state.project : '');
+    set('unit', state.unit, 'total'); set('currency', state.currency, 'CZK'); set('trend', state.trend, 'balance'); set('view', state.view, 'services'); set('group', state.group); set('purpose', state.purpose); set('records', records() ? state.records : '', 'statements'); set('project', state.records === 'projects' ? state.project : '');
     history.replaceState(null, '', url);
   }
   function plot(id, spec, source) {
@@ -86,10 +98,12 @@
       </div></header>
       <div class="pb-bar"><div class="pb-shell pb-bar-inner">
         <label class="pb-control"><span>${T('Year', 'Rok')}</span><select id="budget-year">${years.slice().reverse().map(year => `<option value="${year}">${year}</option>`).join('')}</select></label>
-        <label class="pb-control"><span>${T('Show', 'Zobrazit')}</span><select id="budget-unit"><option value="total">${T('Total CZK', 'Celkem v Kč')}</option><option value="per-capita">${T('Per resident', 'Na obyvatele')}</option></select></label>
+        <label class="pb-control"><span>${T('Show', 'Zobrazit')}</span><select id="budget-unit"><option value="total">${T('Total', 'Celkem')}</option><option value="per-capita">${T('Per resident', 'Na obyvatele')}</option></select></label>
+        <label class="pb-control"><span>${T('Budget currency', 'Měna rozpočtu')}</span><select id="budget-currency"><option value="CZK">CZK</option><option value="EUR">EUR</option><option value="USD">USD</option></select></label>
         <nav class="pb-nav" aria-label="${T('Sections', 'Části stránky')}">${navItems.map(([id, label]) => `<a href="#${id}">${label}</a>`).join('')}</nav>
       </div></div>
       ${section('overview', T('Overview', 'Přehled'), esc(scopeNote), `
+        <p class="pb-note" id="budget-currency-note"></p>
         <div class="pb-metrics" id="headline-metrics"></div>
         <details class="pb-disclosure" id="exact-figures"><summary>${T('Exact figures and definitions', 'Přesné částky a definice')}</summary><div id="exact-figures-body"></div></details>
         <div class="pb-card">
@@ -153,9 +167,10 @@
   }
 
   function bind() {
-    $('#budget-year').value = state.year; $('#budget-unit').value = state.unit;
+    $('#budget-year').value = state.year; $('#budget-unit').value = state.unit; $('#budget-currency').value = state.currency;
     $('#budget-year').addEventListener('change', event => selectYear(Number(event.target.value)));
     $('#budget-unit').addEventListener('change', event => { state.unit = event.target.value; writeURL(); renderOverview(); renderSpending(); renderContext(); });
+    $('#budget-currency').addEventListener('change', event => { state.currency = event.target.value; writeURL(); renderOverview(); renderSpending(); if (ext()?.connectedResults) renderConnections(); });
     app.addEventListener('click', event => { const trend = event.target.closest('[data-trend]'); if (trend) { state.trend = trend.dataset.trend; writeURL(); renderTrajectory(); } });
     $('#spending-view').addEventListener('click', event => { const view = event.target.closest('[data-view]'); if (view) { state.view = view.dataset.view; state.group = ''; state.purpose = null; writeURL(); renderSpending(); } });
     $('#budget-stage').addEventListener('change', event => { state.stage = event.target.value; renderSpending(); });
@@ -179,17 +194,25 @@
   // ---------------------------------------------------------------- overview
   function renderOverview() {
     const row = yearRow(), previous = state.overview.history.find(item => item.year === state.year - 1);
-    const perPerson = state.unit === 'per-capita' ? '' : ` · ${money(row.expense_actual / row.population_mid_year)} ${T('per resident', 'na obyvatele')}`;
+    const rate = fxData?.rates?.CZE?.years?.[state.year]?.local_per_usd;
+    const sourceUrl = fxData?.sources?.find(source => source.provider === 'ECB')?.url;
+    $('#budget-currency-note').innerHTML = !fxData
+      ? T('Budget amounts are reported in CZK. Currency conversion is unavailable because annual rates could not be loaded.', 'Rozpočtové částky jsou vykázány v Kč. Přepočet měn není dostupný, protože se nepodařilo načíst roční kurzy.')
+      : state.currency === 'CZK'
+      ? T('Budget amounts are reported in CZK. EUR and USD views use each year’s annual exchange rate. Published records remain in source CZK.', 'Rozpočtové částky jsou vykázány v Kč. Pohledy v EUR a USD používají roční kurz daného roku. Publikované záznamy zůstávají v původních Kč.')
+      : `${T('Budget amounts are converted from CZK using each year’s ECB annual average.', 'Rozpočtové částky jsou přepočteny z Kč ročním průměrným kurzem ECB pro každý rok.')} ${state.year}: 1 ${state.currency} ≈ ${number(state.currency === 'EUR' ? rate / fxData.eur_per_usd[state.year] : rate, 2)} CZK. ${T('Published records remain in source CZK.', 'Publikované záznamy zůstávají v původních Kč.')} ${link(sourceUrl, 'ECB ↗')}`;
+    $('#exact-figures summary').textContent = state.currency === 'CZK' ? T('Exact figures and definitions', 'Přesné částky a definice') : T('Converted figures and definitions', 'Přepočtené částky a definice');
+    const perPerson = state.unit === 'per-capita' ? '' : ` · ${budgetMoney(budgetValue(row.expense_actual / row.population_mid_year))} ${T('per resident', 'na obyvatele')}`;
     $('#headline-metrics').innerHTML =
       metric(T('Revenue', 'Příjmy'), shownMoney(row.revenue_actual), `${state.year} · ${unit()}`) +
       metric(T('Spending', 'Výdaje'), shownMoney(row.expense_actual), `${Number.isFinite(row.expense_adjusted) && row.expense_adjusted > 0 ? `${percent(row.expense_actual / row.expense_adjusted * 100)} ${T('of revised plan', 'upraveného plánu')}` : unit()}${perPerson}`, 'id="kpi-spending"') +
       metric(T('Balance', 'Saldo'), `${shownValue(row.budget_balance) > 0 ? '+' : ''}${shownMoney(row.budget_balance)}`, T('Revenue minus spending', 'Příjmy minus výdaje'), `class="${row.budget_balance < 0 ? 'pb-negative' : ''}"`) +
       metric(T('Cash and deposits', 'Peníze a vklady'), shownMoney(row.cash_current), `${T('31 December', '31. prosince')} ${state.year} · ${T('a year-end stock', 'stav ke konci roku')}`);
     const cashChange = [row.cash_current, row.cash_previous].every(Number.isFinite) ? row.cash_current - row.cash_previous : null;
-    $('#exact-figures-body').innerHTML = `<div class="pb-table-wrap"><table class="pb-table"><tbody>${[[T('Revenue', 'Příjmy'), row.revenue_actual], [T('Spending', 'Výdaje'), row.expense_actual], [T('Operating spending', 'Běžné výdaje'), row.current_expense], [T('Capital spending', 'Kapitálové výdaje'), row.capital_expense], [T('Balance (revenue minus spending)', 'Saldo (příjmy minus výdaje)'), row.budget_balance], [`${T('Cash and deposits, 31 December', 'Peníze a vklady k 31. prosinci')} ${state.year}`, row.cash_current], [T('Cash at the previous year-end', 'Peníze ke konci předchozího roku'), row.cash_previous], [T('Change in cash', 'Změna peněz'), cashChange], [T('Mid-year population', 'Počet obyvatel k 1. 7.'), null, number(row.population_mid_year)]].map(([label, value, text]) => `<tr><th scope="row">${label}</th><td class="pb-currency">${text ?? exact(value)}</td></tr>`).join('')}</tbody></table></div><p class="pb-note">${T('Cash is a year-end stock, not annual revenue or spendable reserves; its change need not equal the balance. From 2012 it sums balance-sheet accounts 068, 231, 236, 241, 244, 261 and 262 (2010–2011: current-account balances).', 'Peníze jsou stav ke konci roku, nikoli roční příjmy ani volné rezervy; jejich změna se nemusí rovnat saldu. Od roku 2012 jde o součet rozvahových účtů 068, 231, 236, 241, 244, 261 a 262 (2010–2011: zůstatky běžných účtů).')} ${link(Data.balanceSheetUrl(ico, state.year), T('MONITOR balance sheet', 'Rozvaha v MONITORU'))}</p>`;
+    $('#exact-figures-body').innerHTML = `<div class="pb-table-wrap"><table class="pb-table"><tbody>${[[T('Revenue', 'Příjmy'), row.revenue_actual], [T('Spending', 'Výdaje'), row.expense_actual], [T('Operating spending', 'Běžné výdaje'), row.current_expense], [T('Capital spending', 'Kapitálové výdaje'), row.capital_expense], [T('Balance (revenue minus spending)', 'Saldo (příjmy minus výdaje)'), row.budget_balance], [`${T('Cash and deposits, 31 December', 'Peníze a vklady k 31. prosinci')} ${state.year}`, row.cash_current], [T('Cash at the previous year-end', 'Peníze ke konci předchozího roku'), row.cash_previous], [T('Change in cash', 'Změna peněz'), cashChange], [T('Mid-year population', 'Počet obyvatel k 1. 7.'), null, number(row.population_mid_year)]].map(([label, value, text]) => `<tr><th scope="row">${label}</th><td class="pb-currency">${text ?? budgetExact(value)}</td></tr>`).join('')}</tbody></table></div><p class="pb-note">${T('Cash is a year-end stock, not annual revenue or spendable reserves; its change need not equal the balance. From 2012 it sums balance-sheet accounts 068, 231, 236, 241, 244, 261 and 262 (2010–2011: current-account balances).', 'Peníze jsou stav ke konci roku, nikoli roční příjmy ani volné rezervy; jejich změna se nemusí rovnat saldu. Od roku 2012 jde o součet rozvahových účtů 068, 231, 236, 241, 244, 261 a 262 (2010–2011: zůstatky běžných účtů).')} ${link(Data.balanceSheetUrl(ico, state.year), T('MONITOR balance sheet', 'Rozvaha v MONITORU'))}</p>`;
     if (previous) {
       const total = row.expense_actual - previous.expense_actual, current = row.current_expense - previous.current_expense, capital = row.capital_expense - previous.capital_expense;
-      $('#change-story').textContent = T(`Spending changed by ${signed(total)} (${percent((row.expense_actual / previous.expense_actual - 1) * 100)}) from ${previous.year}: operating ${signed(current)}, capital ${signed(capital)}. Nominal, not adjusted for inflation.`, `Výdaje se oproti roku ${previous.year} změnily o ${signed(total)} (${percent((row.expense_actual / previous.expense_actual - 1) * 100)}): běžné ${signed(current)}, kapitálové ${signed(capital)}. V běžných cenách, bez očištění o inflaci.`);
+      $('#change-story').textContent = T(`In source CZK, spending changed by ${signed(total)} (${percent((row.expense_actual / previous.expense_actual - 1) * 100)}) from ${previous.year}: operating ${signed(current)}, capital ${signed(capital)}. Nominal, not adjusted for inflation.`, `V původních Kč se výdaje oproti roku ${previous.year} změnily o ${signed(total)} (${percent((row.expense_actual / previous.expense_actual - 1) * 100)}): běžné ${signed(current)}, kapitálové ${signed(capital)}. V běžných cenách, bez očištění o inflaci.`);
     } else $('#change-story').textContent = T('The previous year is outside the published history.', 'Předchozí rok není v publikované historii.');
     renderTrajectory();
   }
@@ -200,7 +223,7 @@
       ? [{ key: 'current_expense', label: T('Operating spending', 'Běžné výdaje'), color: '#a8b63f', value: item => shownValue(item.current_expense, item) }, { key: 'capital_expense', label: T('Capital spending', 'Kapitálové výdaje'), color: '#171918', value: item => shownValue(item.capital_expense, item) }]
       : [{ key: 'revenue_actual', label: T('Revenue', 'Příjmy'), color: '#a8b63f', value: item => shownValue(item.revenue_actual, item) }, { key: 'expense_actual', label: T('Spending', 'Výdaje'), color: '#c93237', value: item => shownValue(item.expense_actual, item) }, { key: 'expense_adjusted', label: T('Revised spending plan', 'Upravený plán výdajů'), color: '#8b8d83', value: item => shownValue(item.expense_adjusted, item) }];
     $('#trajectory-title').textContent = `${state.trend === 'split' ? T('Operating and capital spending', 'Běžné a kapitálové výdaje') : T('Revenue and spending', 'Příjmy a výdaje')} · ${span}`;
-    plot('#trajectory-chart', { type: 'line', rows: years, fields, title: `${city().name} · ${span} · ${unit()}`, unit: unit(), height: 320, endLabels: false, selectedLabel: String(state.year), format: displayedExact, axisFormat: short, onSelect: item => selectYear(item.year) }, { name: 'Ministerstvo financí · MONITOR · FIN 2-12 M', url: monitor(state.year), table: state.overview.evidence[0]?.datasetId, edition: state.overview.evidence[0]?.generatedAt, definition: T('Annual revenue and spending after consolidation. Per resident divides each year by its mid-year population.', 'Roční příjmy a výdaje po konsolidaci. Na obyvatele dělí každý rok populací k 1. 7.'), caveat: T('Nominal CZK, no inflation adjustment. City-owned companies are outside the budget.', 'Běžné Kč bez očištění o inflaci. Městské firmy nejsou součástí rozpočtu.') });
+    plot('#trajectory-chart', { type: 'line', rows: years, fields, title: `${city().name} · ${span} · ${unit()}`, unit: unit(), height: 320, endLabels: false, selectedLabel: String(state.year), format: displayedExact, axisFormat: budgetMoney, onSelect: item => selectYear(item.year) }, { name: 'Ministerstvo financí · MONITOR · FIN 2-12 M', url: monitor(state.year), table: state.overview.evidence[0]?.datasetId, edition: state.overview.evidence[0]?.generatedAt, definition: T('Annual revenue and spending after consolidation. Per resident divides each year by its mid-year population.', 'Roční příjmy a výdaje po konsolidaci. Na obyvatele dělí každý rok populací k 1. 7.'), caveat: state.currency === 'CZK' ? T('Nominal CZK, no inflation adjustment. City-owned companies are outside the budget.', 'Běžné Kč bez očištění o inflaci. Městské firmy nejsou součástí rozpočtu.') : T('Source amounts are nominal CZK; each year is converted at its annual ECB average. No inflation adjustment. City-owned companies are outside the budget.', 'Zdrojové částky jsou v běžných Kč; každý rok je přepočten ročním průměrným kurzem ECB. Bez očištění o inflaci. Městské firmy nejsou součástí rozpočtu.') });
   }
   async function selectYear(year) {
     if (!state.overview.history.some(row => row.year === year)) return;
@@ -263,9 +286,9 @@
     }
     const reconciles = Number.isFinite(model.total) && Number.isFinite(model.target) && Math.abs(model.total - model.target) < .02;
     status.className = reconciles ? '' : 'pb-warning';
-    status.textContent = reconciles ? `${stageLabel(state.stage)} · ${T('the lines add up to the reported total of', 'řádky dávají dohromady vykázaný celek')} ${exact(model.total)}` : `${stageLabel(state.stage)} · ${T('the lines add up to', 'součet řádků je')} ${exact(model.total)}; ${T('reported total', 'vykázaný celek')} ${exact(model.target)}`;
+    status.textContent = reconciles ? `${stageLabel(state.stage)} · ${T('the lines add up to the reported total of', 'řádky dávají dohromady vykázaný celek')} ${budgetExact(model.total)}` : `${stageLabel(state.stage)} · ${T('the lines add up to', 'součet řádků je')} ${budgetExact(model.total)}; ${T('reported total', 'vykázaný celek')} ${budgetExact(model.target)}`;
     const title = model.term ? T('Search results', 'Výsledky hledání') : model.group ? model.group.label : model.rootLabel;
-    plot('#spending-map', { type: 'treemap', title: `${title} · ${stageLabel(state.stage)} · ${state.year}`, rows: nodes.map(node => ({ ...node, value: shownValue(node.value) })), fields: [{ key: 'value', label: stageLabel(state.stage) }], unit: unit(), valueFormat: value => state.unit === 'per-capita' ? `${number(value)} ${T('CZK', 'Kč')}` : money(value), format: displayedExact, height: 440, onSelect: activate }, { name: 'MONITOR · FIN 2-12 M', url: monitor(state.year), table: state.overview.evidence[0]?.datasetId, edition: state.overview.evidence[0]?.generatedAt, definition: T('Native budget classification of the selected stage. Groups are navigation labels built from the codes; each code appears once.', 'Původní rozpočtová klasifikace vybrané fáze. Skupiny jsou navigační štítky sestavené z kódů; každý kód je zahrnut jednou.'), caveat: T('Services and types of cost classify the same money two ways. Never add the views together.', 'Služby a druhy výdajů třídí tytéž peníze dvěma způsoby. Pohledy nikdy nesčítejte.') });
+    plot('#spending-map', { type: 'treemap', title: `${title} · ${stageLabel(state.stage)} · ${state.year}`, rows: nodes.map(node => ({ ...node, value: shownValue(node.value) })), fields: [{ key: 'value', label: stageLabel(state.stage) }], unit: unit(), valueFormat: budgetMoney, format: displayedExact, height: 440, onSelect: activate }, { name: 'MONITOR · FIN 2-12 M', url: monitor(state.year), table: state.overview.evidence[0]?.datasetId, edition: state.overview.evidence[0]?.generatedAt, definition: T('Native budget classification of the selected stage. Groups are navigation labels built from the codes; each code appears once.', 'Původní rozpočtová klasifikace vybrané fáze. Skupiny jsou navigační štítky sestavené z kódů; každý kód je zahrnut jednou.'), caveat: T('Services and types of cost classify the same money two ways. Never add the views together.', 'Služby a druhy výdajů třídí tytéž peníze dvěma způsoby. Pohledy nikdy nesčítejte.') });
     renderSpendingList(model);
     renderPurposeDetail();
     renderSourceComparison(model);
@@ -302,7 +325,7 @@
     const stages = ['approved', 'adjusted', 'actual'].map(stage => state.detail.rows.find(item => item.code === row.code && item.dimension === 'functional' && item.side === 'expenditure' && item.stage === stage)?.amount);
     const group = Math2.serviceFor(row.code), accounting = state.detail.coverage.accounting?.status === 'available';
     const joint = state.detail.jointCoverage?.status === 'reconciled' ? (state.detail.jointRows || []).filter(item => item.functional_code === row.code && item.side === 'expenditure' && item.stage === state.stage) : [];
-    const jointBlock = joint.length ? `<h4>${T('Budget purpose → type of cost', 'Účel rozpočtu → druh výdaje')} · ${stageLabel(state.stage)}</h4><p class="pb-note">${T('Both codes are reported on the same budget facts. This is a decomposition of the budget line, not an additional amount.', 'Oba kódy jsou vykázány na stejných rozpočtových faktech. Jde o rozpad rozpočtového řádku, nikoli další částku.')}</p><div class="pb-table-wrap"><table class="pb-table"><thead><tr><th>${T('Cost code', 'Kód výdaje')}</th><th>${T('Amount', 'Částka')}</th></tr></thead><tbody>${joint.map(item => `<tr><td>${esc(item.economic_code)} · ${esc(lang === 'en' ? item.itemName : item.name_cs || item.name_native || item.economic_code)}</td><td class="pb-currency">${exact(item.amount)}</td></tr>`).join('')}</tbody></table></div>` : '';
+    const jointBlock = joint.length ? `<h4>${T('Budget purpose → type of cost', 'Účel rozpočtu → druh výdaje')} · ${stageLabel(state.stage)}</h4><p class="pb-note">${T('Both codes are reported on the same budget facts. This is a decomposition of the budget line, not an additional amount.', 'Oba kódy jsou vykázány na stejných rozpočtových faktech. Jde o rozpad rozpočtového řádku, nikoli další částku.')}</p><div class="pb-table-wrap"><table class="pb-table"><thead><tr><th>${T('Cost code', 'Kód výdaje')}</th><th>${T('Amount', 'Částka')}</th></tr></thead><tbody>${joint.map(item => `<tr><td>${esc(item.economic_code)} · ${esc(lang === 'en' ? item.itemName : item.name_cs || item.name_native || item.economic_code)}</td><td class="pb-currency">${budgetExact(item.amount)}</td></tr>`).join('')}</tbody></table></div>` : '';
     let recordsBlock = '';
     if (records()) {
       const evidence = Math2.purposeEvidence(state.detail.accountingRows, state.payments?.rows, state.year, row.code);
@@ -311,7 +334,7 @@
     }
     host.innerHTML = `<div class="pb-panel-head"><div><p class="pb-kicker">${esc(T(group.en, group.cs))} · ${T('line', 'paragraf')} ${esc(row.code)} · ${state.year}</p><h3 id="purpose-title" tabindex="-1">${esc(name(row))}</h3>${lang === 'en' && name(row) !== row.name ? `<p class="pb-note">${esc(row.name)}</p>` : ''}</div><button type="button" class="pb-icon-button" data-purpose-close aria-label="${T('Close', 'Zavřít')}">×</button></div>
       <div class="pb-metrics pb-metrics-3">${stages.map((amount, index) => metric([stageLabel('approved'), stageLabel('adjusted'), stageLabel('actual')][index], shownMoney(amount), displayedExact(shownValue(amount)))).join('')}</div>
-      <p class="pb-note">${Number.isFinite(stages[2]) && Number.isFinite(stages[1]) ? `${T('Actual minus revised plan', 'Skutečnost minus upravený plán')}: ${signed(stages[2] - stages[1])}.` : ''} ${link(monitor(state.year), T('Official accounts', 'Oficiální výkaz'))}</p>${jointBlock}${recordsBlock}`;
+      <p class="pb-note">${Number.isFinite(stages[2]) && Number.isFinite(stages[1]) ? `${T('Actual minus revised plan', 'Skutečnost minus upravený plán')}: ${budgetSigned(budgetValue(stages[2] - stages[1]))}.` : ''} ${link(monitor(state.year), T('Official accounts', 'Oficiální výkaz'))}</p>${jointBlock}${recordsBlock}`;
   }
   function budgetRecord(row) {
     const related = state.detail.rows.filter(item => item.code === row.code && item.dimension === row.dimension && item.side === row.side);
@@ -667,8 +690,16 @@
     const overview = await client.loadOverview(); state.overview = overview;
     if (!overview.history.length) throw new Error('No published history');
     if (!overview.history.some(row => row.year === state.year)) state.year = overview.latest.year;
+    try {
+      const response = await fetch('/data/municipal-fx-rates.v1.json');
+      if (response.ok) {
+        const rates = await response.json();
+        if (overview.history.every(row => Number.isFinite(rates.rates?.CZE?.years?.[row.year]?.local_per_usd) && Number.isFinite(rates.eur_per_usd?.[row.year]))) fxData = rates;
+      }
+    } catch { /* The source CZK view stays available when exchange rates cannot load. */ }
+    if (!fxData) state.currency = 'CZK';
     document.title = T(`${overview.city.name} budget — Public Spending Data`, `Rozpočet: ${overview.city.name} — Public Spending Data`);
-    await window.PSDPlotReady; chartReady = true; shell(); renderOverview(); renderSpending(); renderEvidence(); writeURL();
+    await window.PSDPlotReady; chartReady = true; shell(); if (!fxData) { $('#budget-currency option[value="EUR"]').disabled = true; $('#budget-currency option[value="USD"]').disabled = true; } renderOverview(); renderSpending(); renderEvidence(); writeURL();
     app.setAttribute('aria-busy', 'false'); app.dataset.ready = 'true';
     if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
     const detail = selectYear(state.year);

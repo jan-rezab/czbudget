@@ -798,10 +798,11 @@ test("nationwide municipal explorer drives the aggregate story and directory yea
 test("municipal profiles draw interactive history and preserve genuine coverage gaps", async ({ page }) => {
   await page.goto("/cz/municipalities/plzen/?lang=en", { waitUntil: "networkidle" });
   await expect(page.locator("#profile-history-chart svg")).toBeVisible();
-  await expect(page.locator("#profile-history-chart .psd-plot-line")).toHaveCount(3);
-  await expect(page.locator(".profile-history-legend")).toContainText("Revenue");
-  await expect(page.locator(".profile-history-legend")).toContainText("Expenditure");
-  await expect(page.locator(".profile-history-legend")).toContainText("Cash balance");
+  await expect(page.locator("#profile-history-chart .psd-plot-line")).toHaveCount(2);
+  await expect(page.locator("#profile-position-chart .psd-plot-line")).toHaveCount(1);
+  await expect(page.locator(".profile-history-figure").first().locator(".profile-history-legend")).toContainText("Revenue");
+  await expect(page.locator(".profile-history-figure").first().locator(".profile-history-legend")).toContainText("Expenditure");
+  await expect(page.locator(".profile-position-figure .profile-history-legend")).toContainText("Cash balance");
   await page.locator("#profile-history-chart .psd-plot-hit").last().focus();
   await expect(page.locator("#profile-history-chart .psd-plot-tooltip")).toBeVisible();
   await expect(page.locator("#profile-history-chart .psd-plot-tooltip")).toContainText("2025");
