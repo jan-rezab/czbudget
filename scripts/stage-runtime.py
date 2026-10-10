@@ -120,11 +120,13 @@ def stage(root, output, lock=None):
         copy(lock, output / 'server/data-assets-lock.json')
     copy(root / 'nginx.conf.template', output / 'nginx.conf.template')
     copy(root / 'Dockerfile.slim', output / 'Dockerfile')
-    subprocess.run(['node', str(root / 'scripts/render-localized-shells.mjs'), str(root), str(output / 'public')], check=True)
-    for target in [output / 'public/index.en.html', output / 'public/about.en.html',
-                   output / 'public/methodology.en.html', output / 'public/deep-dives/index.en.html',
-                   *(output / 'public/country-shells').glob('*.html')]:
-        inventory[target.relative_to(output).as_posix()] = target.stat().st_size
+    renderer = root / 'scripts/render-localized-shells.mjs'
+    if renderer.is_file():
+        subprocess.run(['node', str(renderer), str(root), str(output / 'public')], check=True)
+        for target in [output / 'public/index.en.html', output / 'public/about.en.html',
+                       output / 'public/methodology.en.html', output / 'public/deep-dives/index.en.html',
+                       *(output / 'public/country-shells').glob('*.html')]:
+            inventory[target.relative_to(output).as_posix()] = target.stat().st_size
     version_runtime_references(root, output, inventory)
     total = sum(inventory.values())
     if total > 768 * 1024 * 1024:

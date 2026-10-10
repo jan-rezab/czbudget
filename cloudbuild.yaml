@@ -112,7 +112,7 @@ steps:
 
   - id: stage-code-runtime
     waitFor: [build-process-log, source-contracts, python-contracts, assert-verified-candidate]
-    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim@sha256:b3c19d28b18621203fc6e360515061c086c3b103dc4cf09ff80051e1473ed5ec
+    name: mcr.microsoft.com/playwright:v1.62.1-noble@sha256:dcc5531e97840b9b5e794f2814476b21571c5124a3fca2267d73041f56e7580e
     entrypoint: python3
     args: [scripts/stage-runtime.py, --output, /workspace/.runtime-image]
 
