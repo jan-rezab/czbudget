@@ -56,6 +56,18 @@ try {
     assert.equal(response.status, 200, url);
     await response.arrayBuffer();
   }
+  for (const [url, expected] of [
+    ['/about.html?lang=en', '<html lang="en">'],
+    ['/methodology.html?lang=en', '<html lang="en">'],
+    ['/deep-dives/?lang=en', '<html lang="en">'],
+    ['/countries/germany?lang=en', '<h1 id="country-name">Germany</h1>'],
+  ]) {
+    const response = await fetch(`http://127.0.0.1:8080${url}`, {signal: AbortSignal.timeout(20_000)});
+    assert.equal(response.status, 200, url);
+    assert.ok((await response.text()).includes(expected), `${url} must contain ${expected}`);
+  }
+  const unknownCountry = await fetch('http://127.0.0.1:8080/countries/zzz?lang=en', {signal: AbortSignal.timeout(20_000)});
+  assert.equal(unknownCountry.status, 404, 'Unknown country must not serve another country profile');
   console.log('Code-only runtime contract passed: lean filesystem, health and static routes.');
 } finally {
   if (child.exitCode === null && child.signalCode === null) {

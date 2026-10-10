@@ -63,7 +63,10 @@ map $request_uri $country_canonical_path {
 # The first HTML response must match the requested language. The homepage is
 # English by default; other routes retain their Czech default.
 map "$uri:$arg_lang" $psd_route_file {
-  default $uri;
+  # A non-existent file leaves directory routes to the original try_files chain.
+  # Mapping them to $uri causes try_files to treat the trailing slash as a
+  # directory match before index.html is resolved.
+  default /.psd-localized-route-miss;
   "/:" /index.en.html;
   "/:en" /index.en.html;
   "/:cs" /index.html;
@@ -416,7 +419,7 @@ server {
     sub_filter 'assets/favicon.svg"' 'assets/favicon.svg?v=20260824-archivo-lockup"';
     sub_filter 'site-header.css?v=20260824-header-lockup"' 'site-header.css?v=20260902-municipal-depth"';
     sub_filter 'site-header.css?v=20260822-component"' 'site-header.css?v=20260902-municipal-depth"';
-    try_files $psd_route_file $uri/ $uri/index.html =404;
+    try_files $psd_route_file $uri $uri/ $uri/index.html =404;
   }
 
   # Per-profile JSON payloads are no longer in the image — the
