@@ -208,6 +208,7 @@ test("view, stage, search and year keep the selected budget boundary", async ({ 
 test("invoice allocations load on demand without changing budget totals", async ({ page }) => {
   const requests = await fixtureCity(page);
   await open(page);
+  await expect(page.locator("#budget-table tbody tr")).toHaveCount(2);
   const budgetBefore = await page.locator("#budget-table tbody").textContent();
   const historyBefore = await (await trajectoryTable(page)).textContent();
   expect(requests.payments).toBe(0);
