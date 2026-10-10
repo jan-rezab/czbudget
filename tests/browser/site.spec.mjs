@@ -49,6 +49,7 @@ const countryParity = await readJson("data/country-parity.v1.json");
 // data/coverage-metrics.v1.json, capped at "100M+" with the exact integer in the
 // title attribute (site-pages.js renderDataHealth).
 const coverageMetrics = (await readJson("data/coverage-metrics.v1.json")).metrics;
+const qualityReport = await readJson("data/data-quality-report.v1.json");
 const structuredRowsProcessed = Number(coverageMetrics.cumulative_structured_rows_processed);
 const structuredRowsLabel = structuredRowsProcessed >= 100_000_000 ? "100M+" : formatCount(structuredRowsProcessed);
 
@@ -235,7 +236,14 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator("#status-data-total")).toHaveAttribute("title", formatCount(structuredRowsProcessed));
   // Validated facts, public profiles, directory, itemized, entity rows, country-years, ledger rows.
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(7);
-  await expect(page.locator("#data-health-root")).toContainText("Checks passed");
+  const verifiedDataRelease = qualityReport.status === "passed" && qualityReport.release_id && qualityReport.verified_at && qualityReport.build_mode !== "local";
+  const healthStatus = page.locator("#data-health-root .data-health-status");
+  if (verifiedDataRelease) {
+    await expect(healthStatus).toContainText(`Verified data release: ${qualityReport.release_id}`);
+  } else {
+    await expect(healthStatus).toContainText("Historical local check · verification date and data release ID unavailable");
+    await expect(healthStatus).not.toContainText("Checks passed");
+  }
   await expect(page.locator("#data-health-root")).toContainText(formatCount(counts.municipalUnitsInScope));
   await expect(page.locator("#data-health-root")).toContainText("Municipalities · directory / headlines");
   await expect(page.locator("#data-health-root")).toContainText("Municipalities · itemized budgets");
