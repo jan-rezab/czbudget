@@ -109,3 +109,53 @@ test("PBO profiles use the synthetic-account codelist and account terminology", 
   await expect(page.locator("#filter-item-label")).toHaveText("Account");
   await expect(page.locator("#payment-rows .cv-classification")).toContainText("Account 501 · Spotřeba materiálu");
 });
+
+async function mockCzechCoverage(page, failPaq = false) {
+  const profile = (name, key, ico, type, year, rows) => ({ name, key, ico, type, pbo_payment_rows: type === 'pbo' ? rows : 0, years: [{ year, source_validity: null, records: { payments: rows } }] });
+  await page.route('**/data/cityvizor-catalogue.v1.json', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ complete: true, snapshot_completed_at: '2026-09-09T00:00:00Z', profile_count: 3, profiles_with_payment_rows: 3, preferred_payment_view_rows: 60, verification: { control_count: 3, source_control_exceptions: [] }, profiles: [profile('Brno - Medlánky','cityvizor.cz/45','44992785','municipality',2026,30),profile('Nové Město na Moravě','cityvizor.cz/1','00294900','municipality',2024,20),profile('Škola','cityvizor.cz/2','12345678','pbo',2026,10)] }) }));
+  await page.route('**/data/paq/index.json', route => failPaq ? route.fulfill({ status: 503, body: 'Unavailable' }) : route.fulfill({ contentType: 'application/json', body: JSON.stringify({ variables: 1, observations: 2, non_null_observations: 1, completed_at: '2026-09-09T00:00:00Z', license: 'CC-BY-NC-4.0', raw_manifest_sha256: 'test-hash', region_counts: { obec: 2, orp: 1, okres: 1, kraj: 1 }, regions: { brno: { level: 'obec', name: 'Brno', ico: '44992785', code: '582786' }, nmnm: { level: 'obec', name: 'Nové Město na Moravě', ico: '00294900', code: '596230' } } }) }));
+  await page.route('**/data/paq/coverage-audit.json', route => route.fulfill({ contentType: 'application/json', body: JSON.stringify({ expected: 2, received: 2, missing: [] }) }));
+}
+
+test('Czech coverage separates held snapshots from database ingestion and offers no raw downloads', async ({ page }) => {
+  await mockCzechCoverage(page);
+  await page.goto('/czech-sources.html?lang=en');
+  await expect(page.locator('#coverage-rows tr')).toHaveCount(3);
+  await expect(page.locator('#coverage-rows')).toContainText('0 rows in hlidac_municipality_contract_matches');
+  await expect(page.locator('#coverage-rows')).toContainText('415,303 / 12 cities');
+  await expect(page.locator('#coverage-rows')).toContainText('downloaded and normalized');
+  await expect(page.locator('#coverage-rows')).toContainText('Not reconciled in BigQuery');
+  await expect(page.locator('main a[href*=".json"], main a[href*=".zip"], main a[href*=".gz"], main a[href*="/api/"], main a[download]')).toHaveCount(0);
+  await page.locator('#research-evidence summary').first().click();
+  await expect(page.locator('#research-evidence')).toContainText('not a unique-contract count');
+  for (const width of [390, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  }
+});
+
+test('Czech coverage does not assign whole-city PAQ data to a district sharing its ID', async ({ page }) => {
+  await mockCzechCoverage(page);
+  await page.goto('/czech-sources.html?lang=en');
+  await expect(page.locator('#coverage-rows tr')).toHaveCount(3);
+  await page.locator('#city-search').fill('Medlánky');
+  await expect(page.locator('#city-rows tr')).toHaveCount(1);
+  await expect(page.locator('#city-rows')).toContainText('Join not verified');
+  await expect(page.locator('#city-rows')).not.toContainText('Cloud: downloaded and normalized');
+  await expect(page.locator('#city-rows')).toContainText('not this district’s holdings');
+  await expect(page.locator('#city-rows a[href*="paq.html"]')).toHaveCount(0);
+  await page.locator('#city-search').fill('');
+  await page.locator('#city-fresh').selectOption('older');
+  await expect(page.locator('#city-rows')).toContainText('Nové Město');
+  await expect(page.locator('#city-rows')).not.toContainText('Medlánky');
+  await expect(page.locator('#city-rows a[href*="paq.html"]')).toHaveCount(1);
+});
+
+test('Czech coverage leaves failed PAQ reconciliation unknown instead of zero', async ({ page }) => {
+  await mockCzechCoverage(page, true);
+  await page.goto('/czech-sources.html?lang=cs');
+  await expect(page.locator('#source-overview')).toContainText('Pokrytí zůstává neznámé');
+  await page.locator('#city-search').fill('Nové');
+  await expect(page.locator('#city-rows')).toContainText('PAQ nelze ověřit');
+  await expect(page.locator('#coverage-rows')).not.toContainText('PAQ / DataPAQ');
+});
