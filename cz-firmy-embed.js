@@ -61,11 +61,13 @@
     }));
   }
 
-  function renderRegistry(data) {
+  function renderRegistry(data, portfolio) {
+    const financialDetail = PublicEntityFinancialDetail.create(portfolio, language, "embed");
     const search = select("#embed-entity-search");
     const owner = select("#embed-entity-owner");
     const sort = select("#embed-entity-sort");
     const body = select("#embed-public-entity-rows");
+    financialDetail.bind(body);
     const tabs = [...document.querySelectorAll("#embed-entity-tabs button")];
     let activeCategory = "all";
     const owners = [...new Set(data.entities.map(item => item.owner_level))].sort((a, b) => tr("owner",a).localeCompare(tr("owner",b),locale));
@@ -134,14 +136,14 @@
         return right - left || a.name.localeCompare(b.name, "cs");
       });
       body.innerHTML = visible.map(item => `<tr${item.strategic_highlight ? ' class="strategic-highlight"' : ""}>
-        <td><strong>${escapeHtml(item.name)}</strong><small>${english ? "ID" : "IČO"} ${escapeHtml(item.ico)} · ${escapeHtml(item.legal_form)}</small></td>
+        <td>${financialDetail.trigger(item)}<small>${english ? "ID" : "IČO"} ${escapeHtml(item.ico)} · ${escapeHtml(item.legal_form)}</small></td>
         <td><span class="entity-type">${escapeHtml(tr("category",item.category))}</span></td>
         <td>${escapeHtml(tr("owner",item.owner_level))}</td>
         <td class="numeric">${item.top_line.value_mczk == null ? "—" : `${money(item.top_line.value_mczk)} <small>${english ? "CZK m" : "mil. Kč"} · ${escapeHtml(tr("topLine",item.top_line.definition))}</small>`}${item.health_insurance ? `<small>${english ? "Expenditure" : "Výdaje"}: ${money(item.health_insurance.expenditure_mczk)} ${english ? "CZK m" : "mil. Kč"}</small>` : ""}</td>
         <td class="numeric ${item.top_line.net_result_mczk < 0 ? "negative" : ""}">${item.top_line.net_result_mczk == null ? "—" : `${signedMoney(item.top_line.net_result_mczk)} <small>${english ? "CZK m" : "mil. Kč"}</small>`}${item.health_insurance ? `<small>${english ? "cash balance" : "saldo příjmů a výdajů"}</small>` : ""}</td>
         <td class="numeric ${item.top_line.net_margin_pct < 0 ? "negative" : ""}">${percent(item.top_line.net_margin_pct)}</td>
         <td>${item.financial_source_kind ? `<span class="data-available">${escapeHtml(tr("source",item.financial_source_kind))}</span>` : item.category === "Zdravotní pojišťovna" ? `<span class="data-missing">${english ? "special statement outside the income-statement dataset" : "speciální výkaz mimo VZZ"}</span>` : `<span class="data-missing">${english ? "statement unavailable" : "výkaz chybí"}</span>`}${item.health_insurance ? `<small>${english ? "Assets" : "Aktiva"}: ${money(item.assets_mczk)} ${english ? "CZK m" : "mil. Kč"}</small><a href="${escapeHtml(item.source_financial)}" target="_blank" rel="noreferrer">${english ? "Source tables" : "Zdrojové tabulky"}</a>` : ""}${item.strategic_highlight ? '<small class="highlight-label">TOP 38 highlight</small>' : ""}</td>
-      </tr>`).join("");
+      </tr>${financialDetail.detail(item)}`).join("");
       select("#embed-registry-count").textContent = english ? `Showing ${format(visible.length)} of ${format(data.summary.groups[activeCategory].entity_count)} entities in this tab` : `Zobrazeno ${format(visible.length)} z ${format(data.summary.groups[activeCategory].entity_count)} subjektů v záložce`;
     }
 
@@ -205,7 +207,7 @@
       }
 
       document.querySelectorAll("#embed-ranking-mode button").forEach(button => button.addEventListener("click", () => render(button.dataset.mode)));
-      renderRegistry(publicData);
+      renderRegistry(publicData, data);
       render("profit");
     })
     .catch(error => {
