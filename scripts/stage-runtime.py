@@ -126,9 +126,10 @@ def stage(root, output, lock=None):
         country_shells = list((output / 'public/country-shells').glob('*.html'))
         if len(country_shells) != 390:
             raise ValueError(f'Expected 390 localized country shells, got {len(country_shells)}')
-        for target in [output / 'public/index.en.html', output / 'public/about.en.html',
-                       output / 'public/methodology.en.html', output / 'public/deep-dives/index.en.html',
-                       *country_shells]:
+        shell_manifest = output / 'public/localized-shells.json'
+        shells = json.loads(shell_manifest.read_text())
+        for relative in [*shells['files'], 'localized-shells.json']:
+            target = output / 'public' / relative
             if not target.is_file():
                 raise ValueError('Missing localized shell: ' + str(target))
             inventory[target.relative_to(output).as_posix()] = target.stat().st_size

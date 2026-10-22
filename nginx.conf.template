@@ -70,6 +70,69 @@ map "$uri:$arg_lang" $psd_route_file {
   "/:" /index.en.html;
   "/:en" /index.en.html;
   "/:cs" /index.html;
+  "/deep-dives/funding/:en" /deep-dives/funding/index.en.html;
+  "/deep-dives/water-resilience/:en" /deep-dives/water-resilience/index.en.html;
+  "/deep-dives/education/:en" /deep-dives/education/index.en.html;
+  "/deep-dives/health/:en" /deep-dives/health/index.en.html;
+  "/deep-dives/transportation/:en" /deep-dives/transportation/index.en.html;
+  "/deep-dives/defense/:en" /deep-dives/defense/index.en.html;
+  "/deep-dives/redistribution/:en" /deep-dives/redistribution/index.en.html;
+  "/deep-dives/revenue/:en" /deep-dives/revenue/index.en.html;
+  "/deep-dives/tax-burden/:en" /deep-dives/tax-burden/index.en.html;
+  "/deep-dives/eu-budget/:en" /deep-dives/eu-budget/index.en.html;
+  "/deep-dives/job-market/:en" /deep-dives/job-market/index.en.html;
+  "/deep-dives/economy/:en" /deep-dives/economy/index.en.html;
+  "/deep-dives/industry/:en" /deep-dives/industry/index.en.html;
+  "/deep-dives/industry/diagnostics/:en" /deep-dives/industry/diagnostics/index.en.html;
+  "/deep-dives/trade/:en" /deep-dives/trade/index.en.html;
+  "/deep-dives/energy-trade/:en" /deep-dives/energy-trade/index.en.html;
+  "/deep-dives/russia-trade/:en" /deep-dives/russia-trade/index.en.html;
+  "/deep-dives/automotive/:en" /deep-dives/automotive/index.en.html;
+  "/deep-dives/product-markets/:en" /deep-dives/product-markets/index.en.html;
+  "/deep-dives/digital-spillover/:en" /deep-dives/digital-spillover/index.en.html;
+  "/deep-dives/ageing/:en" /deep-dives/ageing/index.en.html;
+  "/deep-dives/migration/:en" /deep-dives/migration/index.en.html;
+  "/deep-dives/european-politics/:en" /deep-dives/european-politics/index.en.html;
+  "/deep-dives/state-owned-enterprises/:en" /deep-dives/state-owned-enterprises/index.en.html;
+  "/deep-dives/capital-cities/:en" /deep-dives/capital-cities/index.en.html;
+  "/deep-dives/budget-planner/:en" /deep-dives/budget-planner/index.en.html;
+  "/deep-dives/public-employment/:en" /deep-dives/public-employment/index.en.html;
+  "/deep-dives/money/cze/:en" /deep-dives/money/cze/index.en.html;
+  "/deep-dives/plzen-contracts/:en" /deep-dives/plzen-contracts/index.en.html;
+  "/deep-dives/money/usa/:en" /deep-dives/money/usa/index.en.html;
+  "/deep-dives/rosling/:en" /deep-dives/rosling/index.en.html;
+  "/deep-dives/economic-flows/:en" /deep-dives/economic-flows/index.en.html;
+  "/comparison.html:en" /comparison.en.html;
+  "/map.html:en" /map.en.html;
+  "/municipalities/:en" /municipalities/index.en.html;
+  "/municipalities/czechia/:en" /municipalities/czechia/index.en.html;
+  "/eu-capitals.html:en" /eu-capitals.en.html;
+  "/municipalities/bolivia/:en" /municipalities/bolivia/index.en.html;
+  "/municipalities/brazil/:en" /municipalities/brazil/index.en.html;
+  "/municipalities/chile/:en" /municipalities/chile/index.en.html;
+  "/municipalities/colombia/:en" /municipalities/colombia/index.en.html;
+  "/municipalities/costa-rica/:en" /municipalities/costa-rica/index.en.html;
+  "/municipalities/denmark/:en" /municipalities/denmark/index.en.html;
+  "/municipalities/el-salvador/:en" /municipalities/el-salvador/index.en.html;
+  "/municipalities/england/:en" /municipalities/england/index.en.html;
+  "/municipalities/finland/:en" /municipalities/finland/index.en.html;
+  "/municipalities/france/:en" /municipalities/france/index.en.html;
+  "/municipalities/georgia/:en" /municipalities/georgia/index.en.html;
+  "/municipalities/germany/:en" /municipalities/germany/index.en.html;
+  "/municipalities/guatemala/:en" /municipalities/guatemala/index.en.html;
+  "/municipalities/italy/:en" /municipalities/italy/index.en.html;
+  "/municipalities/japan/:en" /municipalities/japan/index.en.html;
+  "/municipalities/mexico/:en" /municipalities/mexico/index.en.html;
+  "/municipalities/netherlands/:en" /municipalities/netherlands/index.en.html;
+  "/municipalities/norway/:en" /municipalities/norway/index.en.html;
+  "/municipalities/peru/:en" /municipalities/peru/index.en.html;
+  "/municipalities/poland/:en" /municipalities/poland/index.en.html;
+  "/municipalities/south-korea/:en" /municipalities/south-korea/index.en.html;
+  "/municipalities/spain/:en" /municipalities/spain/index.en.html;
+  "/municipalities/sweden/:en" /municipalities/sweden/index.en.html;
+  "/municipalities/ukraine/:en" /municipalities/ukraine/index.en.html;
+  "/cesky-rozpocet.html:en" /cesky-rozpocet.en.html;
+  "/process/log/:en" /process/log/index.en.html;
   "/about.html:en" /about.en.html;
   "/methodology.html:en" /methodology.en.html;
   "/deep-dives/:en" /deep-dives/index.en.html;
@@ -434,6 +497,16 @@ server {
   }
 
   location @municipality_payload {
+    proxy_pass http://public_spending_api;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  # Release metadata is published atomically in the independent data plane.
+  # The API retains the packaged snapshot until a verified metadata release exists.
+  location ~ ^/(?:sitemap\.xml|lib/data/sovereign-benchmark\.v1\.json|data/(?:data-quality-report\.v1|data-freshness\.v1|release-manifest\.v1|cze-school-funding-2026-summary\.v1|transport-performance\.v1|country-parity\.v1|european-politics\.v1|cz-state-enterprises-2024|global-budget-transparency\.v1|municipal-transparency\.v1|cz-state-enterprise-balance-sheets-2024\.v1|eu-capital-budgets\.v1|politics-source-crawl\.v1|defense-deep-dive\.v1)\.json)$ {
     proxy_pass http://public_spending_api;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
