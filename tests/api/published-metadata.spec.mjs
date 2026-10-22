@@ -11,10 +11,10 @@ import {PublishedMetadataStore} from '../../server/published-metadata.mjs';
 const hash = body => crypto.createHash('sha256').update(body).digest('hex');
 const qaPath = '/data/data-quality-report.v1.json';
 const manifestPath = '/data/release-manifest.v1.json';
-function fixture(id = 'metadata-test-1') {
+function fixture(id = 'metadata-test-1', qaOverrides = {}) {
   const verified = '2026-10-22T15:30:52Z';
   const bodies = new Map(METADATA_PATHS.map(url => [url, Buffer.from(url.endsWith('.xml') ? '<urlset><url><loc>https://example.test/</loc></url></urlset>' : JSON.stringify({value: id}))]));
-  bodies.set(qaPath, Buffer.from(JSON.stringify({release_id: id, verified_at: verified, build_mode: 'published-release-audit'})));
+  bodies.set(qaPath, Buffer.from(JSON.stringify({release_id: id, verified_at: verified, build_mode: 'published-release-audit', status: 'passed', verification_scope: {cs: 'Ověřené publikované soubory; původní zdroje mohou chybět.', en: 'Verified published files; original sources may be unavailable.'}, published_releases: [{dataset: 'municipal', release_id: 'municipal-source-1'}], ...qaOverrides})));
   bodies.set(manifestPath, Buffer.from(JSON.stringify({release_id: id, artifacts: [...bodies].filter(([url]) => url !== manifestPath).map(([url, body]) => ({path: url.slice(1), sha256: hash(body), bytes: body.length}))})));
   const filename = `${'a'.repeat(64)}.pack`;
   let offset = 0;
@@ -85,6 +85,26 @@ test('partial, wrong-pack, oversized, unproven and contradictory groups retain p
     Object.assign(state, fixture('metadata-test-2'));
     mutate(state);
     assert.strictEqual(await service.current(), first);
+  }
+});
+
+test('consistent hashes cannot publish failed QA or an audit without explicit scope and inspected release IDs', async () => {
+  for (const qaOverrides of [
+    {status: 'failed'}, {status: 'processing'}, {status: undefined},
+    {verification_scope: undefined}, {verification_scope: {en: 'Only English'}},
+    {verification_scope: {cs: 'Popis', en: '   '}},
+    {published_releases: []}, {published_releases: undefined},
+    {published_releases: [{dataset: 'municipal'}]},
+    {published_releases: [{dataset: 'municipal', release_id: ' '}]},
+  ]) {
+    const state = fixture();
+    const service = new PublishedMetadataStore({assets: assetsFor(state), ttlMs: 0});
+    const first = await service.current();
+    Object.assign(state, fixture('metadata-test-2', qaOverrides));
+    assert.strictEqual(await service.current(), first);
+    assert.equal((await service.entry(qaPath)).releaseId, 'metadata-test-1');
+    const freshService = new PublishedMetadataStore({assets: assetsFor(state)});
+    assert.equal(await freshService.current(), null, 'a fresh instance must retain image fallback');
   }
 });
 

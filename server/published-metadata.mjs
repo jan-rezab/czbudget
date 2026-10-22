@@ -6,6 +6,7 @@ import {METADATA_PATHS, isMetadataPath} from './metadata-paths.mjs';
 
 const MAX_RELEASE_BYTES = 32 * 1024 * 1024;
 const digest = (body) => crypto.createHash('sha256').update(body).digest('hex');
+const nonEmptyText = (value) => typeof value === 'string' && value.trim().length > 0;
 const validId = (id) => typeof id === 'string' && /^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(id);
 
 /** A complete group is verified before any member replaces the previous group. */
@@ -60,6 +61,9 @@ export class PublishedMetadataStore {
         const manifest = JSON.parse(bodies.get('/data/release-manifest.v1.json').body);
         if (qa.release_id !== release.release_id || manifest.release_id !== release.release_id ||
             qa.verified_at !== release.verified_at || qa.build_mode !== 'published-release-audit' ||
+            qa.status !== 'passed' || !nonEmptyText(qa.verification_scope?.cs) || !nonEmptyText(qa.verification_scope?.en) ||
+            !Array.isArray(qa.published_releases) || qa.published_releases.length === 0 ||
+            !qa.published_releases.every(item => item && nonEmptyText(item.dataset) && nonEmptyText(item.release_id)) ||
             !Array.isArray(manifest.artifacts)) throw new Error('metadata_provenance_invalid');
         for (const [url, file] of entries) {
           if (url === '/data/release-manifest.v1.json') continue; // No circular self-hash.

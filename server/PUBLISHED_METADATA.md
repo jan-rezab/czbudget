@@ -35,9 +35,11 @@ any valid group, the byte-for-byte image fallback continues to work.
 The QA document has `build_mode: "published-release-audit"`, the same `release_id`
 and `verified_at`, and a precise scope. It must retain truthful coverage limits,
 not reclassify old local checks as recent verification. Set `status: "passed"`
-only when the documented audit has actually passed. `verification_scope.cs` and
+only when the documented audit has actually passed; the consumer rejects all other
+statuses even when every content hash is valid. Nonempty `verification_scope.cs` and
 `.en` describe what was checked; `published_releases` lists `{dataset, release_id}`
-for the actual pinned releases inspected. Keep source URLs, generation/hash pins,
+for the actual pinned releases inspected. At least one named, identified audited
+release is required before this group can publish. Keep source URLs, generation/hash pins,
 counts, validation results and explicit unavailable provenance in the QA JSON and
 immutable processing receipt. Coverage shows this as a published-data audit,
 with date, scope, release IDs and the QA download; mixed QA/manifest releases do
