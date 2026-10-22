@@ -23,7 +23,12 @@ for (const type of ['line', 'column', 'stacked', 'bar']) {
     await expect(plot.locator('.psd-plot-legend')).toContainText('Revenue');
     await expect(plot.locator('.psd-plot-legend')).toContainText('Expenditure');
     const figure=page.locator('#chart-object');
-    await figure.locator('[data-action="table"]').click();
+    const tableAction = figure.locator('[data-action="table"]');
+    const actionTopWithReadout = (await tableAction.boundingBox()).y;
+    await page.getByRole('heading').hover();
+    await expect(tooltip).toBeHidden();
+    expect((await tableAction.boundingBox()).y).toBeCloseTo(actionTopWithReadout, 1);
+    await tableAction.click();
     await expect(figure.locator('.psd-chart-table')).toContainText('2022');
     await expect(figure.locator('.psd-chart-table')).toContainText('100');
     expect(await page.evaluate(()=>window.chartObject.csv())).toContain('2022,100,70');

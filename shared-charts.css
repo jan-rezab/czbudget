@@ -57,6 +57,9 @@
 .psd-plot-inspection.is-reserved,
 .psd-shared-plot[data-chart-component="donut"] .psd-plot-inspection{min-height:calc(44px + var(--inspection-rows,1)*32px);margin-top:10px}
 .psd-plot-inspection .psd-plot-tooltip{position:static;width:100%;max-width:100%;box-shadow:none;border:0;border-radius:0;background:transparent;padding:8px 10px 4px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));column-gap:24px}
+/* Hiding a readout must not move a control between pointerdown and click.
+   Preserve the last inspected layout while keeping its content visually/AT hidden. */
+.psd-plot-inspection .psd-plot-tooltip[hidden]{display:grid!important;visibility:hidden}
 .psd-plot-inspection .psd-plot-tooltip>strong{grid-column:1/-1}
 .psd-plot-inspection .psd-plot-tooltip>span{min-width:0}
 @media(max-width:600px){.psd-plot-inspection.is-reserved,.psd-shared-plot[data-chart-component="donut"] .psd-plot-inspection{min-height:calc(44px + var(--inspection-fields,1)*32px)}.psd-plot-inspection .psd-plot-tooltip{grid-template-columns:minmax(0,1fr)}}

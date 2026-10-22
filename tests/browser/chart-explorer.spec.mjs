@@ -98,6 +98,22 @@ test('plot brush zooms without triggering a point click; All and double-click re
   expect(await range(page)).toEqual([2005, 2024]);
 });
 
+test('readout dismissal keeps time presets in place and immediately clickable', async ({ page }) => {
+  await ready(page);
+  await page.locator('#range-5').click();
+  await page.locator('#explorer-plot [data-point="1"]').focus();
+  await page.keyboard.press('ArrowRight');
+  const readout = page.locator('#explorer-plot .psd-plot-tooltip');
+  await expect(readout).toBeVisible();
+  const all = page.locator('#range-all');
+  const topWithReadout = (await all.boundingBox()).y;
+  await all.focus();
+  await expect(readout).toBeHidden();
+  expect((await all.boundingBox()).y).toBeCloseTo(topWithReadout, 1);
+  await all.click();
+  expect(await range(page)).toEqual([2005, 2024]);
+});
+
 test('keyboard range movement keeps window width, table rows and reduced-motion behavior', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await ready(page);

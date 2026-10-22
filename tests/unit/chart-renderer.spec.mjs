@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import charts from '../../lib/chart-renderer.js';
 
 test('signed domains include zero and negative balances', () => {
@@ -204,4 +205,14 @@ test('floating column domains include opening levels and signed changes without 
   const spec=charts.model({type:'column',baseKey:'start',rows:[{start:100,value:20},{start:120,value:-150},{start:null,value:9999}],fields:[{key:'value'}]});
   assert.ok(spec.axis.min<=-30&&spec.axis.max>=120);assert.ok(spec.axis.max<9999);
   assert.deepEqual(spec.rows.map(r=>r.values[0]),[20,-150,9999]);
+});
+
+
+test('hidden below-plot readouts retain layout without exposing their content', () => {
+  const css = readFileSync(new URL('../../shared-charts.css', import.meta.url), 'utf8');
+  const rule = css.match(/\.psd-plot-inspection \.psd-plot-tooltip\[hidden\]\{([^}]+)\}/)?.[1];
+  assert.ok(rule, 'the below-plot hidden state has a scoped layout rule');
+  assert.match(rule, /(?:^|;)display:grid!important(?:;|$)/);
+  assert.match(rule, /(?:^|;)visibility:hidden(?:;|$)/);
+  assert.match(css, /\.psd-plot-tooltip\[hidden\]\{display:none!important\}/, 'floating tips retain ordinary hidden behavior');
 });
