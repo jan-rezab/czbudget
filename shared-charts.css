@@ -11,6 +11,10 @@
 .psd-plot-guide{stroke:var(--chart-neutral,#8b8d83);stroke-width:1;stroke-dasharray:4 4;pointer-events:none}
 .psd-plot-guide[hidden],.psd-plot-tooltip[hidden]{display:none!important}
 .psd-plot-tooltip{position:absolute;z-index:5;width:max-content;max-width:calc(100% - 8px);box-sizing:border-box;padding:12px 14px;background:#faf7ef;color:#171918;border:1px solid #8b8d83;box-shadow:0 8px 24px #17191820;border-radius:3px;pointer-events:none;font:12px/1.5 Arial,Helvetica,sans-serif}
+.psd-plot-legend{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;margin:2px 8px 0;padding:10px 2px 4px;border-top:1px solid var(--chart-grid,#d2ccc1);color:#3c4038;font:12px/1.35 Arial,Helvetica,sans-serif}
+.psd-plot-legend>span{display:inline-flex;align-items:center;gap:8px;min-width:0}
+.psd-plot-legend i{width:16px;height:3px;flex:none;border-radius:1px;background:var(--series,#171918)}
+.psd-plot-legend i.is-dashed{height:0;background:transparent;border-top:2px dashed var(--series,#171918)}
 .psd-plot-tooltip>strong{display:block;border-bottom:1px solid #d2ccc1;padding-bottom:5px;margin-bottom:6px;font-size:14px}
 .psd-plot-tooltip>span{display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:8px;align-items:center;margin:4px 0}
 .psd-plot-tooltip i{display:block;width:7px;height:7px}
@@ -48,12 +52,14 @@
 .psd-treemap-unsized{margin-top:14px;border-top:1px solid var(--chart-grid,#d2ccc1);padding-top:12px}.psd-treemap-unsized h4{font-size:13px;margin:0 0 8px}.psd-treemap-unsized ul{list-style:none;margin:0;padding:0;display:grid;gap:5px}.psd-treemap-unsized li{min-width:0}.psd-treemap-unsized button{width:100%;padding:10px 11px;display:flex;justify-content:space-between;align-items:center;gap:15px;text-align:left;font:inherit;font-size:12px;background:var(--chart-paper,#faf7ef);color:var(--chart-ink,#171918);border:1px solid var(--chart-grid,#d2ccc1);border-radius:3px;cursor:pointer}.psd-treemap-unsized button:hover,.psd-treemap-unsized button:focus-visible{border-color:var(--chart-ink,#171918);outline:2px solid var(--chart-ink,#171918);outline-offset:1px}.psd-treemap-unsized small{display:block;font-size:10px;line-height:1.5;margin-top:3px;color:var(--chart-neutral,#626359)}.psd-treemap-unsized b{white-space:nowrap}.psd-treemap-tooltip p{margin:5px 0;max-width:300px;overflow-wrap:anywhere}.psd-treemap-tooltip b{font-size:15px;text-align:left}.psd-treemap-tooltip{z-index:6}
 @media(max-width:600px){.psd-shared-plot[data-chart-component="treemap"]{padding:8px}.psd-treemap-caption{font-size:10px;gap:8px}.psd-treemap-tile{padding:9px}.psd-treemap-label{font-size:13px}.psd-treemap-value{font-size:18px}.psd-treemap-detail{font-size:10px}.psd-treemap-unsized button{min-height:44px}}
 @media(prefers-reduced-motion:reduce){.psd-treemap-tile{transition:none}}
-/* Reserve inspection space outside the plot so pointer/keyboard/touch values never obscure the data. */
-.psd-plot-inspection{min-height:calc(44px + var(--inspection-rows,1)*32px);margin-top:10px}
-.psd-plot-inspection .psd-plot-tooltip{position:static;width:100%;max-width:100%;box-shadow:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:24px}
+/* Series keys and inspected values sit under the plot so they never cover the marks.
+   Charts that opt into a reserved band keep their height while the readout is hidden. */
+.psd-plot-inspection.is-reserved,
+.psd-shared-plot[data-chart-component="donut"] .psd-plot-inspection{min-height:calc(44px + var(--inspection-rows,1)*32px);margin-top:10px}
+.psd-plot-inspection .psd-plot-tooltip{position:static;width:100%;max-width:100%;box-shadow:none;border:0;border-radius:0;background:transparent;padding:8px 10px 4px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));column-gap:24px}
 .psd-plot-inspection .psd-plot-tooltip>strong{grid-column:1/-1}
 .psd-plot-inspection .psd-plot-tooltip>span{min-width:0}
-@media(max-width:600px){.psd-plot-inspection{min-height:calc(44px + var(--inspection-fields,1)*32px)}.psd-plot-inspection .psd-plot-tooltip{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.psd-plot-inspection.is-reserved,.psd-shared-plot[data-chart-component="donut"] .psd-plot-inspection{min-height:calc(44px + var(--inspection-fields,1)*32px)}.psd-plot-inspection .psd-plot-tooltip{grid-template-columns:minmax(0,1fr)}}
 
 .psd-donut-slice{stroke:#faf7ef;stroke-width:2;cursor:pointer}.psd-donut-slice:hover,.psd-donut-slice:focus{stroke:#171918;stroke-width:3;outline:none}.psd-shared-plot svg .psd-donut-total{font-size:28px;font-weight:700}
 

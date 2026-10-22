@@ -15,6 +15,13 @@ for (const type of ['line', 'column', 'stacked', 'bar']) {
     const plot = page.locator('#plot'), hits = plot.locator('[data-point]'), tooltip = plot.locator('.psd-plot-tooltip');
     await expect(plot).toHaveAttribute('data-chart-component', type);
     await hits.first().hover(); await expect(tooltip).toContainText('100 EUR');
+    const plotBounds = await plot.locator('svg').boundingBox();
+    const legendBounds = await plot.locator('.psd-plot-legend').boundingBox();
+    const readoutBounds = await tooltip.boundingBox();
+    expect(legendBounds.y).toBeGreaterThanOrEqual(plotBounds.y + plotBounds.height - 1);
+    expect(readoutBounds.y).toBeGreaterThanOrEqual(legendBounds.y + legendBounds.height - 1);
+    await expect(plot.locator('.psd-plot-legend')).toContainText('Revenue');
+    await expect(plot.locator('.psd-plot-legend')).toContainText('Expenditure');
     const figure=page.locator('#chart-object');
     await figure.locator('[data-action="table"]').click();
     await expect(figure.locator('.psd-chart-table')).toContainText('2022');

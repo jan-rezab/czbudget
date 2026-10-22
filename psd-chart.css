@@ -12,30 +12,47 @@
 .psd-chart-rail {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-  padding-top: 9px;
-  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  align-items: center;
+  gap: 2px 18px;
+  margin: 8px 2px 0;
+  padding: 0;
+  border: 0;
 }
 
 .psd-chart-action {
+  position: relative;
   font: inherit;
-  font-size: 11.5px;
-  font-weight: 600;
-  letter-spacing: 0.02em;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0;
   color: inherit;
-  opacity: 0.72;
+  opacity: 0.62;
   background: transparent;
-  border: 1px solid color-mix(in srgb, currentColor 32%, transparent);
-  border-radius: 3px;
-  padding: 4px 9px 5px;
+  border: 0;
+  border-radius: 0;
+  padding: 4px 0;
   cursor: pointer;
-  transition: opacity 0.12s ease, border-color 0.12s ease;
+  transition: opacity 0.12s ease;
+}
+
+.psd-chart-action + .psd-chart-action::before {
+  content: "";
+  position: absolute;
+  left: -11px;
+  top: 50%;
+  width: 3px;
+  height: 3px;
+  margin-top: -1.5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.45;
+  pointer-events: none;
 }
 
 .psd-chart-action:hover:not(:disabled) {
   opacity: 1;
-  border-color: color-mix(in srgb, currentColor 58%, transparent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .psd-chart-action:focus-visible {
@@ -46,7 +63,9 @@
 
 .psd-chart-action[aria-pressed="true"] {
   opacity: 1;
-  border-color: currentColor;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .psd-chart-action:disabled {

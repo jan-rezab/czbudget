@@ -41,6 +41,26 @@ test('plot, tooltip table and CSV rail share one canonical accessor',()=>{
   assert.equal(data.rows[0].raw.year,2024);
 });
 
+test('series keys and inspected values stay under the plot instead of covering it', () => {
+  const originalDocument = globalThis.document;
+  globalThis.document = { activeElement: null, querySelector: () => ({}) };
+  const stopAfterMarkup = Symbol('capture rendered markup');
+  let html;
+  const host = { clientWidth: 900, contains: () => false, classList: { add() {} }, dataset: {}, set innerHTML(value) { html = value; throw stopAfterMarkup; } };
+  try {
+    charts.render(host, { type: 'line', rows: [{ year: 2020, revenue: 10, expense: 8 }, { year: 2024, revenue: 12, expense: 9 }], fields: [{ key: 'revenue', label: 'Revenue' }, { key: 'expense', label: 'Expenditure' }] });
+  } catch (error) { if (error !== stopAfterMarkup) throw error; }
+  finally { globalThis.document = originalDocument; }
+  const legend = html.indexOf('psd-plot-legend');
+  const svgEnd = html.indexOf('</svg>');
+  const tooltip = html.indexOf('psd-plot-tooltip');
+  assert.ok(legend > svgEnd, 'legend follows the plot');
+  assert.match(html, /psd-plot-legend[\s\S]*Revenue[\s\S]*Expenditure/);
+  assert.ok(tooltip > legend, 'readout follows the legend');
+  assert.match(html, /<div class="psd-plot-inspection"/);
+  assert.doesNotMatch(html, /data-end-series=/);
+});
+
 test('compact plots preserve accessible country names without a crowded end-label gutter', () => {
   const originalDocument = globalThis.document;
   globalThis.document = { activeElement: null, querySelector: () => ({}) };
