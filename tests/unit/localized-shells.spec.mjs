@@ -85,7 +85,9 @@ test('first-response shells carry the requested country and language', () => {
 
 
 test('rendering staged source copies never modifies hard-linked checkout files', () => {
-  const output=mkdtempSync(path.join(os.tmpdir(),'psd-shell-links-'));
+  // Cloud Build mounts /workspace separately from /tmp; a hard-link fixture
+  // must share the source filesystem to exercise replacement of a real link.
+  const output=mkdtempSync(path.join(root,'.psd-shell-links-'));
   try {
     const before=readFileSync(path.join(root,'about.html'),'utf8');
     linkSync(path.join(root,'about.html'),path.join(output,'about.html'));
