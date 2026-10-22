@@ -113,7 +113,7 @@
     "build:warehouse-bundles": "node scripts/build-profiles-from-warehouse.mjs --all-ready --slim --bundle --out .warehouse-bundle",
     "build:reports-index": "node scripts/build-reports-index.mjs",
     "validate:reports-index": "node scripts/build-reports-index.mjs --check",
-    "validate:localized-shells": "node --test tests/unit/localized-shells.spec.mjs"
+    "validate:localized-shells": "node --test tests/unit/localized-shells.spec.mjs tests/unit/budget-i18n.spec.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",

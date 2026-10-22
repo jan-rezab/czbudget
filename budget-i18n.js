@@ -21,7 +21,7 @@
     "{n} / Stát jako vlastník":"{n} / The state as owner","{n} / Demografický model":"{n} / Demographic model","{n} / Mezinárodní kontext":"{n} / International context","{n} / Data & metodika":"{n} / Data & methodology","Výdaje {n}":"{n} expenditure",
     "{n} / Stát jako vlastník":"{n} / The state as owner","Zisk není":"Profit is not","příjem rozpočtu.":"budget revenue.","Suma zisků":"Sum of profits","Suma ztrát":"Sum of losses","Čistý výsledek":"Net result","Součet obratu":"Total turnover","Všech {n}":"All {n}","{n} nejziskovějších":"{n} most profitable","{n} nejslabších":"{n} weakest","{n} největších":"{n} largest","Otevřít úplný profil":"Open full profile",
     "{n} / Demografický model":"{n} / Demographic model","Stárnutí není graf.":"Ageing is not a chart.","Je to účet.":"It is a bill.","Varianta ČSÚ":"CZSO variant","Nízká":"Low","Střední":"Medium","Vysoká":"High","Efektivní důchodový věk":"Effective retirement age","Roční reálný růst mezd na plátce":"Annual real wage growth per contributor","Roční reálný růst nákladů na osobu":"Annual real cost growth per person","Populace {n}+":"Population {n}+","Roční náklady systémů · {n}":"Annual system costs · {n}","Roční výdaje systémů":"Annual system expenditure","úroveň v mld. Kč · ceny {n}":"level in CZK bn · {n} prices","Důchodové saldo":"Pension balance","Věková struktura":"Age structure","miliony obyvatel":"million people","Tlak podle systému":"Pressure by system","Důchodový účet: plátci proti příjemcům":"Pension account: contributors vs recipients","mld. Kč v cenách {n}":"CZK bn at {n} prices",
-    "výchozí úroveň {n} se načítá…":"loading the {n} baseline…","Celkem":"Total","Výdaje na důchody začínají v roce {n} na {n} mld. Kč, nikoli na nule. „{n} %“ v ovladači je pouze nulový roční reálný růst nákladu na osobu; celkové výdaje se i tehdy mění s demografií. Důchodový věk se zavádí lineárně během deseti let. Váhy zdravotnictví a péče jsou scénářové předpoklady, nikoli prognóza ČSÚ.":"Pension expenditure starts at CZK {n}bn in {n}, not at zero. ‘{n}%’ in the control means zero annual real cost growth per person only; total expenditure still changes with demographics. The retirement age is phased in linearly over ten years. Healthcare and care weights are scenario assumptions, not a CZSO forecast.",
+    "výchozí úroveň {n} se načítá…":"loading the {n} baseline…","Celkem":"Total","Výdaje na důchody začínají v roce {n} na {n} mld. Kč, nikoli na nule. „{n} %“ v ovladači je pouze nulový roční reálný růst nákladu na osobu; celkové výdaje se i tehdy mění s demografií. Důchodový věk se zavádí lineárně během deseti let. Váhy zdravotnictví a péče jsou scénářové předpoklady, nikoli prognóza ČSÚ.":"In {n}, pension expenditure starts at CZK {n}bn, not at zero. ‘{n}%’ in the control means zero annual real cost growth per person only; total expenditure still changes with demographics. The retirement age is phased in linearly over ten years. Healthcare and care weights are scenario assumptions, not a CZSO forecast.",
     "{n} / Mezinárodní kontext":"{n} / International context","Jedna metrika.":"One metric.","Deset realit.":"Ten realities.","Rok":"Year","Ukazatel":"Metric","Skupina":"Group","Kontinent":"Continent","Všechny kontinenty":"All continents","TOP {n} za každý kontinent + Česko":"Top {n} per continent + Czechia","IMF WEO · nominální HDP {n}":"IMF WEO · nominal GDP {n}","Všechny země":"All countries","Základní srovnání":"Core comparison","Fiskální benchmark":"Fiscal benchmark","skutečnost do {n}":"actual through {n}","Profil země":"Country profile","Saldo × dluh":"Balance × debt","Zdroj: IMF World Economic Outlook · duben {n}":"Source: IMF World Economic Outlook · April {n}",
     "{n} / Data & metodika":"{n} / Data & methodology","Důvěra začíná":"Trust begins","u definice.":"with the definition.","Český rozpočet":"Czech budget","Sociální systémy":"Social systems","Mezinárodní benchmark":"International benchmark","Nahoru ↑":"Back to top ↑","Český rozpočet v čase a souvislostech":"The Czech budget over time and in context","nominální mld. Kč":"nominal CZK bn","mld. Kč":"CZK bn","mld. Kč ročně · {n}":"CZK bn per year · {n}","změna proti {n}":"change vs {n}","let":"years","návrh":"proposal","skutečnost":"actual",
     "Rozsah dat / fiskální perimeter":"Data scope / fiscal perimeter","Tři účty.":"Three perimeters.","Žádné sčítání.":"Do not add them.","Stejný stát lze měřit třemi legitimními způsoby. Výsledek se může zásadně změnit podle toho, které instituce zahrneme a zda vnitřní transfery konsolidujeme.":"The same state can be measured using three legitimate boundaries. The result can change materially depending on which institutions are included and whether internal transfers are consolidated.",
@@ -38,6 +38,17 @@
   };
   Object.assign(csToEn, {
     "Český státní rozpočet": "Czech state budget",
+    "Datový graf": "Data chart",
+    "Zdroj: MF ČR · ČSÚ": "Source: Czech Ministry of Finance · CZSO",
+    "Zdroj: MF ČR": "Source: Czech Ministry of Finance",
+    "Zdroj: ČSÚ · projekce obyvatelstva {n}–{n}": "Source: CZSO · population projection {n}–{n}",
+    "Zdroj: ČSÚ · ČSSZ · MF ČR · model Public Spending Data": "Source: CZSO · CSSA · Czech Ministry of Finance · Public Spending Data model",
+    "rok": "year",
+    "miliony": "millions",
+    "mld. Kč": "CZK bn",
+    "{n} mil.": "{n} million",
+    "z {n} : {n} v roce {n}": "from {n} : {n} in {n}",
+    "+{n} % proti {n}": "+{n}% versus {n}",
     "Rozsah dat": "Data scope",
     "Tři účetní hranice": "Three accounting boundaries",
     "Příjmy a výdaje podle kategorií": "Revenue and expenditure by category",
@@ -105,10 +116,9 @@
   // language-bootstrap.js already resolved URL param → stored preference →
   // route default; re-reading storage here would only duplicate it unguarded.
   let lang = window.PSDLanguage?.current() || (document.documentElement.lang === "en" ? "en" : "cs");
-  // The HTML shipped by this page is always Czech. language-bootstrap.js sets
-  // <html lang> before this deferred script runs, so it cannot be used as a
-  // proxy for the language currently rendered in the body.
-  let renderedLang = "cs";
+  // The staged shell records its body language independently of the user preference.
+  // Legacy Czech HTML has no marker; language-bootstrap may already have changed lang.
+  let renderedLang = document.body.dataset.renderedLanguage || "cs";
   let translating = false;
   // A5 + B5 — numbers are formatted at render, never baked into a translation key.
   //
@@ -155,8 +165,17 @@
     });
     return text.replace(trimmed, rendered);
   };
+  function translateAttributes(element, dictionary, toLang) {
+    if (element.nodeType !== Node.ELEMENT_NODE) return;
+    for (const attribute of ["placeholder", "aria-label", "title", "data-source"]) {
+      const value = element.getAttribute(attribute);
+      if (value) element.setAttribute(attribute, replaceText(value, dictionary, toLang));
+    }
+  }
   function translateTree(root, dictionary, toLang) {
     if (root.nodeType === Node.TEXT_NODE) { root.nodeValue = replaceText(root.nodeValue, dictionary, toLang); return; }
+    translateAttributes(root, dictionary, toLang);
+    root.querySelectorAll?.("[placeholder],[aria-label],[title],[data-source]").forEach(element => translateAttributes(element, dictionary, toLang));
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
     while (walker.nextNode()) walker.currentNode.nodeValue = replaceText(walker.currentNode.nodeValue, dictionary, toLang);
   }
@@ -170,11 +189,7 @@
       renderedLang = next;
     }
     lang = window.PSDLanguage?.set(next, { persist }) || next; document.documentElement.lang = lang;
-    document.querySelectorAll("[placeholder],[aria-label],[title]").forEach(node => {
-      for (const attribute of ["placeholder","aria-label","title"]) {
-        const value=node.getAttribute(attribute); if(value&&dictionary[value])node.setAttribute(attribute,dictionary[value]);
-      }
-    });
+    document.querySelectorAll("[placeholder],[aria-label],[title],[data-source]").forEach(element => translateAttributes(element, dictionary, next));
     document.querySelectorAll("[data-budget-lang]").forEach(button => button.classList.toggle("active", button.dataset.budgetLang === lang));
     document.title = lang === "en" ? "Public Spending Data — Czech budget over time" : "Public Spending Data — český rozpočet v čase";
     const url = new URL(location.href); url.searchParams.set("lang", lang); history.replaceState(null,"",url);
@@ -185,7 +200,10 @@
   document.querySelectorAll("[data-budget-lang]").forEach(button => button.addEventListener("click", () => applyLanguage(button.dataset.budgetLang, true)));
   const observer = new MutationObserver(records => {
     if (translating || lang !== "en") return; translating = true;
-    records.forEach(record => record.addedNodes.forEach(node => translateTree(node, csToEn, "en")));
+    records.forEach(record => {
+      translateAttributes(record.target, csToEn, "en");
+      record.addedNodes.forEach(node => translateTree(node, csToEn, "en"));
+    });
     translating = false;
   });
   observer.observe(document.body,{subtree:true,childList:true});
