@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { readFileSync } from 'node:fs';
+import { htmlIds, sectionIds } from './html-attributes.mjs';
 
 test('candidate image serves navigation and the published story',async({page})=>{
   await page.goto('/stories/?lang=en');
@@ -45,7 +46,6 @@ const localizedRoutes=[
   ...['/comparison.html','/map.html','/process/log/','/cesky-rozpocet.html','/municipalities/','/municipalities/czechia/','/municipalities/germany/','/municipalities/france/'].map(route=>({label:route,route})),
 ];
 const budgetSource=readFileSync(new URL('../../cesky-rozpocet.html',import.meta.url),'utf8');
-const sectionIds=html=>[...html.matchAll(/<section\b[^>]*\bid="([^"]+)"/g)].map(match=>match[1]);
 const fullBudgetSections=['overview','cesko','rozpocet-v-case','utraceni','statni-firmy','zdravotni-system','nemocnice-benchmark','demografie','benchmark','metodika'];
 for(const {label,route} of localizedRoutes) {
   test(`candidate image returns English HTML before scripts run: ${label}`,async({request})=>{
@@ -64,8 +64,8 @@ for(const {label,route} of localizedRoutes) {
         expect(sectionIds(html)).toEqual(fullBudgetSections);
         expect(sectionIds(html)).toEqual(sectionIds(budgetSource));
         expect((html.match(/<section\b/g)||[]).length).toBe((budgetSource.match(/<section\b/g)||[]).length);
-        const ids=markup=>[...markup.matchAll(/\bid="([^"]+)"/g)].map(match=>match[1]).filter(id=>!id.startsWith('alternate-')&&id!=='canonical-url').sort();
-        expect(ids(html)).toEqual(ids(budgetSource));
+        const budgetIds=markup=>htmlIds(markup).filter(id=>!id.startsWith('alternate-')&&id!=='canonical-url').sort();
+        expect(budgetIds(html)).toEqual(budgetIds(budgetSource));
       }
     } finally {await response.dispose();}
   });

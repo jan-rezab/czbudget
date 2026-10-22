@@ -16,6 +16,7 @@ const required=[
   'tests/unit/localized-shells.spec.mjs','tests/unit/budget-i18n.spec.mjs',
   'server/metadata-paths.mjs','server/published-metadata.mjs',
   'tests/api/published-metadata.spec.mjs','tests/api/data-health-provenance.spec.mjs',
+  'tests/release/image.spec.mjs','tests/release/html-attributes.mjs','tests/unit/image-html-contract.spec.mjs',
   'tests/unit/chart-registry.spec.mjs','tests/unit/release-contract.spec.mjs','tests/browser/shared-charts.spec.mjs'
 ];
 const triggerPath=process.argv[2];

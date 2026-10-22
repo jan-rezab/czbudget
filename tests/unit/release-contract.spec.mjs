@@ -56,7 +56,7 @@ test('production cannot promote before focused or exhaustive verification and ca
 
 test('the production trigger cannot omit localization helpers or metadata verification',()=>{
   const required=requiredReleasePaths();
-  const newDependencies=['scripts/localized-shell-copy.mjs','scripts/localized-shell-literals.json','tests/unit/budget-i18n.spec.mjs','tests/api/published-metadata.spec.mjs','tests/api/data-health-provenance.spec.mjs'];
+  const newDependencies=['scripts/localized-shell-copy.mjs','scripts/localized-shell-literals.json','tests/unit/budget-i18n.spec.mjs','tests/api/published-metadata.spec.mjs','tests/api/data-health-provenance.spec.mjs','tests/release/image.spec.mjs','tests/release/html-attributes.mjs','tests/unit/image-html-contract.spec.mjs'];
   for(const file of [...newDependencies,'server/metadata-paths.mjs','server/published-metadata.mjs']) assert.ok(required.includes(file),file);
   const directory=mkdtempSync(join(tmpdir(),'psd-release-trigger-'));
   const trigger=join(directory,'trigger.json');
