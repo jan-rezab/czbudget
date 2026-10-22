@@ -133,7 +133,9 @@
   function reformatNumber(token, toLang) {
     // A bare run of digits is a year or a plain count — 2026 must not become 2,026.
     if (/^\d+$/.test(token)) return token;
-    const hasCzechDecimal = /,\d+$/.test(token);
+    // The source language is the opposite of the requested target. English
+    // commas group thousands; treating them as decimal commas changes values.
+    const hasCzechDecimal = toLang === "en" && /,\d+$/.test(token);
     const normalised = hasCzechDecimal
       ? token.replace(/[   ]/g, "").replace(",", ".")
       : token.replace(/[   ,]/g, "");

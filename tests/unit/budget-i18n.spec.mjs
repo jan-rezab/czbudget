@@ -22,3 +22,11 @@ test('chart descriptions preserve source years and translate dynamic values', ()
   assert.equal(sandbox.translate('0,9 mil.', 'en'), '0.9 million');
   assert.equal(sandbox.translate('z 35,6 : 100 v roce 2025', 'en'), 'from 35.6 : 100 in 2025');
 });
+
+
+test('English grouped integer counts retain their value when returning to Czech', () => {
+  assert.equal(sandbox.translate('1,112 organisations', 'cs'), '1\u00a0112 organizací');
+  assert.equal(sandbox.translate('1,000,000 organisations', 'cs'), '1\u00a0000\u00a0000 organizací');
+  assert.equal(sandbox.translate('1 112 organizací', 'en'), '1,112 organisations');
+  assert.equal(sandbox.translate('from CZK 2,427.8bn in 2026', 'cs'), 'z 2\u00a0427,8 mld. Kč v roce 2026');
+});
