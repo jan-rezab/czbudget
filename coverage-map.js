@@ -196,7 +196,7 @@
   });
   const freshnessPromise = PSDCoverage.load();
   const transparencyPromise = window.psdTransparencyDataPromise || (window.psdTransparencyDataPromise = Promise.all([
-    fetch("data/global-budget-transparency.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
+    fetch("data/global-budget-transparency.v1.json", {cache:"no-cache"}).then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); }),
     fetch("data/world-map.v1.json").then((response) => { if (!response.ok) throw new Error(response.status); return response.json(); })
   ]));
   Promise.all([freshnessPromise, transparencyPromise]).then(([freshness, [registry, geometry]]) => {

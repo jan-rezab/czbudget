@@ -332,14 +332,14 @@
   document.querySelector("#method-download-csv")?.addEventListener("click",downloadMethodCsv);
   render();
   if(document.body.dataset.page==="methodology")Promise.all([
-    fetch("data/methodology-sources.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/data-quality-report.v1.json?v=20260825-entry-count").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/release-manifest.v1.json").then(response=>response.ok?response.json():null),
-    fetch("data/international-municipalities/index.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/municipal-itemized-coverage.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/transport-performance.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/transport-budget-detail.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/coverage-source-research.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
-    fetch("data/coverage-metrics.v1.json").then(response=>{if(!response.ok)throw new Error(response.status);return response.json();})
+    fetch("data/methodology-sources.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/data-quality-report.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/release-manifest.v1.json", {cache:"no-cache"}).then(response=>response.ok?response.json():null),
+    fetch("data/international-municipalities/index.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/municipal-itemized-coverage.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/transport-performance.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/transport-budget-detail.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/coverage-source-research.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();}),
+    fetch("data/coverage-metrics.v1.json", {cache:"no-cache"}).then(response=>{if(!response.ok)throw new Error(response.status);return response.json();})
   ]).then(([methodology,quality,release,municipalities,itemizedBudgets,transportPerformance,transportBudget,coverageResearch,coverageMetrics])=>{methodologyData=methodology;qualityData=quality;releaseData=release;municipalityData=municipalities;itemizedBudgetData=itemizedBudgets;transportPerformanceData=transportPerformance;transportBudgetData=transportBudget;coverageResearchData=coverageResearch;coverageMetricsData=coverageMetrics;renderMethodology();renderDataHealth();}).catch(error=>{const summary=document.querySelector("#method-ledger-summary");if(summary)summary.textContent=`Methodology data: ${error}`;const health=document.querySelector("#data-health-root");if(health)health.textContent=`Data health: ${error}`;});
 })();

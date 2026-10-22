@@ -67,7 +67,12 @@
   let promise;
   async function load() {
     if (!promise) promise = (async () => {
-      const base = await PSDData.loadJson('/data/data-freshness.v1.json');
+      // This URL moves independently of the website. Revalidate even a still-fresh
+      // browser entry from the earlier one-hour cache policy. Both Coverage and Map
+      // share this promise; each ordinary page load verifies the current bytes.
+      const response = await fetch('/data/data-freshness.v1.json', {cache: 'no-cache', signal: AbortSignal.timeout(12000)});
+      if (!response.ok) throw new Error(`Published freshness: ${response.status}`);
+      const base = await response.json();
       const endpoints = ['/api/v1/trade/countries', '/api/v1/job-market/2024', '/deep-dives/reports.json', '/data/education-capacity-international.v1.json'];
       const validators = [value => Array.isArray(value?.data?.countries), value => Boolean(value?.release_id) && Number(value?.period) === 2024 && Array.isArray(value?.series?.employment_shares), value => Array.isArray(value?.reports), value => Array.isArray(value?.countries)];
       const results = await Promise.allSettled(endpoints.map((url, index) => PSDData.loadJson(url).then(value => {
