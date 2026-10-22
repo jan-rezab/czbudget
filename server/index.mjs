@@ -1,3 +1,5 @@
+import {isMetadataPath} from './metadata-paths.mjs';
+import {publishedMetadataStore} from './published-metadata.mjs';
 import { readJSON as readEntityJSON } from './data-store.mjs';
 import http from "node:http";
 import {QueryAdmissionError} from './query-admission.mjs';
@@ -366,6 +368,7 @@ export async function handler(request, response) {
     if(url.pathname!=='/healthz'&&(await costGate.status()).paused){
       response.setHeader('Retry-After','900');return sendError(response,503,'service_budget_paused','The site is temporarily paused to protect its operating budget. Please try again later.',id);
     }
+    if (isMetadataPath(url.pathname)) return await publishedMetadataStore.serve(request, response, url.pathname);
     if (PUBLIC_ENTITY_PATH.test(url.pathname)) {
       if (!['GET', 'HEAD'].includes(request.method)) throw new DataError(405, 'method_not_allowed', 'Use GET or HEAD.');
       const value = await readEntityJSON(url.pathname.slice(1));

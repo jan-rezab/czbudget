@@ -6,6 +6,8 @@ import {pipeline} from 'node:stream/promises';
 import {createGunzip, gunzip as gunzipCallback} from 'node:zlib';
 import {promisify} from 'node:util';
 
+import {isMetadataPath} from './metadata-paths.mjs';
+
 const gunzip = promisify(gunzipCallback);
 
 // Data routes served from published static-asset packs rather than from the image.
@@ -66,7 +68,7 @@ export class StaticAssets {
       // rather than rejecting the whole lock, which would fail every asset route.
       const files = {};
       for (const [url, file] of Object.entries(lock.files)) {
-        if (!(ASSET_PATH.test(url) || PUBLIC_ENTITY_PATH.test(url))) continue;
+        if (!(ASSET_PATH.test(url) || PUBLIC_ENTITY_PATH.test(url) || isMetadataPath(url))) continue;
         files[url] = file;
         const pack = lock.packs[file.pack];
         if (url.split('/').some(p => p.startsWith('.')) || !pack

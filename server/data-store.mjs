@@ -3,6 +3,9 @@ import path from "node:path";
 import { publicSnapshotStore, SnapshotError } from "./snapshot-store.mjs";
 import { ASSET_PATH, AssetError, PUBLIC_ENTITY_PATH, staticAssets } from "./static-assets.mjs";
 
+import {isMetadataPath} from './metadata-paths.mjs';
+import {publishedMetadataStore} from './published-metadata.mjs';
+
 const ROOT = path.resolve(process.env.SITE_ROOT || "/usr/share/nginx/html");
 const cache = new Map();
 
@@ -34,6 +37,7 @@ export class DataError extends Error {
 }
 
 export async function readJSON(relativePath, { useCache = true } = {}) {
+  if (isMetadataPath(`/${relativePath}`)) return publishedJSON(`/${relativePath}`, {readJSON: url => publishedMetadataStore.readJSON(url, {useCache})});
   if (PUBLIC_ENTITY_PATH.test(`/${relativePath}`)) {
     const published = await staticAssets.publishedEntityJSON(`/${relativePath}`);
     if (published !== null) return published;
