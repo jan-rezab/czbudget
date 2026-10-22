@@ -24,10 +24,10 @@ for (const type of ['line', 'column', 'stacked', 'bar']) {
     await expect(plot.locator('.psd-plot-legend')).toContainText('Expenditure');
     const figure=page.locator('#chart-object');
     const tableAction = figure.locator('[data-action="table"]');
-    const actionTopWithReadout = (await tableAction.boundingBox()).y;
+    const actionTopWithReadout = await tableAction.evaluate(element => element.getBoundingClientRect().top + scrollY);
     await page.getByRole('heading').hover();
     await expect(tooltip).toBeHidden();
-    expect((await tableAction.boundingBox()).y).toBeCloseTo(actionTopWithReadout, 1);
+    expect(await tableAction.evaluate(element => element.getBoundingClientRect().top + scrollY)).toBeCloseTo(actionTopWithReadout, 1);
     await tableAction.click();
     await expect(figure.locator('.psd-chart-table')).toContainText('2022');
     await expect(figure.locator('.psd-chart-table')).toContainText('100');

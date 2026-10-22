@@ -1,6 +1,7 @@
 import { tradeExplorer } from '../fixtures/trade-explorer.mjs';
 import { test, expect } from '@playwright/test';
 
+const documentTop = locator => locator.evaluate(element => element.getBoundingClientRect().top + scrollY);
 const range = page => page.evaluate(() => [Number(document.querySelector('#explorer-start').value), Number(document.querySelector('#explorer-end').value)]);
 async function ready(page) {
   await page.goto('/chart-explorer.html');
@@ -98,18 +99,23 @@ test('plot brush zooms without triggering a point click; All and double-click re
   expect(await range(page)).toEqual([2005, 2024]);
 });
 
-test('readout dismissal keeps time presets in place and immediately clickable', async ({ page }) => {
+test('first inspection and dismissal keep timeline controls in place and clickable', async ({ page }) => {
   await ready(page);
   await page.locator('#range-5').click();
+  const all = page.locator('#range-all');
+  const navigator = page.locator('#explorer-navigator');
+  const initialAllTop = await documentTop(all);
+  const initialNavigatorTop = await documentTop(navigator);
   await page.locator('#explorer-plot [data-point="1"]').focus();
   await page.keyboard.press('ArrowRight');
   const readout = page.locator('#explorer-plot .psd-plot-tooltip');
   await expect(readout).toBeVisible();
-  const all = page.locator('#range-all');
-  const topWithReadout = (await all.boundingBox()).y;
+  expect(await documentTop(all)).toBeCloseTo(initialAllTop, 1);
+  expect(await documentTop(navigator)).toBeCloseTo(initialNavigatorTop, 1);
   await all.focus();
   await expect(readout).toBeHidden();
-  expect((await all.boundingBox()).y).toBeCloseTo(topWithReadout, 1);
+  expect(await documentTop(all)).toBeCloseTo(initialAllTop, 1);
+  expect(await documentTop(navigator)).toBeCloseTo(initialNavigatorTop, 1);
   await all.click();
   expect(await range(page)).toEqual([2005, 2024]);
 });

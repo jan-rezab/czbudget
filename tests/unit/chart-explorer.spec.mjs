@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import explorer from '../../lib/chart-explorer-model.js';
 import chart from '../../lib/chart-renderer.js';
 
@@ -118,4 +119,9 @@ test('fiscal metadata arrays do not replace the supported percentage-of-GDP meas
   assert.equal(data.snapshot[0].value, 45.235);
   assert.equal(explorer.metricsFor(fiscal).expenditure_pct_gdp.title, 'Government spending');
   assert.equal(explorer.metricsFor(fiscal).nominal_gdp_usd_bn, undefined);
+});
+
+test('explorer reserves its bounded readout before the first pointer inspection', () => {
+  const adapter = readFileSync(new URL('../../chart-explorer.js', import.meta.url), 'utf8');
+  assert.match(adapter, /inspectionPlacement: 'below'/);
 });

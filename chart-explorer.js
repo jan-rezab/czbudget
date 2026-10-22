@@ -130,6 +130,8 @@
       rowColor: row => row.color, endLabels: true, showPoints: false, valueLabels: true, activeField: focus,
       selectedLabel: state.year, axisFormat: value => trade() ? compactUSD.format(value) : `${number(value)}${state.mode === 'change' ? '' : '%'}`,
       height: plotHost.clientWidth < 600 ? 250 : 300, compact: true,
+      // Keep the timeline and presets stationary before the first inspection too.
+      inspectionPlacement: 'below',
       contextRows: bar ? undefined : data.contextRows,
       includeZero: bar || state.scale === 'zero', animate: animate && !live && !wasHidden && state.view !== 'table' ? 280 : false,
       onSelect: row => { if (row.year) selectYear(row.year); },
