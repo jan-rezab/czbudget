@@ -39,6 +39,11 @@
   Object.assign(csToEn, {
     "Český státní rozpočet": "Czech state budget",
     "Datový graf": "Data chart",
+    "Podíl skupin na celkových výdajích": "Group shares of total expenditure",
+    "Filtrovat účelové oblasti": "Filter spending purposes",
+    "Řazení rozpočtových kapitol": "Budget chapter order",
+    "Typ veřejného subjektu": "Public entity type",
+    "Datová vrstva se nepodařila načíst. Obnovte prosím stránku.": "The data layer could not be loaded. Please reload the page.",
     "Zdroj: MF ČR · ČSÚ": "Source: Czech Ministry of Finance · CZSO",
     "Zdroj: MF ČR": "Source: Czech Ministry of Finance",
     "Zdroj: ČSÚ · projekce obyvatelstva {n}–{n}": "Source: CZSO · population projection {n}–{n}",

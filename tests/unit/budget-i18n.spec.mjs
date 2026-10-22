@@ -30,3 +30,17 @@ test('English grouped integer counts retain their value when returning to Czech'
   assert.equal(sandbox.translate('1 112 organizací', 'en'), '1,112 organisations');
   assert.equal(sandbox.translate('from CZK 2,427.8bn in 2026', 'cs'), 'z 2\u00a0427,8 mld. Kč v roce 2026');
 });
+
+
+test('spending and entity control labels and data-loading errors translate', () => {
+  for (const [cs, en] of [
+    ['Podíl skupin na celkových výdajích', 'Group shares of total expenditure'],
+    ['Filtrovat účelové oblasti', 'Filter spending purposes'],
+    ['Řazení rozpočtových kapitol', 'Budget chapter order'],
+    ['Typ veřejného subjektu', 'Public entity type'],
+    ['Datová vrstva se nepodařila načíst. Obnovte prosím stránku.', 'The data layer could not be loaded. Please reload the page.'],
+  ]) {
+    assert.equal(sandbox.translate(cs, 'en'), en);
+    assert.equal(sandbox.translate(en, 'cs'), cs);
+  }
+});
