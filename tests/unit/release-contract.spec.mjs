@@ -3,7 +3,10 @@ import assert from 'node:assert/strict';
 import {requiredReleasePaths} from '../../scripts/validate-release-contract.mjs';
 import {registry} from '../../scripts/chart-registry.mjs';
 import {productionPlan, releaseMode} from '../../scripts/release-verification.mjs';
-import {readFileSync} from 'node:fs';
+import {readFileSync,mkdtempSync,writeFileSync,rmSync} from 'node:fs';
+import {spawnSync} from 'node:child_process';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 
 test('release contract covers every adapter and its architecture sources',()=>{
   const required=requiredReleasePaths();
@@ -48,4 +51,28 @@ test('production cannot promote before focused or exhaustive verification and ca
   assert.match(block('assert-current-main'),/waitFor: \[assert-single-production, component-verification, full-verification, image-contract, image-browser-contract, push\]/);
   assert.match(block('verification-input'),/git diff --no-renames --name-only "\$\$base" "\$COMMIT_SHA"/);
   assert.match(yaml,/\ntimeout: 1800s\n/);
+});
+
+
+test('the production trigger cannot omit localization helpers or metadata verification',()=>{
+  const required=requiredReleasePaths();
+  const newDependencies=['scripts/localized-shell-copy.mjs','scripts/localized-shell-literals.json','tests/unit/budget-i18n.spec.mjs','tests/api/published-metadata.spec.mjs','tests/api/data-health-provenance.spec.mjs'];
+  for(const file of [...newDependencies,'server/metadata-paths.mjs','server/published-metadata.mjs']) assert.ok(required.includes(file),file);
+  const directory=mkdtempSync(join(tmpdir(),'psd-release-trigger-'));
+  const trigger=join(directory,'trigger.json');
+  const validator=new URL('../../scripts/validate-release-contract.mjs',import.meta.url);
+  try {
+    // Keep the deployed trigger's server/** convention; an exact helper omission
+    // must fail even though every other release file remains covered.
+    const covered=[...required.filter(file=>!file.startsWith('server/')),'server/**'];
+    writeFileSync(trigger,JSON.stringify({includedFiles:covered}));
+    const valid=spawnSync(process.execPath,[validator.pathname,trigger],{encoding:'utf8'});
+    assert.equal(valid.status,0,valid.stderr);
+    for(const omitted of newDependencies) {
+      writeFileSync(trigger,JSON.stringify({includedFiles:covered.filter(file=>file!==omitted)}));
+      const invalid=spawnSync(process.execPath,[validator.pathname,trigger],{encoding:'utf8'});
+      assert.notEqual(invalid.status,0,omitted);
+      assert.ok(invalid.stderr.includes(`Production trigger misses release paths: ${omitted}`),invalid.stderr);
+    }
+  } finally {rmSync(directory,{recursive:true,force:true});}
 });

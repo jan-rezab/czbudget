@@ -11,6 +11,11 @@ const required=[
   'scripts/validate-ui-environment.mjs','scripts/validate-release-contract.mjs',
   'scripts/release-verification.mjs','scripts/prepare-production-verification.mjs','scripts/run-component-gate.mjs',
   'scripts/build-admission.py','tests/test_build_admission.py',
+  'nginx.conf.template','scripts/stage-runtime.py','scripts/render-localized-shells.mjs',
+  'scripts/localized-shell-copy.mjs','scripts/localized-shell-literals.json',
+  'tests/unit/localized-shells.spec.mjs','tests/unit/budget-i18n.spec.mjs',
+  'server/metadata-paths.mjs','server/published-metadata.mjs',
+  'tests/api/published-metadata.spec.mjs','tests/api/data-health-provenance.spec.mjs',
   'tests/unit/chart-registry.spec.mjs','tests/unit/release-contract.spec.mjs','tests/browser/shared-charts.spec.mjs'
 ];
 const triggerPath=process.argv[2];
