@@ -236,10 +236,19 @@ test("comparison and coverage live outside the homepage", async ({ page }) => {
   await expect(page.locator("#status-data-total")).toHaveAttribute("title", formatCount(structuredRowsProcessed));
   // Validated facts, public profiles, directory, itemized, entity rows, country-years, ledger rows.
   await expect(page.locator("#data-health-root .data-health-kpis article")).toHaveCount(7);
-  const verifiedDataRelease = qualityReport.status === "passed" && qualityReport.release_id && qualityReport.verified_at && qualityReport.build_mode !== "local";
+  const verifiedDataRelease = qualityReport.status === "passed" && qualityReport.release_id && Number.isFinite(Date.parse(qualityReport.verified_at)) && qualityReport.build_mode !== "local";
   const healthStatus = page.locator("#data-health-root .data-health-status");
   if (verifiedDataRelease) {
-    await expect(healthStatus).toContainText(`Verified data release: ${qualityReport.release_id}`);
+    const publishedAudit = qualityReport.build_mode === "published-release-audit";
+    await expect(healthStatus).toContainText(`${publishedAudit ? "Verified published-data audit" : "Verified data release"}: ${qualityReport.release_id}`);
+    if (publishedAudit) {
+      await expect(page.locator("#data-health-root")).toContainText("Verification scope:");
+      await expect(page.locator("#data-health-root")).toContainText(qualityReport.verification_scope.en);
+      await expect(page.locator("#data-health-root")).toContainText("Verified:");
+      for (const release of qualityReport.published_releases) {
+        await expect(page.locator("#data-health-root details")).toContainText(`${release.dataset}: ${release.release_id}`);
+      }
+    }
   } else {
     await expect(healthStatus).toContainText("Historical local check · verification date and data release ID unavailable");
     await expect(healthStatus).not.toContainText("Checks passed");
