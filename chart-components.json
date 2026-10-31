@@ -17,7 +17,8 @@
       "pyramid",
       "funding-flow",
       "treemap",
-      "circuit"
+      "circuit",
+      "choropleth"
     ]
   },
   "consumers": [
@@ -459,6 +460,24 @@
         "lib/economic-circuit-model.mjs",
         "tests/unit/economic-circuit.spec.mjs"
       ]
+    },
+    {
+      "id": "home-municipal-budget-map",
+      "adapter": "homepage-budget-map.js",
+      "families": [
+        "choropleth"
+      ],
+      "tests": [
+        "tests/browser/home-budget-map.spec.mjs"
+      ],
+      "routes": [
+        "/"
+      ],
+      "change_paths": [
+        "homepage-budget-map.js",
+        "homepage-budget-map.css",
+        "tests/browser/home-budget-map.spec.mjs"
+      ]
     }
   ],
   "legacy": {
@@ -570,7 +589,9 @@
       "lib/economic-flow-model.mjs",
       "deep-dives.js",
       "economic-atlas-overview.js",
-      "lib/economic-circuit-model.mjs"
+      "lib/economic-circuit-model.mjs",
+      "homepage-budget-map.js",
+      "homepage-budget-map.css"
     ]
   }
 }

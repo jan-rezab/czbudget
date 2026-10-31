@@ -21,7 +21,7 @@ OFFLOADED_FILES = {'data/trade/automotive-monthly.v1.json', 'data/municipal-budg
         'international-municipalities', 'municipal-snapshot', 'municipal-history-directory',
         'cze-medicine-reimbursements', 'cze-school-funding-2026', 'czech-consolidated-accounts',
         'czech-sfdi-financing', 'pensions-today', 'methodology-sources', 'eu-budget-flows',
-        'sovereign-benchmark-slim']}
+        'sovereign-benchmark-slim', 'czech-municipal-budget-map']}
 ROOT_EXTENSIONS = {'.html', '.js', '.css', '.svg', '.png', '.ico', '.xml', '.txt'}
 
 

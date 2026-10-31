@@ -187,7 +187,7 @@ export async function statDataFile(relative, { root = process.cwd(), store = loc
  * czech-project-geography and the bulk of contracts/ and industry/) keep their own
  * data-plane validators and are not rescanned here.
  */
-export const REPOSITORY_DATASET = /^\/data\/(?:(?:paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|countries|public-entities|economy|international-municipalities|czech-sfdi-tables|monitor-grants|registry\/source-provenance)\/|contracts\/00075370\.plzen-projects\.v1\.json$|industry\/CZE\.json\.gz$|(?:international-municipalities|municipal-snapshot|municipal-history-directory|cze-medicine-reimbursements|cze-school-funding-2026|czech-consolidated-accounts|czech-sfdi-financing|pensions-today|methodology-sources|eu-budget-flows|sovereign-benchmark-slim)\.v1\.json$)/;
+export const REPOSITORY_DATASET = /^\/data\/(?:(?:paq|monitor-2026|dotaceeu|mv-administration-grants|mf-perimeter-history|france-municipal-profiles|countries|public-entities|economy|international-municipalities|czech-sfdi-tables|monitor-grants|registry\/source-provenance)\/|contracts\/00075370\.plzen-projects\.v1\.json$|industry\/CZE\.json\.gz$|(?:international-municipalities|municipal-snapshot|municipal-history-directory|cze-medicine-reimbursements|cze-school-funding-2026|czech-consolidated-accounts|czech-sfdi-financing|pensions-today|methodology-sources|eu-budget-flows|sovereign-benchmark-slim|czech-municipal-budget-map)\.v1\.json$)/;
 
 /** Repository datasets that are served from the packs and absent from this checkout. */
 export async function offloadedRepositoryDatasets({ root = process.cwd(), store = localAssetStore() } = {}) {

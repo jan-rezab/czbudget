@@ -77,7 +77,8 @@ class RuntimeAssetsTest(unittest.TestCase):
                       'data/international-municipalities.v1.json', 'data/municipal-snapshot.v1.json', 'data/municipal-history-directory.v1.json',
                       'data/cze-medicine-reimbursements.v1.json', 'data/cze-school-funding-2026.v1.json', 'data/czech-consolidated-accounts.v1.json',
                       'data/czech-sfdi-financing.v1.json', 'data/pensions-today.v1.json', 'data/methodology-sources.v1.json',
-                      'data/eu-budget-flows.v1.json', 'data/sovereign-benchmark-slim.v1.json']:
+                      'data/eu-budget-flows.v1.json', 'data/sovereign-benchmark-slim.v1.json',
+                      'data/czech-municipal-budget-map.v1.json']:
             self.assertFalse(runtime.included(Path(value)), value)
         for value in ['data/isred/a.json', 'data/industrial-intelligence/index.json', 'data/paq/index.json', 'data/trade/automotive-monthly.v1.json', 'data/municipal-budget-codebook.v1.json', 'data/.query.json', '.public-serving-build/current.json', 'scripts/tool.js', 'content/stories/draft.html', 'content/stories/catalog.mjs', 'pipeline/raw.csv', 'tests/a.js', 'data/entities/00000001.json', 'cz/municipalities/praha/index.html', 'municipalities/finland/example/index.html', 'data/example 2.json']:
             self.assertFalse(runtime.included(Path(value)), value)

@@ -72,6 +72,7 @@ const OFFLOADED_SAMPLES = [
   '/data/cze-medicine-reimbursements.v1.json', '/data/cze-school-funding-2026.v1.json',
   '/data/czech-consolidated-accounts.v1.json', '/data/czech-sfdi-financing.v1.json', '/data/pensions-today.v1.json',
   '/data/methodology-sources.v1.json', '/data/eu-budget-flows.v1.json', '/data/sovereign-benchmark-slim.v1.json',
+  '/data/czech-municipal-budget-map.v1.json',
   '/data/paq/index.json', '/data/industry/CZE.json.gz', '/data/contracts/00075370.plzen-projects.v1.json',
 ];
 // Small contracts generated or validated with the code stay in the image.

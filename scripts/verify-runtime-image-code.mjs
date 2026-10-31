@@ -29,6 +29,7 @@ for (const name of [
   'data/methodology-sources.v1.json',
   'data/eu-budget-flows.v1.json',
   'data/sovereign-benchmark-slim.v1.json',
+  'data/czech-municipal-budget-map.v1.json',
 ]) {
   await assert.rejects(fs.stat(`${root}/${name}`), {code: 'ENOENT'});
 }

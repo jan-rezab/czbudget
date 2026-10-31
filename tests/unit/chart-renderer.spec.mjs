@@ -216,3 +216,8 @@ test('hidden below-plot readouts retain layout without exposing their content', 
   assert.match(rule, /(?:^|;)visibility:hidden(?:;|$)/);
   assert.match(css, /\.psd-plot-tooltip\[hidden\]\{display:none!important\}/, 'floating tips retain ordinary hidden behavior');
 });
+test('choropleth bins keep missing values apart from zero and respect thresholds',()=>{
+  const bins=[-.1,0,.1];
+  assert.deepEqual([-.2,-.1,0,.05,.1,.5,0].map(value=>charts.choroplethBin(value,bins)),[0,1,2,2,3,3,2]);
+  for(const value of [null,undefined,NaN,'0.1']) assert.equal(charts.choroplethBin(value,bins),'x');
+});

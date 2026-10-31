@@ -118,3 +118,33 @@ button.psd-funding-node:hover{border-color:#8b8d83;box-shadow:0 5px 18px #171918
 
 /* Measured annual flow bands and floating columns share the standard chart rail. */
 .psd-flow-band-viewport{overflow:auto;max-width:100%;overscroll-behavior-x:contain}.psd-shared-plot .psd-flow-band-viewport svg{display:block;width:100%;min-width:850px!important}.psd-flow-ribbon{opacity:.48;transition:opacity .15s}.psd-flow-ribbon.is-dim{opacity:.08}.psd-flow-band-label{cursor:pointer;outline:none}.psd-flow-band-label>rect:first-child{fill:transparent;stroke:transparent}.psd-flow-band-label:hover>rect:first-child,.psd-flow-band-label:focus>rect:first-child,.psd-flow-band-label[aria-pressed=true]>rect:first-child{fill:#dfe6ce66;stroke:#8c9c68}.psd-shared-plot svg .psd-flow-name{font:13px system-ui,sans-serif;fill:#465442}.psd-shared-plot svg .psd-flow-value{font:30px Georgia,serif;fill:#253420}.psd-shared-plot svg .psd-flow-unit{font:10px monospace;fill:#758267}.psd-shared-plot svg .psd-flow-center{font:17px Georgia,serif;fill:#425638}.psd-flow-boundary{stroke:#899875;stroke-dasharray:3 7;opacity:.5}.psd-floating-connector{stroke:#8b9680;stroke-dasharray:4 4;stroke-width:1}.psd-flow-band-viewport:focus-within{scroll-behavior:smooth}
+/* Choropleth: adapter thresholds pick a bin; missing values keep their own swatch. */
+.psd-choropleth{--choro-0:#8f1f24;--choro-1:#c93237;--choro-2:#e3a29a;--choro-3:#e4dfd2;--choro-4:#d3da9e;--choro-5:#a8b63f;--choro-6:#5f6b17;--choro-x:#bdb8ad;position:relative}
+.psd-choropleth[data-ramp="sequential"]{--choro-0:#e8e4d8;--choro-1:#cdd3c9;--choro-2:#a9b8b2;--choro-3:#83999a;--choro-4:#5e7a80;--choro-5:#3d5a62;--choro-6:#1f3a42}
+.psd-choro-frame{position:relative;min-width:0}
+.psd-choro-frame svg{display:block;width:100%;height:auto;touch-action:manipulation;outline:none}
+.psd-choro-frame svg:focus-visible{outline:2px solid #a8b63f;outline-offset:3px}
+.psd-choro-areas path{stroke:#faf7ef;stroke-width:.18;cursor:pointer}
+.psd-choro-areas .is-empty{fill:var(--choro-x);cursor:default}
+.psd-choropleth .b0{fill:var(--choro-0);background:var(--choro-0)}.psd-choropleth .b1{fill:var(--choro-1);background:var(--choro-1)}.psd-choropleth .b2{fill:var(--choro-2);background:var(--choro-2)}.psd-choropleth .b3{fill:var(--choro-3);background:var(--choro-3)}.psd-choropleth .b4{fill:var(--choro-4);background:var(--choro-4)}.psd-choropleth .b5{fill:var(--choro-5);background:var(--choro-5)}.psd-choropleth .b6{fill:var(--choro-6);background:var(--choro-6)}.psd-choropleth .bx{fill:var(--choro-x);background:var(--choro-x)}
+.psd-choro-regions path{fill:none;stroke:#faf7ef;stroke-width:1.8;pointer-events:none}
+.psd-choro-outline{fill:none;stroke:#171918;stroke-width:1;pointer-events:none}
+.psd-choro-hover,.psd-choro-pin{fill:none;stroke:#171918;pointer-events:none;vector-effect:non-scaling-stroke}
+.psd-choro-hover{stroke-width:1.6}.psd-choro-pin{stroke-width:2.6}
+.psd-choro-tip{position:absolute;z-index:4;pointer-events:none;background:#171918;color:#faf7ef;padding:10px 12px;min-width:200px;max-width:260px;font:12px/1.4 Arial,Helvetica,sans-serif;font-variant-numeric:tabular-nums}
+.psd-choro-tip.is-pinned{pointer-events:auto}
+.psd-choro-tip strong{display:block;font:400 17px/1.15 Georgia,serif;margin-bottom:2px}
+.psd-choro-meta{display:block;font:10px/1.3 monospace;text-transform:uppercase;letter-spacing:.05em;color:#d2ccc1}
+.psd-choro-value{display:block;font:700 20px/1.1 Arial,Helvetica,sans-serif;margin:6px 0 2px}
+.psd-choro-lines{display:grid;grid-template-columns:1fr auto;gap:1px 10px;margin-top:8px;padding-top:6px;border-top:1px solid #555a56}
+.psd-choro-lines>.psd-choro-meta{grid-column:1/-1}
+.psd-choro-lines span:nth-child(odd):not(.psd-choro-meta){text-align:left}
+.psd-choro-lines .is-total{border-top:1px solid #555a56;padding-top:2px;font-weight:700}
+.psd-choro-tip a{display:inline-block;margin-top:8px;color:#faf7ef}
+.psd-choro-legend{display:flex;flex-wrap:wrap;align-items:flex-end;gap:10px 18px;margin-top:10px}
+.psd-choro-ramp{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(30px,52px);padding-bottom:16px}
+.psd-choro-ramp span{height:10px;position:relative}
+.psd-choro-ramp b{position:absolute;left:0;top:14px;transform:translateX(-50%);font:400 10px/1 monospace;color:#555a56;white-space:nowrap}
+.psd-choro-missing{display:flex;align-items:center;gap:6px;font:10px/1 monospace;color:#555a56;padding-bottom:16px}
+.psd-choro-missing i{width:12px;height:10px;background:var(--choro-x)}
+@media (prefers-reduced-motion:no-preference){.psd-choro-areas path{transition:fill .25s}}
