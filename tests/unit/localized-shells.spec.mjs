@@ -64,7 +64,6 @@ test('first-response shells carry the requested country and language', () => {
     assert.match(home, /Itemized municipal budgets are published for only some countries/);
     assert.match(home, /Loading comparison…/);
     assert.match(home, /Loading health indicators…/);
-    assert.match(home, /Loading the municipal map…/);
     assert.doesNotMatch(home, /Načítám/);
     const about = readFileSync(path.join(output, 'about.en.html'), 'utf8');
     assert.match(about, /<h1 data-page-copy="aboutTitle">About Public Spending Data<\/h1>/);

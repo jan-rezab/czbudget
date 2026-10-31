@@ -462,21 +462,22 @@
       ]
     },
     {
-      "id": "home-municipal-budget-map",
-      "adapter": "homepage-budget-map.js",
+      "id": "czech-municipal-budget-map",
+      "adapter": "municipal-budget-map.js",
       "families": [
         "choropleth"
       ],
       "tests": [
-        "tests/browser/home-budget-map.spec.mjs"
+        "tests/browser/czech-budget-map.spec.mjs"
       ],
       "routes": [
-        "/"
+        "/municipalities/czechia/"
       ],
       "change_paths": [
-        "homepage-budget-map.js",
-        "homepage-budget-map.css",
-        "tests/browser/home-budget-map.spec.mjs"
+        "municipal-budget-map.js",
+        "municipal-budget-map.css",
+        "municipalities/czechia/index.html",
+        "tests/browser/czech-budget-map.spec.mjs"
       ]
     }
   ],
@@ -590,8 +591,8 @@
       "deep-dives.js",
       "economic-atlas-overview.js",
       "lib/economic-circuit-model.mjs",
-      "homepage-budget-map.js",
-      "homepage-budget-map.css"
+      "municipal-budget-map.js",
+      "municipal-budget-map.css"
     ]
   }
 }

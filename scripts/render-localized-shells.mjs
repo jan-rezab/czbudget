@@ -54,7 +54,7 @@ const countries = scriptValue(await read('country-names.js'), 'const countries =
 const slugs = scriptValue(await read('country-routes.js'), 'const slugs =', 'const codes =', 'slugs');
 
 let home = translated(await read('index.html'), 'data-i18n', homeCopy.en);
-home = home.replace('Načítám srovnání…', 'Loading comparison…').replace('Načítám zdravotní ukazatele…', 'Loading health indicators…').replace('Načítám mapu obcí…', 'Loading the municipal map…');
+home = home.replace('Načítám srovnání…', 'Loading comparison…').replace('Načítám zdravotní ukazatele…', 'Loading health indicators…');
 home = metadata(home, { lang: 'en', title: 'Public Spending Data — public budgets in context', description: 'Compare national finances, inspect municipal budgets and open the original sources.' });
 await write('index.en.html', home);
 
