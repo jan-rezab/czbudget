@@ -11,6 +11,7 @@ Per municipality (all PSD calculations, never source observations):
       tax + non-tax revenue + current grants (41xx, consolidation items excluded)
       and current spending is class 5
   ob  operating balance 2021-25, CZK
+  ce  current spending (class 5) 2021-25, CZK
   cx  capital spending (class 6) 2021-25, CZK
   cf  capital revenue + investment grants (42xx) 2021-25, CZK
   k   capital spending a year per resident: cx / 5 / mean mid-year population
@@ -144,6 +145,7 @@ def build(inputs: dict[str, list], manifest_sha: str) -> dict:
             "p": pop,
             "o": round(float(op / cur_rev), 4) if cur_rev > 0 else None,
             "ob": round(float(op)),
+            "ce": round(float(cur_exp)),
             "cx": round(float(cap_exp)),
             "cf": round(float(cap_fund)),
             "k": round(float(cap_exp) / 5 / avg_pop) if avg_pop and r["pop_null"] == "0" else None,

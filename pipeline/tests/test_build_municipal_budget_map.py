@@ -27,6 +27,7 @@ class BudgetMapTest(unittest.TestCase):
     def test_ratios_and_identity(self):
         row = build(inputs(), "x")["municipalities"][0]
         self.assertEqual((row["o"], row["ob"], row["cx"], row["cf"], row["fb"]), (0.3, 300, 500, 100, -100))
+        self.assertEqual(row["ce"], 700)
         self.assertEqual(row["k"], 500)  # 500 CZK / 5 years / 0.2 mean residents
         self.assertEqual(row["m"], 6.0)
         self.assertEqual(row["n"], "Dolní nad Lesem")
