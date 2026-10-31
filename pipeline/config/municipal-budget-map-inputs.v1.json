@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "dataset_id": "CZ_MUNICIPAL_BUDGET_MAP_2021_2025",
+  "output": "data/czech-municipal-budget-map.v1.json",
+  "licence": {
+    "ruian": "ČÚZK RÚIAN data are open data under CC BY 4.0 (https://cuzk.gov.cz/)",
+    "monitor": "MONITOR, Ministry of Finance of the Czech Republic, open data"
+  },
+  "inputs": [
+    {
+      "name": "five-year.sql",
+      "role": "query",
+      "source": "PSD warehouse query, run 2026-10-31T15:07Z as jan@ravineo.com with bq query --nouse_legacy_sql --format=json",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/8c215e830efeb7cb7cde414126d02ad8ca04bb74bb8516c35bbeee4b8e31fb12-five-year.sql",
+      "sha256": "8c215e830efeb7cb7cde414126d02ad8ca04bb74bb8516c35bbeee4b8e31fb12",
+      "bytes": 1594
+    },
+    {
+      "name": "five-year.json",
+      "role": "five_year",
+      "source": "Result of five-year.sql over budget_detail.czech_municipal_history_annual (release cb5e6d60-fcf9-4c12-af75-1c59491114a1) and budget_detail.czech_municipal_transfer_items_annual (release d5410309-fe00-413f-a082-a85041386efb)",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/fb0502a947699cb2a0ae811a5dc0d0f50e8ed393ace50f206c66fbbd811366cc-five-year.json",
+      "sha256": "fb0502a947699cb2a0ae811a5dc0d0f50e8ed393ace50f206c66fbbd811366cc",
+      "bytes": 2257106
+    },
+    {
+      "name": "municipal-snapshot.v1.json",
+      "role": "snapshot",
+      "source": "https://publicspendingdata.org/data/municipal-snapshot.v1.json as served 2026-10-31 (published PSD municipal snapshot, fiscal 2025)",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/ef8663e98524a99f6cf4bca5c269ae0c48dc204e19642ebf9d6fbecdbca2efa7-municipal-snapshot.v1.json",
+      "sha256": "ef8663e98524a99f6cf4bca5c269ae0c48dc204e19642ebf9d6fbecdbca2efa7",
+      "bytes": 14403743
+    },
+    {
+      "name": "ruian-layer19-stat.json",
+      "role": "state",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/19/query?outFields=*&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:22Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/66776d563ba1c1f0c47d869c1097e8ed83b94e4fad1f81d4a4de27aa3e70e26c-ruian-layer19-stat.json",
+      "sha256": "66776d563ba1c1f0c47d869c1097e8ed83b94e4fad1f81d4a4de27aa3e70e26c",
+      "bytes": 35326
+    },
+    {
+      "name": "ruian-layer17-kraje.json",
+      "role": "regions",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/17/query?outFields=*&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:22Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/54f76cb13446ef0082b1a16b7d06ec9e927b0e5bdaf9b342f543f61b8dee4089-ruian-layer17-kraje.json",
+      "sha256": "54f76cb13446ef0082b1a16b7d06ec9e927b0e5bdaf9b342f543f61b8dee4089",
+      "bytes": 163978
+    },
+    {
+      "name": "ruian-layer12-obce-p0.json",
+      "role": "municipalities",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/12/query?outFields=kod,nazev,okres&orderByFields=kod&resultOffset=0&resultRecordCount=1000&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:21Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/0a4cbc8f499499d9d9b559502b4e6296a492f96a63a8a1d6e50e4980c19652f0-ruian-layer12-obce-p0.json",
+      "sha256": "0a4cbc8f499499d9d9b559502b4e6296a492f96a63a8a1d6e50e4980c19652f0",
+      "bytes": 500755
+    },
+    {
+      "name": "ruian-layer12-obce-p1000.json",
+      "role": "municipalities",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/12/query?outFields=kod,nazev,okres&orderByFields=kod&resultOffset=1000&resultRecordCount=1000&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:21Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/366e61e5889f5c9a347da24fd6a926b68fad2dbf7a1a7e69fbc797f51935fd32-ruian-layer12-obce-p1000.json",
+      "sha256": "366e61e5889f5c9a347da24fd6a926b68fad2dbf7a1a7e69fbc797f51935fd32",
+      "bytes": 525458
+    },
+    {
+      "name": "ruian-layer12-obce-p2000.json",
+      "role": "municipalities",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/12/query?outFields=kod,nazev,okres&orderByFields=kod&resultOffset=2000&resultRecordCount=1000&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:21Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/c7962c1cbeaeade7a8bfe7bf8a79cff99873988d1df42023c83f56d04dcc8497-ruian-layer12-obce-p2000.json",
+      "sha256": "c7962c1cbeaeade7a8bfe7bf8a79cff99873988d1df42023c83f56d04dcc8497",
+      "bytes": 583523
+    },
+    {
+      "name": "ruian-layer12-obce-p3000.json",
+      "role": "municipalities",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/12/query?outFields=kod,nazev,okres&orderByFields=kod&resultOffset=3000&resultRecordCount=1000&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:21Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/9597e4f23f6e4ab44b523eb42635f6f4a53a6b49bdb270c13507cf762523b75e-ruian-layer12-obce-p3000.json",
+      "sha256": "9597e4f23f6e4ab44b523eb42635f6f4a53a6b49bdb270c13507cf762523b75e",
+      "bytes": 494034
+    },
+    {
+      "name": "ruian-layer12-obce-p4000.json",
+      "role": "municipalities",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/12/query?outFields=kod,nazev,okres&orderByFields=kod&resultOffset=4000&resultRecordCount=1000&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:21Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/2d15ac7cb3d17948773b50e90c3b588a9cc2c6e6cabc799f120706f345537665-ruian-layer12-obce-p4000.json",
+      "sha256": "2d15ac7cb3d17948773b50e90c3b588a9cc2c6e6cabc799f120706f345537665",
+      "bytes": 455739
+    },
+    {
+      "name": "ruian-layer12-obce-p5000.json",
+      "role": "municipalities",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/12/query?outFields=kod,nazev,okres&orderByFields=kod&resultOffset=5000&resultRecordCount=1000&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:21Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/a06334fbfe445d3f67632cea934120f7694ce44cc1943a3681ad9b80d7c407d7-ruian-layer12-obce-p5000.json",
+      "sha256": "a06334fbfe445d3f67632cea934120f7694ce44cc1943a3681ad9b80d7c407d7",
+      "bytes": 444268
+    },
+    {
+      "name": "ruian-layer12-obce-p6000.json",
+      "role": "municipalities",
+      "source": "https://ags.cuzk.gov.cz/arcgis/rest/services/RUIAN/Prohlizeci_sluzba_nad_daty_RUIAN/MapServer/12/query?outFields=kod,nazev,okres&orderByFields=kod&resultOffset=6000&resultRecordCount=1000&where=1%3D1&outSR=3035&maxAllowableOffset=180&geometryPrecision=0&f=json",
+      "retrieved": "2026-10-31T07:21Z",
+      "object": "gs://czbudget-janrezab-data-layers/raw/municipal-budget-map/sha256/9feeb5941cbe11ab93073a1dd6dd7060a066843452e02ea96003847b361f64a6-ruian-layer12-obce-p6000.json",
+      "sha256": "9feeb5941cbe11ab93073a1dd6dd7060a066843452e02ea96003847b361f64a6",
+      "bytes": 131224
+    }
+  ]
+}
